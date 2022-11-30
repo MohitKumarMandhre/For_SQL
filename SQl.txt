@@ -1,0 +1,16 @@
+1. entities and relationship- 3days
+aliases
+view
+2. normalization and denormalization(all forms) - 3days
+truncate delete drop
+indexes
+3. join types- 4 days
+4. functions- aggregate and scalar- 2 days
+5. olap,oltp- 4 days
+6. coalition, stores procedure, recursive stored procedure- 5 days
+7. pattern matching- 3 days
+list
+8. data integrity- 3 days
+subquery
+union, minus, intersect,
+cursor,
