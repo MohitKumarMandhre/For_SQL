@@ -14,3 +14,21 @@ list
 subquery
 union, minus, intersect,
 cursor,
+
+
+
+SQL ASSIGNMENT - 03-11-2022
+-----------------------
+1.)
+create table if not exists employees
+ (
+   employee_id integer unique,
+   first_name varchar(30) default ' ',
+   last_name varchar(30) default ' ',
+   job_id integer not null unique,
+   salary decimal(6,0) default 0,
+   constraint `fk_job_employees` foreign key (`job_id`) references jobs(`job_id`) on delete cascade on update restrict
+ );
+ 
+ 2.)
+ 
