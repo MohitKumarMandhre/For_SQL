@@ -1,7 +1,9 @@
 * 04/12/2022
 
 --To create a database with a proper character set and collation
+
 CREATE DATABASE IF NOT EXISTS profile_maker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 
 -- To use a DB
 USE db_name;
