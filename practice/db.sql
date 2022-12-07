@@ -13,7 +13,9 @@ SELECT @@character_set_database, @@collation_database;
 
 --Alternatively, to display the values without changing the default database:
 SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
-FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'db_name';
+FROM INFORMATION_SCHEMA.SCHEMATA 
+WHERE SCHEMA_NAME = 'db_name'
+;
 
 
 --Creating a `users` table
