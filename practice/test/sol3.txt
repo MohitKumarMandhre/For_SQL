@@ -1,0 +1,9 @@
+-- logs ( *id, num )
+
+select distinct num
+from ( 
+    select num, lag( num) over( ORDER BY id) as prevNum, lead( num) over( ORDER BY id) as succNum
+    from logs
+    where num = prevNum and num = succNum
+ ) 
+;

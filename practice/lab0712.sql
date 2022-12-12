@@ -1,6 +1,6 @@
 show databases ;
 
-use classicmodels ;
+use mysqljdbc ;
 
 show tables ;
 

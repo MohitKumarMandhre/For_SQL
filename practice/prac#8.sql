@@ -18,8 +18,8 @@ where t1.`department_ID` = t2.`department_ID`
 -- Q3 Write a query to find the name (first_name, last_name), job, department ID, and name of the employees who work in London.
 select first_name, last_name, de.DEPARTMENT_ID, department_name
 from jobs as jo inner join locations as lo inner join departments as de inner join employees as em 
-where em.`JOB_ID` = jo.`JOB_ID` and em.`DEPARTMENT_ID` = de.`DEPARTMENT_ID` 
-and de.`LOCATION_ID` = lo.`LOCATION_ID` and lo.`CITY` = 'London'
+ON em.`JOB_ID` = jo.`JOB_ID` and em.`DEPARTMENT_ID` = de.`DEPARTMENT_ID` 
+where de.`LOCATION_ID` = lo.`LOCATION_ID` and lo.`CITY` = 'London'
 ;
 
 -- Q4 Write a query to find the employee id, name (last_name) along with their manager_id, and name (last_name).
@@ -29,25 +29,25 @@ where j2.`EMPLOYEE_ID` = j1.`MANAGER_ID`
 ;
 
 -- Q5 Write a query to find the name (first_name, last_name) and hire date of the employees who were hired after 'Jones'.
-select e1.first_name, e1.last_name, e1.hire_date
+explain select e1.first_name, e1.last_name, e1.hire_date
 from employees as e1 inner join employees e2
-ON e2.`LAST_NAME` = 'Jones' 
-where e1.`HIRE_DATE` > e2.`HIRE_DATE` 
+ON e1.`HIRE_DATE` > e2.`HIRE_DATE` and e2.`LAST_NAME` like '%Jones%' 
 ;
 
 -- Q6 Write a query to get the department name and number of employees in the department.
-select de.`DEPARTMENT_NAME`, count( de.`DEPARTMENT_ID`)
+explain select de.`DEPARTMENT_NAME`, count( de.`DEPARTMENT_ID`)
 from departments as de left join employees as em 
 ON em.`DEPARTMENT_ID` = de.`DEPARTMENT_ID`
-GROUP BY de.`DEPARTMENT_NAME`
+GROUP BY de.`DEPARTMENT_ID`
 ; 
 
 -- Q7 Write a query to find the employee ID, job title, number of days between the ending date and the starting date for all jobs in department 90.
 select jh.employee_ID, jo.job_title, datediff( jh.end_date, jh.start_date ) as number_of_days
-from job_history as jh inner join jobs as jo -- inner join employees as e 
-ON jo.`JOB_ID` = jh.`JOB_ID` -- and jh.`EMPLOYEE_ID` = e.`EMPLOYEE_ID`
+from job_history as jh inner join jobs as jo
+ON jo.`JOB_ID` = jh.`JOB_ID`
 where jh.`DEPARTMENT_ID` = 90
 ;
+-- TO_DAYS()
 
 -- Q8 Write a query to display the department ID and name and first name of the manager.
 select de.`DEPARTMENT_NAME`, em.`FIRST_NAME`
@@ -81,8 +81,11 @@ where em.`SALARY` > 10000
 ;
 
 -- Q13 Write a query to display department name, name (first_name, last_name), hire date, the salary of the manager for all managers whose experience is more than 15 years.
-select DEPARTMENT_NAME, FIRST_NAME, round( DATEDIFF( NOW(), `HIRE_DATE` ) / 365) AS EXP
+select DEPARTMENT_NAME, FIRST_NAME, `HIRE_DATE`, `SALARY`,TIMESTAMPDIFF( YEAR, `HIRE_DATE`, CURDATE( ) ) AS EXP
 from departments as de inner join employees as em
 ON de.`MANAGER_ID` = em.`EMPLOYEE_ID`
-where DATEDIFF( NOW(), `HIRE_DATE` ) / 365 > 15
-;
+where TIMESTAMPDIFF( YEAR, `HIRE_DATE`, CURDATE() ) > 15
+;  
+
+-- timestampDiff
+show indexes from departments ;

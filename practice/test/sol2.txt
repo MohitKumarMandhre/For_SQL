@@ -1,0 +1,14 @@
+-- employees ( id, name, salary, departmentId )
+-- department ( id, name )
+
+
+select d.name, t.name, SALARY
+from departments as d inner join (
+    select `id` as DEPARTMENT_ID, salary, name, DENSE_RANK() 
+    over( PARTITION BY id ORDER BY SALARY desc ) as rn
+    from employees
+) as t
+ON d.id = t.id
+where rn <= 3
+;
+
