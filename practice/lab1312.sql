@@ -118,37 +118,100 @@ select coalesce( null, "", 1) ;
 
 select 
 'avgSal' as 'filter' ,
--- salary,
+'salary' as "tag",
 avg( case when age BETWEEN 20 and 25 then salary end) as '20-25',
 avg( case when age BETWEEN 25 and 30 then salary end) as '25-30'
 from emp 
 UNION
 select
 'minSal' as filter ,
--- salary,
+'salary' as "tag",
 min( case when age BETWEEN 20 and 25 then salary end),
 min( case when age BETWEEN 25 and 30 then salary end)
 from emp 
 UNION
 select
 'maxSal' as filter ,
--- salary,
+'salary' as "tag",
 max( case when age BETWEEN 20 and 25 then salary end),
 max( case when age BETWEEN 25 and 30 then salary end)
 from emp 
 UNION
 select
 'minAge' as filter ,
--- age,
+'age' as "tag",
 floor ( min( case when age BETWEEN 20 and 25 then age end)),
 floor ( min( case when age BETWEEN 25 and 30 then age end))
 from emp 
 UNION
 select
 'maxAge' as filter ,
--- age,
+'age' as "tag",
 floor ( max( case when age BETWEEN 20 and 25 then age end)),
 floor ( max( case when age BETWEEN 25 and 30 then age end))
 from emp 
+UNION
+select
+'avgAge' as filter ,
+'age' as "tag",
+floor ( avg( case when age BETWEEN 20 and 25 then age end)),
+floor ( avg( case when age BETWEEN 25 and 30 then age end))
+from emp 
 ;
 
+
+select * from
+(select round( AVG( salary)), round( MIN( salary)), round( Max( salary))
+from emp where age between 20 and 25) t1,
+(select round( AVG( salary)), round( MIN( salary)), round( Max( salary))
+from emp where age between 25 and 30) t2,
+(select AVG( age),  MIN( age), Max( age)
+from emp where age between 20 and 25) t3,
+(select AVG( age),  MIN( age), Max( age)
+from emp where age between 25 and 30) t4
+;
+
+select * from
+(
+    select "20-25"as "grp", round( AVG( salary)) as "avgSal", round( MIN( salary)) as "minSal", round( Max( salary)) as "maxSal", round( AVG( age)) as "avgAge", round( MIN( age)) as "minAge", round( Max( age)) as "maxAge"
+from emp where age between 20 and 25
+) t1
+UNION
+(select "25-30" as "grp", round( AVG( salary)) as "avgSal", round( MIN( salary)) as "minSal", round( Max( salary)) as "maxSal", round( AVG( age)) as "avgAge", round( MIN( age)) as "minAge", round( Max( age)) as "maxAge"
+from emp where age between 25 and 30
+) t2
+;
+
+(select "20-25"as "grp", round( AVG( salary)) as "avgSal", round( MIN( salary)) as "minSal", round( Max( salary)) as "maxSal", round( AVG( age)) as "avgAge", round( MIN( age)) as "minAge", round( Max( age)) as "maxAge"
+from emp where age between 20 and 25
+) 
+UNION
+(
+    select "25-30" as "grp", round( AVG( salary)) as "avgSal", round( MIN( salary)) as "minSal", round( Max( salary)) as "maxSal", round( AVG( age)) as "avgAge", round( MIN( age)) as "minAge", round( Max( age)) as "maxAge"
+from emp where age between 25 and 30
+) 
+;
+
+SELECT floor( 90.666) ;
+
+CREATE table nemp(
+    id int primary key AUTO_INCREMENT,
+    name varchar(30) not null,
+    age int, 
+    salary int, 
+    manager_id int,
+    department_id int, 
+    Foreign Key (department_id) REFERENCES dept(id)
+);
+
+INSERT INTO nemp VALUES(null, 'abc', 21, 200000, 1,2), 
+        (null, 'def', 24, 150000, 2, 2), 
+        (null, 'ghi', 26, 700000, 1,3), 
+        (null, 'xyz', 29, 680000, 3, 2) ;
+
+select * from nemp;
+
+select distinct e2.name, e2.age, e2.salary
+from nemp e1, nemp e2
+-- where e1.name <> e2.name and e1.age <> e2.age and e1.salary <> e2.salary
+;

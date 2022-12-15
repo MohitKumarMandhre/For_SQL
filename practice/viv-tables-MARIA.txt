@@ -1,7 +1,3 @@
--- Active: 1670399129309@@127.0.0.1@3307@world
--- sql query optimization
-show tables;
-
 CREATE TABLE SALGRADE
       ( GRADE int,
 	LOSAL int,
@@ -66,66 +62,3 @@ INSERT INTO EMP VALUES
 (7902,'FORD','ANALYST',7566,'1981-12-3',3000,NULL,20);
 INSERT INTO EMP VALUES
 (7934,'MILLER','CLERK',7782,'1982-1-23',1300,NULL,10);
-
-show tables;
-
-select * from emp;
-
--- 1. find out ename in the job having maximum no. of employees 
-
-select ename, job
-from emp
-where job in (
-    select job from emp
-    GROUP BY job
-    having count( *) in (
-        select max( b.cnt) from 
-        (select count(*) as cnt
-        from emp 
-        GROUP BY job) as b
-    )
-)
-;
-
-SELECT * from salgrade;
-
--- 2. find out grade of turner
-
-select grade, `ENAME`
-from (select sal, `ENAME` from emp where `ENAME` = 'turner') as b,salgrade
-where b.sal>losal and b.sal<hisal
-;
-
-select grade
-from salgrade
-where (select sal from emp where `ENAME` = 'turner') BETWEEN `LOSAL` and `HISAL`
-;
-
--- 3. find the job that got filled in 2nd half of any year filled in the 1st half of the following year
-select * from
-(select ename, job, hiredate
-from emp 
-order by 3) as a1 inner join (
-    select ename, job, hiredate
-    from emp 
-    order by 3
-) as a2
-ON (a1.job = a2.job) and (year(a1.`HIREDATE`)+1 = year(a2.`HIREDATE`)) and ( (month(a1.`HIREDATE`) BETWEEN 7 and 12) and (month(a2.`HIREDATE`) BETWEEN 1 and 6) )
-;
-
-select ename, job, hiredate, QUARTER( `HIREDATE`)
-from emp 
-order by 3;
-
--- 4. wishing bithdate
-set @d1 = '2022-12-15';
- set @d2 = '2022-12-16';
- set @d3 = '2022-12-14';
-
- select
- case 
-    when @d2 = CURRENT_DATE() then "HB"
-    when @d2 > CURRENT_DATE() then "Advance HB"
-    else "Belated HB"
- end as 'Wish'
- ;
