@@ -42,6 +42,11 @@ VALUES(null,'Dooby',27,900000,1,2),
     (null,'Browni',30,900000,1,3),
     (null,'KIki',29,1500000,2,2);
 
+INSERT INTO emp VALUES(null, 'abc', 21, 200000, 1,2), 
+        (null, 'def', 24, 150000, 2, 2), 
+        (null, 'ghi', 26, 700000, 1,3), 
+        (null, 'xyz', 29, 680000, 3, 2) ;
+
 select * from emp ;
 
 
@@ -77,4 +82,73 @@ de.name, age, salary
 from dept as de INNER JOIN emp as em 
 ON de.id = em.department_id
 order by salary desc, 
-if( em.salary > 150000, em.name, age) asc ;
+(case 
+when em.salary >= 150000 then em.name else age
+end) asc
+;
+
+SELECT 
+case
+ when em.salary >= 1500000 then em.name else NULL
+end as EMPNAME,
+de.name, age, salary
+from dept as de INNER JOIN emp as em 
+ON de.id = em.department_id
+order by salary desc,
+if ( em.salary >= 150000, em.name, age ) asc
+;
+
+
+select "20-25" as ageGroup, AVG( salary), MIN( salary), Max( salary)
+from emp where age between 20 and 25
+union 
+select "25-30", AVG( salary),  MIN( salary), Max( salary)
+from emp where age between 25 and 30
+;
+
+select * from
+(select AVG( salary),  MIN( salary), Max( salary)
+from emp where age between 20 and 25) t1,
+(select AVG( salary),  MIN( salary), Max( salary)
+from emp where age between 25 and 30) t2
+;
+
+
+select coalesce( null, "", 1) ;
+
+select 
+'avgSal' as 'filter' ,
+-- salary,
+avg( case when age BETWEEN 20 and 25 then salary end) as '20-25',
+avg( case when age BETWEEN 25 and 30 then salary end) as '25-30'
+from emp 
+UNION
+select
+'minSal' as filter ,
+-- salary,
+min( case when age BETWEEN 20 and 25 then salary end),
+min( case when age BETWEEN 25 and 30 then salary end)
+from emp 
+UNION
+select
+'maxSal' as filter ,
+-- salary,
+max( case when age BETWEEN 20 and 25 then salary end),
+max( case when age BETWEEN 25 and 30 then salary end)
+from emp 
+UNION
+select
+'minAge' as filter ,
+-- age,
+floor ( min( case when age BETWEEN 20 and 25 then age end)),
+floor ( min( case when age BETWEEN 25 and 30 then age end))
+from emp 
+UNION
+select
+'maxAge' as filter ,
+-- age,
+floor ( max( case when age BETWEEN 20 and 25 then age end)),
+floor ( max( case when age BETWEEN 25 and 30 then age end))
+from emp 
+;
+
