@@ -1,0 +1,6 @@
+with cte_emp as (
+    select `FIRST_NAME` as ename ,`DEPARTMENT_ID`, `SALARY`, DENSE_RANK() over( PARTITION BY `DEPARTMENT_ID` ORDER BY `SALARY` DESC) as dr
+    from employees
+)
+select ename as 'higher_earner' from cte_emp where dr<= 3
+;

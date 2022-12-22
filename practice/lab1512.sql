@@ -1,5 +1,7 @@
 -- Active: 1670399129309@@127.0.0.1@3307@world
 -- sql query optimization
+
+use world;
 show tables;
 
 CREATE TABLE SALGRADE
@@ -87,6 +89,20 @@ where job in (
 )
 ;
 
+with cte_e as (
+    select `DEPTNO`, count(*) as cnt
+    from emp
+    GROUP BY `DEPTNO`
+),
+cte_ra as (
+    SELECT `DEPTNO`, cnt, rank() over(ORDER BY cnt desc) as ra 
+    from cte_e
+)
+select `ENAME` from emp where `DEPTNO` IN (
+select `DEPTNO` from cte_ra where ra =1
+)
+;
+
 SELECT * from salgrade;
 
 -- 2. find out grade of turner
@@ -124,8 +140,98 @@ set @d1 = '2022-12-15';
 
  select
  case 
-    when @d2 = CURRENT_DATE() then "HB"
-    when @d2 > CURRENT_DATE() then "Advance HB"
+    when @d1 = DATE( NOW( )) then "HB"
+    when @d1 > CURRENT_DATE() then "Advance HB"
     else "Belated HB"
  end as 'Wish'
  ;
+
+-- #######################################
+show tables;
+
+SELECT * from emp;
+
+drop TABLE demo;
+create table demo(
+    name VARCHAR(100),
+    value VARCHAR(100),
+    id int
+ );
+
+ insert into demo values ('name', 'adam', 1), ('gender', 'male', 1), ('salary', '50000', 1);
+
+ select * from demo;
+
+-- pivot table demo
+select id, 
+max( CASE
+    when name = 'name' then value else ''
+end) as 'NAME',
+max( CASE
+    when name = 'gender' then value else ''
+end) as 'GENDER',
+max( CASE
+    when name = 'salary' then value else ''
+end) as 'SAL'
+from demo
+GROUP BY id
+;
+
+select id, [name], [gender], [salary] from
+(SELECT id, name as ename, value from demo) as st
+PIVOT
+(max(value)
+for 
+ename in ([name], [gender], [salary])
+) as pt
+;
+
+select `ENAME`, MONTH(`HIREDATE`) 
+from emp
+ORDER BY MONTH(`HIREDATE`) asc
+;
+
+SELECT DATEDIFF( '2030-03-01', '2030-02-28');
+
+with cte_ca as (
+    SELECT avg( sal) FROM emp
+), 
+with cte_da as (
+    SELECT `DEPTNO`, avg( `SAL`)
+    from emp
+    group by `DEPTNO`
+)
+SELECT e.`ENAME`, e.sal 
+from emp e inner join cte_da
+WHERE e.sal>cte_da and e.sal<cte_ca
+;
+
+select `ENAME`, emp.`DEPTNO`, `SAL`
+from (
+    select `DEPTNO`, avg(`SAL`) as 'deptavg'
+    from emp
+    GROUP BY `DEPTNO`
+) d1 inner join emp
+ON d1.`DEPTNO` = emp.`DEPTNO`
+where sal > deptavg
+having sal < ( select avg( sal) from emp)
+;
+
+SELECT e1.`EMPLOYEE_ID`, e1.`MANAGER_ID`, e1.`SALARY`, e2.`SALARY`
+from employees e1 INNER JOIN employees e2
+where e1.`MANAGER_ID` = e2.`EMPLOYEE_ID` and e1.`SALARY` > e2.`SALARY`
+;
+
+select CURRENT_DATE(), CURRENT_DATE() - 7 ;
+
+
+select hid, ename, challenges_created from
+    (select hid, ename, challenges_created, dense_rank(challenges_created) over(order by t1.challenges_created desc ) as dr
+    from 
+        (select ha.hacker_id as hid, name as ename, count(*) as challenges_created
+        from Hackers as ha inner join Challenges as ch
+        ON ha.hacker_id = ch.hacker_id
+        group by ha.hacker_id, name
+        order by count(*) desc, ha.hacker_id) as t1) as t2
+where dr = 1
+;

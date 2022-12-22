@@ -1,0 +1,8 @@
+
+
+select st1.id, st2.id, st3.id
+from stadium st1 INNER join stadium st2 inner join stadium st3
+ON st1.id +1 = st2.id and st1.id +2 = st3.id
+where st1.people >= 100 and st2.people >= 100 and st3.people >= 100
+;
+

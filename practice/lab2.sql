@@ -1,4 +1,10 @@
-* 04/12/22
+-- Active: 1670399129309@@127.0.0.1@3307@hr
+-- * 04/12/22
+
+show tables;
+
+show create table departement;
+
 
 -- employee
 -- ( employeeNumber, firstName, lastName, extension, email, officeCode, reportsTo, jobTitle )

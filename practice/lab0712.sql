@@ -1,4 +1,5 @@
 show databases ;
+use world ;
 
 use mysqljdbc ;
 
@@ -12,3 +13,8 @@ inner join productlines t2
 ON t1.productline = t2.productline 
 limit 10
 ;
+
+
+show databases;
+
+show tables ;

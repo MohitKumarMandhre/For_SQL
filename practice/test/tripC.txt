@@ -1,0 +1,20 @@
+
+
+with cte_trip as (
+    select * 
+    trips as tr
+    where client_id IN ( 
+        select users_id from users where banned like "No"
+    ) and 
+    driver_id IN ( 
+        select users_id from users where banned like "No"
+    )
+    where requested_at BETWEEN '2013-10-01' and '2013-10-03'
+)
+SELECT requested_at, round( (
+    (SELECT count(*) FROM cte_trip where status like "cancelled%" and requested_at = t1.requested_at) / (SELECT count(*) FROM cte_trip where requested_at = t1.requested_at)
+), 2) as Cancellation_ratio
+from cte_trip as t1
+GROUP BY requested_at
+;
+

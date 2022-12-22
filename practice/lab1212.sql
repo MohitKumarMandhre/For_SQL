@@ -1,5 +1,5 @@
 -- Active: 1670399129309@@127.0.0.1@3307@classicmodels
-
+use classicmodels;
 show TABLES;
 
 select `DEPARTMENT_ID`, count( *) as 'emps'
