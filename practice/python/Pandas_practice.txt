@@ -1,0 +1,63 @@
+
+
+--  countries data
+
+from urllib.request import urlretrieve
+
+urlretrieve('https://gist.githubusercontent.com/aakashns/28b2e504b3350afd9bdb157893f9725c/raw/994b65665757f4f8887db1c85986a897abb23d84/countries.csv', 
+            'countries.csv')
+
+
+ Questions
+
+
+ Q1: How many countries does the dataframe contain?
+ Q2: Retrieve a list of continents from the dataframe?
+ Q3: What is the total population of all the countries listed in this dataset?
+Q: (Optional) What is the overall life expectancy across in the world?
+
+Q4: Create a dataframe containing 10 countries with the highest population.
+
+Q5: Add a new column in countries_df to record the overall GDP per country (product of population & per capita GDP).
+
+
+Q: (Optional) Create a dataframe containing 10 countries with the lowest GDP per capita, among the counties with population greater than 100 million.
+
+
+Q6: Create a data frame that counts the number countries in each continent?
+
+Q7: Create a data frame showing the total population of each continent.
+
+
+Q8: Count the number of countries for which the total_tests data is missing.
+
+Hint: Use the .isna method.
+
+
+--- covid data
+
+
+urlretrieve('https://gist.githubusercontent.com/aakashns/b2a968a6cfd9fbbb0ff3d6bd0f26262b/raw/b115ed1dfa17f10fc88bf966236cd4d9032f1df8/covid-countries-data.csv', 
+            'covid-countries-data.csv')
+
+Q9: Merge countries_df with covid_data_df on the location column.
+
+Q10: Add columns `tests_per_million`, `cases_per_million` and `deaths_per_million` into `combined_df`.
+
+**Q11: Create a dataframe with 10 countires that have highest number of tests per million people.**
+
+**Q12: Create a dataframe with 10 countires that have highest number of positive cases per million pe
+ople.**
+
+**Q13: Create a dataframe with 10 countires that have highest number of deaths cases per million people?**
+
+
+**(Optional) Q: Count number of countries that feature in both the lists of "highest number of tests per million" and "highest number of cases per million".**
+
+
+(Optional) Q: Count number of countries that feature in both the lists "20 countries with lowest GDP per capita" and "20 countries with the lowest number of hospital beds per thousand population". Only consider countries with a population higher than 10 million while creating the list.
+
+
+
+
+

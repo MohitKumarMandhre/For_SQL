@@ -218,5 +218,67 @@ alter table employee8 add constraint
 
 show INDEXES from employee8 ;
 
+show columns from emp18;
+DESCRIBE salgrade ;
+
+select * from emp
+where JOB not like 'CLERK%';
+
+select * 
+from emp 
+where sal not BETWEEN 0 and 3000
+;
+
+select * 
+from emp 
+where sal not BETWEEN 'JAMES' and 'TURNER'
+;
+
+select * from emp
+where ename like '____';
+
+create Table empn as select * from emp;
+
+UPDATE empn set JOB ="sales_rep" where job = "salesman";
+UPDATE empn set JOB ="hr_rep" where job = "clerk";
+
+select *
+from empn
+where job like '%\_%';
+
+UPDATE empn set JOB ="hr_%rep" where job = "hr_rep";
+
+select *
+from empn
+where job like '%\_%%';
+
+select *
+from empn
+where year(`HIREDATE`) = 1981 and ename not like '%s%'
+;
+
+select ename, comm 
+from emp
+where comm is NULL;
+
+select NULL - 8;
 
 
+create table company( compid SMALLINT PRIMARY key, cname varchar(30));
+
+select * from company;
+
+insert into company values(1, 'wipro'), (2, 'tcs');
+
+insert into company values(3, 'oracle'), (4, 'infosys'), (5, 'sg'), (6, 'cts'), (7, 'emc2');
+
+insert into company values(8, NULL), (9,NULL);
+
+insert into company ( select deptno, dname from dept );
+
+create table DEFAULT_TAB (c1 int primary key AUTO_INCREMENT, c2 TIMESTAMP DEFAULT NOW());
+desc DEFAULT_TAB;
+
+insert into default_tab values (), (), () ;
+
+select * from default_tab;
