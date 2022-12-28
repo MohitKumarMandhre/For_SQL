@@ -3,7 +3,7 @@
 
 show databases;
 
-use hr;
+use world;
 
 show tables;
 
@@ -34,4 +34,14 @@ SHOW FUNCTION STATUS;
 CALL get_emp() ;
 
 CALL show_number(9) ;
+
+-- date 28/12/2022
+
+set @@sql_mode="only_full_group_by" ;
+select *
+from emp
+GROUP BY `DEPTNO`
+;
+
+select sum(sal), deptno from emp;
 
