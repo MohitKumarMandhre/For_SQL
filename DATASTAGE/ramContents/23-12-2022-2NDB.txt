@@ -1,0 +1,267 @@
+
+
+    DR. E.F.CODD IS FATHER OF RDBMS
+
+
+    RELATIONAL ALGEBRA AND RELATIONAL CALCULUS
+
+
+     OPERATORS  => TO MANIPULATE RELATIONS
+
+
+                            OPERATORS
+=======================================================================
+ SET ORIENTED                                   RELATIONAL ORIENTED
+======================================================================
+ UNION                                         PROJECTION
+ INTERSECT                                     RESTRICTION
+ MINUS				               JOIN
+ PRODUCT
+
+
+ TO SEE COLUMNS
+ ----------------
+  show columns from <tablename>;
+  desc <tablename>;
+
+
+  SQUARE
+             SEQUEL
+                      SQL
+ RDBMS
+--------------
+ ORACLE
+ SYBASE
+ SQL SERVER
+ POSTGRE
+ MYSQL
+ MARIADB
+
+      SQL
+  -------------------
+     SELECT
+     DDL
+     DML 
+     DCL
+     TC
+
+   DDL(DATA DEFINITION LANGUAGE)
+  ----------------------------------
+   CREATE
+   ALTER
+   DROP
+   TRUNCATE
+ 
+   DML(DATA MANIPULATION LANGUAGE)
+  ---------------------------------
+   INSERT
+   UPDATE
+   DELETE
+
+
+   DCL(DATA CONTROL LANGUAGE)
+  ----------------------------
+   GRANT
+   REVOKE
+
+   TC(TRANSACTION CONTROL)
+  ---------------------------
+   COMMIT
+   ROLLBACK
+ 
+
+
+  PROJECTION
+ ----------------- 
+  * SELECTING SPECIFIC COLUMNS
+
+ RESTRICTION
+ ----------------
+  * SELECTION
+  * SPECIFIC ROWS ARE SELECTED
+  * WHERE CLAUSE
+
+   SELECT         * (PROJECTION)
+   FROM           TABLENAME
+   WHERE          RESTRICTION
+
+
+
+
+ 
+   =    single  value
+          sal=3000
+
+     <> single value
+
+  like 'pattern'
+
+
+   select * from emp where ename='smith';
+
+  select * from emp where ename like 'smith';
+
+ 
+
+
+
+ OPERATORS
+ ----------------
+  COMPARISON       =,<,<=,>,>=,<>
+  LOGICAL          AND,OR,NOT
+  SPECIAL          IN,NOT IN,BETWEEN
+  PATTERN          LIKE,NOT LIKE
+
+
+
+
+
+ BETWEEN
+ ----------
+  * RANGE OPERATOR
+
+  * USES AND OPERATOR TOGETHER
+
+
+  * LOWER LIMIT 1ST UPPER LIMIT NEXT
+
+  * >=LOWERLIMIT   <=UPPERLIMIT
+
+
+
+
+   950    AND  2975
+
+
+
+
+
+
+  SELECT ENAME,SAL
+  FROM   EMP
+  WHERE  SAL
+  BETWEEN  2975
+  AND      950
+
+
+
+
+  SELECT ENAME,SAL
+  FROM   EMP
+  WHERE  SAL
+  BETWEEN  950
+  AND      2975
+
+
+
+  PATTERN MATCH
+  ---------------
+  LIKE
+  NOT LIKE
+
+
+
+
+
+
+   BEGINNING WITH A CHARACTER        CHARACTER%
+
+   ENDING WITH A CHARACTER           %CHARACTER
+
+   CONTAINING A CHARACTER            %CHARACTER%
+
+
+   _  SINGLE CHARACTER
+ 
+  %  PATTERN
+
+    3 LEVEL ARCHITECTURE
+ ----------------------------
+   EXTERNAL                      USER LEVEL
+    CONCEPTUAL                     GLOBAL LEVEL
+          INTERNAL                   STORAGE LEVEL
+
+
+    2 FACILITIES
+   ---------------
+    DATA ABSTRACTION
+
+     DATA INDEPENDENCE
+
+     DATA  INDEPENDENCE
+    -----------------------
+     LOGICAL            E,C
+         PHYSICAL       C,I
+
+
+
+  INSERT => FRESH ROWS
+
+   DIFFERENT METHODS
+   --------------------
+   1. DEFAULT ORDER
+   2. CHANGED ORDER
+   3. MULTIPLE ROWS
+   4. using set variable option
+   5. INSERTING NULLS(OMIT THE COLUMN,
+                      EXPLICITLY USE NULL -WITHOUT QUOTES)
+   6. COPYING ROWS FROM OTHER TABLE
+              INSERT INTO <TABLE> SELECT COL1,COL2 FROM OTHER TABLE
+   7. EXCPLICITLY DEFAULT
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  UPDATE => MODIFYING EXISTING ROWS
+  ==========================================
+   UPDATE <TABLENAME>
+   SET    COL1=VALUE1,COL2=VALUE2
+   RESTRICTION(WHERE CLAUSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

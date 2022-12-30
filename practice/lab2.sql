@@ -22,10 +22,13 @@ CREATE TABLE `employee` (
   CONSTRAINT `employee` PRIMARY KEY (`employeeNumber`),
   CONSTRAINT `UQ_employees_email` UNIQUE (`email`),
   CONSTRAINT `FK_employee_employee` FOREIGN KEY (`reportsTo`) REFERENCES `employee` (`employeeNumber`) ON DELETE CASCADE,
-  CONSTRAINT `FK_offices_employee` FOREIGN KEY (`officeCode`) REFERENCES `employee` (`officeCode`) ON DELETE CASCADE, 
+  CONSTRAINT `FK_offices_employee` FOREIGN KEY (`officeCode`) REFERENCES `offices` (`officeCode`) ON DELETE CASCADE, 
   INDEX `IX_employee_email` (`email`)
   
 ) ENGINE=InnoDB;
+
+-- alter table add constraint 'PK_employee' primary key (employeeNumber);
+-- alter table add 'FK_offices_employee' FOREIGN KEY ('officeCode') REFERENCES employee('officeCode')
 
 -- offices
 -- ( officeCode, city, code, addressLine1, addressLine2, state, country, postalCode, territory )
@@ -41,7 +44,7 @@ CREATE TABLE `offices` (
   `postalCode` varchar(8) DEFAULT NULL,
   `territory` varchar(25) DEFAULT NULL,
 
-  CONSTRAINT `offices` PRIMARY KEY (`officeCode`),
+  CONSTRAINT `PK_offices` PRIMARY KEY (`officeCode`),
   CONSTRAINT `UQ_offices_phone` UNIQUE (`phone`)
   
 ) ENGINE=InnoDB;
@@ -64,7 +67,7 @@ CREATE TABLE `customers` (
   `salesRepEmployeeNumber` int(11) UNSIGNED,
   `creditLimit` decimal(11, 2) DEFAULT NULL,
 
-  CONSTRAINT `customers` PRIMARY KEY (`customerNumber`),
+  CONSTRAINT `PK_customers` PRIMARY KEY (`customerNumber`),
   CONSTRAINT `UQ_customers_phone` UNIQUE (`phone`),
   CONSTRAINT `FK_employee_customers` FOREIGN KEY (`customerNumber`) references `employee` (`employeeNumber`) ON DELETE CASCADE
   

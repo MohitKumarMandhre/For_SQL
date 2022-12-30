@@ -1,0 +1,704 @@
+mysql> \! cls;
+mysql> select ename,sal from emp where sal<=1250;
++--------+------+
+| ename  | sal  |
++--------+------+
+| SMITH  |  800 |
+| WARD   | 1250 |
+| MARTIN | 1250 |
+| ADAMS  | 1100 |
+| JAMES  |  950 |
++--------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> #find who are not working as clerk
+mysql> select ename,job from emp where job<>"clerk";
++--------+-----------+
+| ename  | job       |
++--------+-----------+
+| ALLEN  | SALESMAN  |
+| WARD   | SALESMAN  |
+| JONES  | MANAGER   |
+| MARTIN | SALESMAN  |
+| BLAKE  | MANAGER   |
+| CLARK  | MANAGER   |
+| SCOTT  | ANALYST   |
+| KING   | PRESIDENT |
+| TURNER | SALESMAN  |
+| FORD   | ANALYST   |
++--------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select ename,job from emp where job!="clerk";
++--------+-----------+
+| ename  | job       |
++--------+-----------+
+| ALLEN  | SALESMAN  |
+| WARD   | SALESMAN  |
+| JONES  | MANAGER   |
+| MARTIN | SALESMAN  |
+| BLAKE  | MANAGER   |
+| CLARK  | MANAGER   |
+| SCOTT  | ANALYST   |
+| KING   | PRESIDENT |
+| TURNER | SALESMAN  |
+| FORD   | ANALYST   |
++--------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select ename,deptno,job from emp;
++--------+--------+-----------+
+| ename  | deptno | job       |
++--------+--------+-----------+
+| SMITH  |     20 | CLERK     |
+| ALLEN  |     30 | SALESMAN  |
+| WARD   |     30 | SALESMAN  |
+| JONES  |     20 | MANAGER   |
+| MARTIN |     30 | SALESMAN  |
+| BLAKE  |     30 | MANAGER   |
+| CLARK  |     10 | MANAGER   |
+| SCOTT  |     20 | ANALYST   |
+| KING   |     10 | PRESIDENT |
+| TURNER |     30 | SALESMAN  |
+| ADAMS  |     20 | CLERK     |
+| JAMES  |     30 | CLERK     |
+| FORD   |     20 | ANALYST   |
+| MILLER |     10 | CLERK     |
++--------+--------+-----------+
+14 rows in set (0.00 sec)
+
+mysql> select ename,deptno,job from emp where deptno=20
+    -> ^C
+mysql> select ename,deptno,job from emp where job="clerk"
+    -> ^C
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> select ename,deptno,job from emp where job="clerk" and deptno=20;
++-------+--------+-------+
+| ename | deptno | job   |
++-------+--------+-------+
+| SMITH |     20 | CLERK |
+| ADAMS |     20 | CLERK |
++-------+--------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select ename,deptno,job from emp where job="clerk" and deptno=40;
+Empty set (0.00 sec)
+
+mysql> select ename,deptno,job from emp where job="clerk" or deptno=40;
++--------+--------+-------+
+| ename  | deptno | job   |
++--------+--------+-------+
+| SMITH  |     20 | CLERK |
+| ADAMS  |     20 | CLERK |
+| JAMES  |     30 | CLERK |
+| MILLER |     10 | CLERK |
++--------+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> #find employees who are not working as clerk(not)
+mysql> select ename,job from emp where job<>"clerk"
+    -> ^C
+mysql> select ename,job from emp where not job="clerk";
++--------+-----------+
+| ename  | job       |
++--------+-----------+
+| ALLEN  | SALESMAN  |
+| WARD   | SALESMAN  |
+| JONES  | MANAGER   |
+| MARTIN | SALESMAN  |
+| BLAKE  | MANAGER   |
+| CLARK  | MANAGER   |
+| SCOTT  | ANALYST   |
+| KING   | PRESIDENT |
+| TURNER | SALESMAN  |
+| FORD   | ANALYST   |
++--------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> #find out employees who are taking salaries not less than 3000
+mysql> #(donot use > operator)
+mysql> select ename,sal from emp where not sal<3000;
++-------+------+
+| ename | sal  |
++-------+------+
+| SCOTT | 3000 |
+| KING  | 5000 |
+| FORD  | 3000 |
++-------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno=30
+    -> ^C
+mysql> select * from emp where deptno=10
+    -> ^C
+mysql> select * from emp where deptno=10 or deptno=30;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
++-------+--------+-----------+------+------------+------+------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno IN(10,30);
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
++-------+--------+-----------+------+------------+------+------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno NOT IN(10,30);
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK   | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7566 | JONES | MANAGER | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT | ANALYST | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7876 | ADAMS | CLERK   | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql>   SELECT ENAME,SAL
+    ->   FROM   EMP
+    ->   WHERE  SAL
+    ->   BETWEEN  950
+    ->   AND      2975
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> ;
++--------+------+
+| ENAME  | SAL  |
++--------+------+
+| ALLEN  | 1600 |
+| WARD   | 1250 |
+| JONES  | 2975 |
+| MARTIN | 1250 |
+| BLAKE  | 2850 |
+| CLARK  | 2450 |
+| TURNER | 1500 |
+| ADAMS  | 1100 |
+| JAMES  |  950 |
+| MILLER | 1300 |
++--------+------+
+10 rows in set (0.00 sec)
+
+mysql> 
+mysql> SELECT ENAME FROM EMP;
++--------+
+| ENAME  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| JONES  |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| SCOTT  |
+| KING   |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| FORD   |
+| MILLER |
++--------+
+14 rows in set (0.00 sec)
+
+mysql> #ENAME STARTING WITH J
+mysql> SELECT ENAME
+    -> FROM   EMP
+    -> WHERE  ENAME
+    -> LIKE   'J%';
++-------+
+| ENAME |
++-------+
+| JONES |
+| JAMES |
++-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> #ENDING WITH D
+mysql> SELECT ENAME
+    -> FROM   EMP
+    -> WHERE  ENAME
+    -> LIKE   '%D';
++-------+
+| ENAME |
++-------+
+| WARD  |
+| FORD  |
++-------+
+2 rows in set (0.00 sec)
+
+mysql> #ENAME CONTAINING 'T' ANYWHERE
+mysql> SELECT ENAME
+    -> FROM   EMP
+    -> WHERE  ENAME
+    -> LIKE   '%T%';
++--------+
+| ENAME  |
++--------+
+| SMITH  |
+| MARTIN |
+| SCOTT  |
+| TURNER |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> #FIND ENAME WHERE 3RD CHARACTER IS 'R'
+mysql> 
+mysql> 
+mysql> SELECT ENAME
+    -> FROM   EMP
+    -> WHERE  ENAME
+    -> LIKE   '__R%';
++--------+
+| ENAME  |
++--------+
+| WARD   |
+| MARTIN |
+| TURNER |
+| FORD   |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE EMP1 AS SELECT * FROM EMP;
+Query OK, 14 rows affected (0.07 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> UPDATE EMP1 SET JOB="sales_rep" where job="SALESMAN";
+Query OK, 4 rows affected (0.01 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> UPDATE EMP1 SET JOB="hr_clerk" where job="CLERK";
+Query OK, 4 rows affected (0.01 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> SELECT JOB FROM EMP1;
++-----------+
+| JOB       |
++-----------+
+| hr_clerk  |
+| sales_rep |
+| sales_rep |
+| MANAGER   |
+| sales_rep |
+| MANAGER   |
+| MANAGER   |
+| ANALYST   |
+| PRESIDENT |
+| sales_rep |
+| hr_clerk  |
+| hr_clerk  |
+| ANALYST   |
+| hr_clerk  |
++-----------+
+14 rows in set (0.00 sec)
+
+mysql> 
+mysql> #FIND JOB HAVING '_'
+mysql> SELECT JOB FROM EMP WHERE JOB LIKE '%\_%';
+Empty set (0.00 sec)
+
+mysql> SELECT JOB FROM EMP WHERE JOB LIKE '%\_%';
+Empty set (0.00 sec)
+
+mysql> SELECT JOB FROM EMP1 WHERE JOB LIKE '%\_%';
++-----------+
+| JOB       |
++-----------+
+| hr_clerk  |
+| sales_rep |
+| sales_rep |
+| sales_rep |
+| sales_rep |
+| hr_clerk  |
+| hr_clerk  |
+| hr_clerk  |
++-----------+
+8 rows in set (0.00 sec)
+
+mysql> UPDATE EMP1 SET JOB="hr%clerk" WHERE JOB='hr_clerk';
+Query OK, 4 rows affected (0.01 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> SELECT JOB FROM EMP1 WHERE JOB LIKE '%\%%';
++----------+
+| JOB      |
++----------+
+| hr%clerk |
+| hr%clerk |
+| hr%clerk |
+| hr%clerk |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> #find out employees who have joined in 1981
+mysql> #and ename not containing s
+mysql> select ename,hiredate
+    -> from   emp
+    -> where  hiredate like '1981%';
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| ALLEN  | 1981-02-20 |
+| WARD   | 1981-02-22 |
+| JONES  | 1981-04-02 |
+| MARTIN | 1981-09-28 |
+| BLAKE  | 1981-05-01 |
+| CLARK  | 1981-06-09 |
+| KING   | 1981-11-17 |
+| TURNER | 1981-09-08 |
+| JAMES  | 1981-12-03 |
+| FORD   | 1981-12-03 |
++--------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select ename,hiredate
+    -> from   emp
+    -> select ename,hiredate
+    -> and ename not like '%s%';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select ename,hiredate
+and ename not like '%s%'' at line 3
+mysql> select ename,hiredate
+    -> from   emp
+    -> where  hiredate like '1981%'
+    -> and ename not like '%s%';
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| ALLEN  | 1981-02-20 |
+| WARD   | 1981-02-22 |
+| MARTIN | 1981-09-28 |
+| BLAKE  | 1981-05-01 |
+| CLARK  | 1981-06-09 |
+| KING   | 1981-11-17 |
+| TURNER | 1981-09-08 |
+| FORD   | 1981-12-03 |
++--------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select ename,comm from emp;
++--------+------+
+| ename  | comm |
++--------+------+
+| SMITH  | NULL |
+| ALLEN  |  300 |
+| WARD   |  500 |
+| JONES  | NULL |
+| MARTIN | 1400 |
+| BLAKE  | NULL |
+| CLARK  | NULL |
+| SCOTT  | NULL |
+| KING   | NULL |
+| TURNER |    0 |
+| ADAMS  | NULL |
+| JAMES  | NULL |
+| FORD   | NULL |
+| MILLER | NULL |
++--------+------+
+14 rows in set (0.00 sec)
+
+mysql> select ename,comm from emp where comm=null;
+Empty set (0.00 sec)
+
+mysql> select ename,comm from emp where comm is null;
++--------+------+
+| ename  | comm |
++--------+------+
+| SMITH  | NULL |
+| JONES  | NULL |
+| BLAKE  | NULL |
+| CLARK  | NULL |
+| SCOTT  | NULL |
+| KING   | NULL |
+| ADAMS  | NULL |
+| JAMES  | NULL |
+| FORD   | NULL |
+| MILLER | NULL |
++--------+------+
+10 rows in set (0.00 sec)
+
+mysql> #employees taking commission
+mysql> select ename,comm from emp where comm is not null;
++--------+------+
+| ename  | comm |
++--------+------+
+| ALLEN  |  300 |
+| WARD   |  500 |
+| MARTIN | 1400 |
+| TURNER |    0 |
++--------+------+
+4 rows in set (0.00 sec)
+
+mysql> \! CLS;
+mysql> CREATE TABLE COMPANY_NEW(COMPID SMALLINT PRIMARY KEY,
+    ->                          COMPNAME VARCHAR(20));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> DESC COMPANY_NEW;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| COMPID   | smallint    | NO   | PRI | NULL    |       |
+| COMPNAME | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> #DEFAULT ORDER
+mysql> INSERT INTO COMPANY_NEW VALUES(1,'WIPRO');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM COMPANY_NEW;
++--------+----------+
+| COMPID | COMPNAME |
++--------+----------+
+|      1 | WIPRO    |
++--------+----------+
+1 row in set (0.00 sec)
+
+mysql> #CHANGED ORDER
+mysql> INSERT INTO COMPANY_NEW(COMPNAME,COMPID) VALUES("TCS",2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> #MULTIPLE ROWS
+mysql> INSERT INTO COMPANY_NEW VALUES (3,"ORACLE"),(4,"INFOSYS"),(5,"SG"),(6,"CTS");
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM COMPANY_NEW;
++--------+----------+
+| COMPID | COMPNAME |
++--------+----------+
+|      1 | WIPRO    |
+|      2 | TCS      |
+|      3 | ORACLE   |
+|      4 | INFOSYS  |
+|      5 | SG       |
+|      6 | CTS      |
++--------+----------+
+6 rows in set (0.00 sec)
+
+mysql> set  @v1=7,@v2="emc2";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> insert into company_new values(@v1,@v2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM COMPANY_NEW;
++--------+----------+
+| COMPID | COMPNAME |
++--------+----------+
+|      1 | WIPRO    |
+|      2 | TCS      |
+|      3 | ORACLE   |
+|      4 | INFOSYS  |
+|      5 | SG       |
+|      6 | CTS      |
+|      7 | emc2     |
++--------+----------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO COMPANY_NEW VALUES(8,NULL);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO COMPANY_NEW(COMP_ID) VALUES(9);
+ERROR 1054 (42S22): Unknown column 'COMP_ID' in 'field list'
+mysql> INSERT INTO COMPANY_NEW(COMPID) VALUES(9);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM COMPANY_NEW;
++--------+----------+
+| COMPID | COMPNAME |
++--------+----------+
+|      1 | WIPRO    |
+|      2 | TCS      |
+|      3 | ORACLE   |
+|      4 | INFOSYS  |
+|      5 | SG       |
+|      6 | CTS      |
+|      7 | emc2     |
+|      8 | NULL     |
+|      9 | NULL     |
++--------+----------+
+9 rows in set (0.00 sec)
+
+mysql> DESC COMPANY_NEW;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| COMPID   | smallint    | NO   | PRI | NULL    |       |
+| COMPNAME | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> INSERT INTO COMPANY_NEW SELECT DEPTNO,DNAME FROM DEPT;
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM COMPANY_NEW;
++--------+------------+
+| COMPID | COMPNAME   |
++--------+------------+
+|      1 | WIPRO      |
+|      2 | TCS        |
+|      3 | ORACLE     |
+|      4 | INFOSYS    |
+|      5 | SG         |
+|      6 | CTS        |
+|      7 | emc2       |
+|      8 | NULL       |
+|      9 | NULL       |
+|     10 | ACCOUNTING |
+|     20 | RESEARCH   |
+|     30 | SALES      |
+|     40 | OPERATIONS |
++--------+------------+
+13 rows in set (0.00 sec)
+
+mysql> CREATE TABLE DEFAULT_TAB(C1 INT PRIMARY KEY,C2 TIMESTAMP DEFAULT 
+    -> NOW());
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> DESC DEFAULT_TAB;
++-------+-----------+------+-----+-------------------+-------------------+
+| Field | Type      | Null | Key | Default           | Extra             |
++-------+-----------+------+-----+-------------------+-------------------+
+| C1    | int       | NO   | PRI | NULL              |                   |
+| C2    | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++-------+-----------+------+-----+-------------------+-------------------+
+2 rows in set (0.01 sec)
+
+mysql> INSERT INTO DEFAULT_TAB(C1) VALUES(101);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM DEFAULT_tAB;
++-----+---------------------+
+| C1  | C2                  |
++-----+---------------------+
+| 101 | 2022-12-23 17:03:10 |
++-----+---------------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO DEFAULT_TAB VALUES(201,DEFAULT);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM DEFAULT_tAB;
++-----+---------------------+
+| C1  | C2                  |
++-----+---------------------+
+| 101 | 2022-12-23 17:03:10 |
+| 201 | 2022-12-23 17:03:34 |
++-----+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> SELECT * FROM COMPANY_NEW;
++--------+------------+
+| COMPID | COMPNAME   |
++--------+------------+
+|      1 | WIPRO      |
+|      2 | TCS        |
+|      3 | ORACLE     |
+|      4 | INFOSYS    |
+|      5 | SG         |
+|      6 | CTS        |
+|      7 | emc2       |
+|      8 | NULL       |
+|      9 | NULL       |
+|     10 | ACCOUNTING |
+|     20 | RESEARCH   |
+|     30 | SALES      |
+|     40 | OPERATIONS |
++--------+------------+
+13 rows in set (0.00 sec)
+
+mysql> UPDATE COMPANY_NEW SET COMPNAME="EY" WHERE COMPID=7;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM COMPANY_NEW WHERE COMPID IS NULL;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY_NEW WHERE COMPNAME IS NULL;
++--------+----------+
+| COMPID | COMPNAME |
++--------+----------+
+|      8 | NULL     |
+|      9 | NULL     |
++--------+----------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE COMPANY_NEW SET COMPNAME="CAPGEMINI" WHERE COMPID=8;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE COMPANY_NEW SET COMPNAME="ERICSON" WHERE COMPID=9;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> NOTEE;

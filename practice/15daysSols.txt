@@ -184,6 +184,44 @@ ORDER BY
 
 
 
+---------------------------------------------------------------------
+my code
+---------------------------------------------------------------------
+
+select submission_date, count( distinct( hacker_ID))
+from submissions
+where submission_date like '2016-03-01%'
+group by submission_date
+ORDER BY submission_date asc
+;
+
+
+select row_number() over(partition by submission_date order by count( h.hacker_id ) desc, h.hacker_id asc ) as rn, count( h.hacker_id ), submission_date, h.hacker_id, name
+from submissions s inner join hackers h
+ON s.hacker_id = h.hacker_id
+group by submission_date, h.hacker_id, name
+;
+
+
+with hac_max as
+(
+    select row_number() 
+    over(partition by submission_date 
+    order by count( h.hacker_id ) desc, h.hacker_id asc ) as rn,
+    submission_date, h.hacker_id as hid, name
+    from submissions s inner join hackers h
+    ON s.hacker_id = h.hacker_id
+    group by submission_date, h.hacker_id, name
+)
+select s.submission_date, count( distinct( s.hacker_ID)), hid, name
+from submissions as s inner join hac_max as hm
+ON s.submission_date = hm.submission_date and rn =1
+-- where s.submission_date like '2016-03-01%' 
+group by s.submission_date, hid, name
+ORDER BY s.submission_date asc
+;
+
+
 
 
 

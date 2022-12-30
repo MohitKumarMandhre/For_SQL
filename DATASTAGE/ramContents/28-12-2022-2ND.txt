@@ -1,0 +1,272 @@
+DATE_FORMAT
+------------
+%D     add th,ndrd etc to day portion
+       17th,22nd,3rd
+
+%w     day number within week
+%d     day number within month
+%j     day number within year
+
+
+FIND OUT EMPLOYEES WHO JOINED
+ON 1ST THURSDAY
+
+
+ename joined  on 17th ,thursday december 1980
+
+ EXTRACT
+ -------------
+    year
+    month
+    day
+
+     extract(year from date),
+    extract(month from date),
+     extract(day from date),
+  
+  RETURNING DIFFERENCE
+  -----------------------
+    DATEDIFF           2 ARGUMENTS
+    TIMSTAMPDIFF       3 ARGUMENTS    
+              YEAR
+              MONTH
+              DAY
+
+    SELECT  DATEDIFF(DATE1,DATE2)
+    SELECT  TIMESTAMPDIFF(YEAR,DATE1,DATE2)
+    SELECT  TIMESTAMPDIFF(MONTH,DATE1,DATE2)
+    SELECT  TIMESTAMPDIFF(DAY,DATE1,DATE2)
+    
+
+ MODIFYING DATES
+ --------------------
+ DATE_ADD  YEARS,MONTHS,DAYS       INTERVAL '1' YEAR
+ DATE_SUB  YEARS,MONTHS,DAYS       INTERVAL '1' MONTH
+                                   INTERVAL '1' DAY
+ LAST_DAY  TAKES 1 ARGUMENT  RETURNS LAST DAY OF THE MONTH SPECIFIED
+
+ MAKEDATE
+          MAKEDATE(YEAR,DAYS)
+
+
+EG:  MAKEDATE(2020,1)
+            2020-01-01
+
+  CONTROL FUNCTIONS
+  --------------------
+  IF
+  CASE
+  NULLIF
+  IFNULL
+
+
+  IF (A,B,C)
+               IF A IS TRUE RETURNS B ELSE C
+
+  CASE  FUNCTION
+  ----------------
+   2 VERSIONS
+
+
+     CASE   WHEN  <CONDN1> THEN <VAL1>
+           ...
+
+           ...
+           ELSE
+             <VALN>
+            END
+
+
+     NEW YEAR BONUS IS PAID
+     ----------------------
+      CLERK            1.5*SAL
+      ANALYST          1.75*SAL
+      SALESMAN         2.0*SAL
+      OTHERS           SAL
+
+
+   SELECT ENAME,SAL,JOB,
+    (CASE WHEN JOB='CLERK' THEN 1.5*SAL
+	  WHEN JOB='SALESMAN' THEN 2.0*SAL
+          WHEN  JOB='ANALYST' THEN 1.75*SAL
+          ELSE
+          SAL
+          END) "bonus"
+   FROM EMP
+   ORDER BY 3;
+
+
+  SELECT ENAME,SAL,JOB,
+    (CASE JOB WHEN 'CLERK' THEN 1.5*SAL
+	  WHEN 'SALESMAN' THEN 2.0*SAL
+          WHEN 'ANALYST' THEN 1.75*SAL
+          ELSE
+          SAL
+          END) "bonus"
+   FROM EMP
+   ORDER BY 3;
+
+
+  USING CASE FUNCTION
+        print   happy birthday 5 times
+                belated birthday 2 times
+                advanced birthday 1 time
+
+      depending upon date
+                2022-12-28   => happy birthday
+                2022-12-27   => belated birthday
+                2022-12-29   => advanced birthday
+
+
+
+select   @v1,(case when date_format(@v1,"%m-%d")=
+              date_format(curdate(),"%m-%d")
+               then repeat("happy birthday  ",5)
+              when date_format(@v1,"%m-d%")>date_format(curdate(),"%m-%d")
+               then repeat("advanced birthday  ",1)
+               else
+               repeat("belated birthday  ",2)
+              end) "greetings";
+
+
+
+
+  NULLIF(A,B)
+               IF A=B RETURNS NULL ELSE A
+
+
+
+  set @@sql_mode="only_full_group_by";
+
+
+
+ MULTIPLE ROW FUNCTIONS
+ ----------------------------
+   * ARE ALSO CALLED AGGREGATE/GROUP FUNCTIONS
+   
+   COUNT
+   MIN
+   MAX
+   AVG
+   SUM
+
+      COUNT(*)                        COUNT(COLUMN)
+  -------------------------------------------------------------------
+   INCLUDES NULLS                     EXCLUDES NULLS
+
+
+
+
+   COUNT,MIN,MAX  CAN BE USED FOR ALL DATATYPES
+    
+    SUM,AVG  USED FOR ONLY NUMBER DATATYPES
+
+
+   if job="clerk"  display the count
+      job="salesman" display max(sal)
+      job="analyst"  display totalsal
+      else           display avg(sal)
+
+
+  SELECT
+  FROM
+  WHERE
+  GROUP BY
+  HAVING 
+  ORDER BY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

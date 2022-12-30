@@ -1,0 +1,326 @@
+SELECT  (PROJECTION) *
+FROM     <TABLENAME>
+WHERE    RESTRICTION
+
+GROUP BY
+HAVING
+ORDER BY 
+
+
+MISCELLANEOUS
+----------------
+DISTINCT
+
+   eliminates duplicates
+
+   applied only on 1st column
+           based upon 1st column 2nd column having duplicates
+           will be displayed only once
+
+
+
+   MYSQL
+            => COMMANDS ARE NOT CASE SENSITIVE
+            => DATA IS NOT CASE SENSITIVE
+
+
+
+  COLUMN ALIASING
+  -----------------
+   * TO CHANGE DISPLAY HEADINGS
+
+    3 WAYS
+    -------------
+    ENAME    "empname"   => "emp name"
+            as  empname
+             empname
+
+     to display a column   additionally from existing column
+                    incr_sal   300 
+
+  basic
+  hra
+  da
+  pf
+  tax
+
+
+
+  display ename,sal,hra,da,pf,tax,totalsal
+
+  hra=40%of sal
+  da=30%of sal
+  pf=12%of sal
+  tax=10%of sal
+  totalsal=sal+hra+da-pf-tax
+
+
+  SET
+ ----------------
+  set @v1=20;
+  set @v2=3000,@v4=5000;
+
+   * define a variable and assign value to it
+
+
+   REWRITE THE EARLIER HRA,DA PROBLEM WITH VARIABLES
+
+  order by 
+ --------------
+  * to sort the data
+    (by default is ascending)
+
+  ways
+ -------------
+  order by ename; (ascending)
+  order by ename asc;
+  order by ename desc;
+  order by <columnno>
+  order by "alias";=> MYSQL DOES NOT GIVE AS ANTICIPATED
+  order by alias;
+
+
+  LIMIT
+  -----------
+   * LIMITS THE NUMBER OF ROWS FOR DISPLAY
+
+
+
+     select * from <table> limit <n>;
+      eg: select * from emp limit 5;
+
+
+
+
+
+
+  SQL FUNCTIONS
+----------------------
+SINGLE ROW                                     MULTIPLE ROW
+==================================================================
+CHARACTER
+NUMBER
+DATE
+CONTROL
+
+
+
+
+
+
+CHARACTER
+----------------
+CONCAT
+     concat(col1, ' ',col2)..............
+
+UPPER
+LOWER
+ SUBSTR(SUBSTRING) 
+         (string,1)     => from 1st position remianing will be displayed
+         (string,1,3)   => from 1st position upto a length of 3
+ INSTR(INSTRING) => POSITION OF THE SPECIFIED CHARACTER
+                     1st occurence only
+ LEFT/RIGHT
+            DISPLAYS STRING FROM LEFT/RIGHT TO SPECIFIED LENGTH
+               LEFT(STRING,3)=> 1ST 3 CHARACTERS
+               RIGHT(STRING,3)=> LAST 3 CHARACTERS
+  TRIM     SPACE/CHARACTER 
+           IN BEGINNING OR END
+
+  (LTRIM/RTRIM)
+  REPLACE  SOURCE STRING WITH TARGET
+  LPAD/RPAD
+         left/right padding with
+         specified character to 
+         specified length
+
+   REPEAT
+          we can repeat the string
+          "n" times
+
+
+   REVERSE
+
+
+NUMBER FUNCTIONS
+----------------
+ MOD 
+ SIGN
+
+  SIGN(A-B)    A=B  0
+
+               A>B   1
+               A<B   -1
+
+ABS
+ASCII
+CHAR
+ROUND
+TRUNCATE
+CEIL
+FLOOR
+
+
+
+SELECT ROUND(157.258,-2)
+
+
+      100              200
+
+DATE FUNCTIONS
+---------------
+RETURNING CURRENT DATE AND TIME
+CURDATE()
+CURRENT_DATE
+
+NOW()
+SYSDATE()
+CURRENT_TIMESTAMP
+
+
+RETURNING DATE AND TIME PARTS
+------------------------------
+DATE()
+TIME()
+YEAR()
+MONTH()
+MONTHNAME()
+DAY()
+DAYNAME()
+HOUR()
+MI()
+QUARTER()
+
+DATE_FORMAT
+----------------
+          %a  => 3letter day
+          %W  => full day
+          %b  => 3letter month
+          %M  => full month
+          %y  => 2digits
+          %Y  => 4digits
+          %d  => day count in month
+          %w  => day count in a week
+          %j  => day count in a year
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
