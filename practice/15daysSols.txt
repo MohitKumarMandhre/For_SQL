@@ -1,24 +1,491 @@
-SELECT SUBMISSION_DATE, (SELECT COUNT(DISTINCT HACKER_ID)
-FROM SUBMISSIONS S2
-WHERE S2.SUBMISSION_DATE = S1.SUBMISSION_DATE 
-AND
-(SELECT COUNT(DISTINCT S3.SUBMISSION_DATE) FROM SUBMISSIONS S3 WHERE S3.HACKER_ID = S2.HACKER_ID 
-AND S3.SUBMISSION_DATE < S1.SUBMISSION_DATE) = DATEDIFF(S1.SUBMISSION_DATE , '2016-03-01')), 
-(SELECT HACKER_ID FROM SUBMISSIONS S2 
-WHERE S2.SUBMISSION_DATE = S1.SUBMISSION_DATE 
-GROUP BY HACKER_ID 
-ORDER BY COUNT(SUBMISSION_ID) DESC, HACKER_ID LIMIT 1) AS TMP, 
-(SELECT NAME FROM HACKERS WHERE HACKER_ID = TMP) 
-FROM (SELECT DISTINCT SUBMISSION_DATE FROM SUBMISSIONS) S1 GROUP BY SUBMISSION_DATE
+solutions :-
 
+-----------------------------
+(submission_date, submission_id, hacker_id, score)
+2016-03-01 48 650 0
+2016-03-01 119 3162 0
+2016-03-01 141 4413 0
+2016-03-01 203 5478 0
+2016-03-01 215 5509 0
+2016-03-01 252 5990 0
+2016-03-01 264 7460 0
+2016-03-01 348 7865 0
+2016-03-01 395 7897 0
+2016-03-01 452 7978 0
+2016-03-01 460 8150 0
+2016-03-01 485 9630 0
+2016-03-01 522 11209 0
+2016-03-01 798 12371 0
+2016-03-01 807 12423 0
+2016-03-01 908 19773 0
+2016-03-01 971 19963 0
+2016-03-01 998 20811 0
+2016-03-01 1119 20888 0
+2016-03-01 1123 21372 0
+2016-03-01 1172 22165 0
+2016-03-01 1236 22917 0
+2016-03-01 1352 22949 0
+2016-03-01 1374 24095 0
+2016-03-01 1380 24576 0
+2016-03-01 1385 26093 0
+2016-03-01 1410 26468 0
+2016-03-01 1625 27064 0
+2016-03-01 1648 30082 0
+2016-03-01 1666 32455 0
+2016-03-01 1667 33323 0
+2016-03-01 1706 33863 0
+2016-03-01 1712 34234 0
+2016-03-01 1736 34369 0
+2016-03-01 1749 36594 0
+2016-03-01 1760 37997 0
+2016-03-01 1786 38962 0
+2016-03-01 1871 41057 0
+2016-03-01 1898 42973 0
+2016-03-01 1906 44791 0
+2016-03-01 2023 48490 0
+2016-03-01 2072 49340 0
+2016-03-01 2172 51132 0
+2016-03-01 2178 51548 0
+2016-03-01 2316 53342 0
+2016-03-01 2350 54113 0
+2016-03-01 2470 54408 0
+2016-03-01 2520 55374 0
+2016-03-01 2521 56707 0
+2016-03-01 2624 81338 85
+2016-03-01 2676 83509 95
+2016-03-01 2686 81314 10
+2016-03-01 2823 26955 35
+2016-03-01 2947 91573 55
+2016-03-01 3231 26170 10
+2016-03-01 3235 89164 65
+2016-03-01 3266 92239 20
+2016-03-01 3394 67815 40
+2016-03-01 3459 59792 10
+2016-03-01 3483 56909 95
+2016-03-01 3498 5026 50
+2016-03-01 3507 80744 0
+2016-03-01 3517 84441 90
+2016-03-01 3518 70115 15
+2016-03-01 3560 89737 95
+2016-03-01 3565 18050 0
+2016-03-01 3580 53295 75
+2016-03-01 3584 19516 95
+2016-03-01 3588 11587 20
+2016-03-01 3595 42225 15
+2016-03-01 3603 64790 70
+2016-03-01 3682 37492 40
+2016-03-01 3688 25226 70
+2016-03-01 3706 95648 15
+2016-03-01 3784 83913 65
+2016-03-01 3786 83968 100
+2016-03-01 3845 54045 75
+2016-03-01 3891 22750 100
+2016-03-01 3939 39091 0
+2016-03-01 3941 98981 65
+2016-03-01 4005 16014 15
+2016-03-01 4009 94251 15
+2016-03-01 4016 62640 30
+2016-03-01 4081 31247 85
+2016-03-01 4133 97530 100
+2016-03-01 4184 66648 20
+2016-03-01 4270 79278 35
+2016-03-01 4303 92654 15
+2016-03-01 4451 8878 55
+2016-03-01 4523 2697 100
+2016-03-01 4533 34294 65
+2016-03-01 4575 22467 70
+2016-03-01 4598 3124 70
+2016-03-01 4624 73695 30
+2016-03-01 4651 21743 5
+2016-03-01 4683 95335 60
+2016-03-01 4748 83371 40
+2016-03-01 4798 81314 80
+2016-03-01 4921 58141 90
+2016-03-01 4952 75233 35
+2016-03-01 5003 433 25
+2016-03-01 5006 77217 75
+2016-03-01 5137 43192 100
+2016-03-01 5270 78993 60
+2016-03-01 5284 81314 35
+2016-03-01 5320 53072 25
+2016-03-01 5336 6030 70
+2016-03-01 5386 79136 25
+2016-03-01 5406 57527 55
+2016-03-01 5408 31263 15
+2016-03-01 5640 41618 20
+2016-03-01 5698 22780 45
+2016-03-01 5712 88484 30
+2016-03-01 5848 63800 60
+2016-03-02 5851 650 0
+2016-03-02 5970 3162 0
+2016-03-02 6171 4413 0
+2016-03-02 6191 5478 0
+2016-03-02 6395 5509 0
+2016-03-02 6464 5990 0
+2016-03-02 6559 7460 0
+2016-03-02 6588 7865 0
+2016-03-02 6606 7897 0
+2016-03-02 6608 7978 0
+2016-03-02 6619 8150 0
+2016-03-02 6637 9630 0
+2016-03-02 6642 11209 0
+2016-03-02 6696 12371 0
+2016-03-02 6739 12423 0
+2016-03-02 6784 19773 0
+2016-03-02 6793 19963 0
+2016-03-02 6807 20811 0
+2016-03-02 6843 20888 0
+2016-03-02 6857 21372 0
+2016-03-02 6879 22165 0
+2016-03-02 6914 22917 0
+2016-03-02 6944 22949 0
+2016-03-02 6951 24095 0
+2016-03-02 7000 24576 0
+2016-03-02 7061 26093 0
+2016-03-02 7125 26468 0
+2016-03-02 7155 27064 0
+2016-03-02 7171 30082 0
+2016-03-02 7241 32455 0
+2016-03-02 7244 33323 0
+2016-03-02 7287 33863 0
+2016-03-02 7360 34234 0
+2016-03-02 7423 34369 0
+2016-03-02 7514 36594 0
+2016-03-02 7606 37997 0
+2016-03-02 7607 38962 0
+2016-03-02 7756 41057 0
+2016-03-02 7787 42973 0
+2016-03-02 7902 44791 0
+2016-03-02 7906 48490 0
+2016-03-02 7924 49340 0
+2016-03-02 7989 51132 0
+2016-03-02 8097 51548 0
+2016-03-02 8151 53342 0
+2016-03-02 8311 54113 0
+2016-03-02 8413 54408 0
+2016-03-02 8437 55374 0
+2016-03-02 8440 56707 0
+2016-03-02 8491 56978 0
+2016-03-02 8579 59818 0
+2016-03-02 8604 60355 0
+2016-03-02 8622 62333 0
+2016-03-02 8656 67479 0
+2016-03-02 8677 69799 0
+2016-03-02 8773 70302 0
+2016-03-02 8829 71848 0
+2016-03-02 8842 73849 0
+2016-03-02 8901 58932 65
+2016-03-02 8944 86429 55
+2016-03-02 8972 90959 65
+2016-03-02 9068 87230 25
+2016-03-02 9092 34840 75
+2016-03-02 9122 51726 10
+2016-03-02 9228 89780 0
+2016-03-02 9267 67735 25
+2016-03-02 9277 85501 40
+2016-03-02 9368 59761 65
+2016-03-02 9389 78408 35
+2016-03-02 9403 89781 80
+2016-03-02 9406 79101 30
+2016-03-02 9408 11092 35
+2016-03-02 9419 94083 45
+2016-03-02 9472 77184 80
+2016-03-02 9503 80394 40
+2016-03-02 9587 11753 90
+2016-03-02 9705 97336 10
+2016-03-02 9789 1050 85
+2016-03-02 9814 50467 60
+2016-03-02 9932 83376 55
+2016-03-02 9986 69030 10
+2016-03-02 9988 95354 75
+2016-03-02 10033 60516 65
+2016-03-02 10039 81598 15
+2016-03-02 10146 66648 95
+2016-03-02 10162 62640 85
+2016-03-02 10165 98981 0
+2016-03-02 10256 49116 70
+2016-03-02 10325 99789 60
+2016-03-02 10345 89781 25
+2016-03-02 10352 73967 30
+2016-03-02 10506 51134 20
+2016-03-02 10519 99789 90
+2016-03-02 10524 21973 50
+2016-03-02 10526 87230 5
+2016-03-02 10586 68071 10
+2016-03-02 10596 83913 45
+2016-03-02 10620 78002 0
+2016-03-02 10653 39091 0
+2016-03-02 10669 73967 40
+2016-03-02 10784 12303 20
+2016-03-02 10814 20033 30
+2016-03-02 10860 31822 80
+2016-03-02 10866 39091 25
+2016-03-02 10887 29719 100
+2016-03-02 10902 5333 0
+2016-03-02 10915 36691 5
+2016-03-02 11001 10068 10
+2016-03-02 11048 48592 65
+2016-03-02 11082 87555 45
+2016-03-02 11292 18941 35
+2016-03-02 11373 36786 55
+2016-03-02 11376 21334 60
+2016-03-02 11468 98981 35
+2016-03-02 11527 20435 90
+2016-03-02 11546 8878 60
+2016-03-02 11551 95648 10
+2016-03-02 11649 98727 75
+2016-03-02 11687 73740 0
+2016-03-02 11763 87802 10
+2016-03-02 11796 32349 40
+2016-03-02 11806 66648 30
+2016-03-02 11852 533 85
+2016-03-02 11859 97530 35
+2016-03-02 11880 15225 0
+2016-03-02 11890 40093 45
+2016-03-02 11901 60516 0
+2016-03-02 11942 98981 65
+2016-03-02 11960 49008 85
+2016-03-02 11994 73115 60
+2016-03-02 12002 29047 70
+2016-03-02 12014 57448 10
+2016-03-02 12033 53295 45
+2016-03-02 12059 77749 0
+2016-03-02 12151 72783 95
+2016-03-02 12211 70115 95
+2016-03-02 12304 21973 15
+2016-03-02 12318 16932 95
+2016-03-02 12422 69030 45
+2016-03-02 12454 78408 25
+2016-03-02 12472 41558 80
+2016-03-02 12476 77490 60
+2016-03-02 12477 59446 50
+2016-03-02 12503 30845 80
+2016-03-02 12513 2764 5
+2016-03-02 12523 74021 55
+2016-03-02 12537 46328 0
+2016-03-02 12602 37187 40
+2016-03-02 12679 99169 85
+2016-03-02 12776 61280 15
+2016-03-02 12856 40147 45
+2016-03-02 12875 78205 55
+2016-03-02 12883 22013 45
+2016-03-02 12908 47174 5
+2016-03-02 12920 66014 45
+2016-03-02 13066 39091 55
+2016-03-02 13133 39857 60
+2016-03-03 13148 650 0
+2016-03-03 13184 3162 0
+2016-03-03 13187 4413 0
+2016-03-03 13211 5478 0
+2016-03-03 13229 5509 0
+2016-03-03 13289 5990 0
+2016-03-03 13349 7460 0
+2016-03-03 13486 7865 0
+2016-03-03 13524 7897 0
+2016-03-03 13647 7978 0
+2016-03-03 13676 8150 0
+2016-03-03 13737 9630 0
+2016-03-03 13751 11209 0
+2016-03-03 13800 12371 0
+2016-03-03 13889 12423 0
+2016-03-03 13905 19773 0
+2016-03-03 13918 19963 0
+2016-03-03 13952 20811 0
+2016-03-03 14164 20888 0
+2016-03-03 14186 21372 0
+2016-03-03 14245 22165 0
+2016-03-03 14308 22917 0
+2016-03-03 14387 22949 0
+2016-03-03 14391 24095 0
+2016-03-03 14517 24576 0
+2016-03-03 14560 26093 0
+2016-03-03 14637 26468 0
+2016-03-03 14654 27064 0
+2016-03-03 14742 30082 0
+2016-03-03 14749 32455 0
+2016-03-03 14760 33323 0
+2016-03-03 14813 33863 0
+2016-03-03 14821 34234 0
+2016-03-03 14914 34369 0
+2016-03-03 14961 36594 0
+2016-03-03 14965 37997 0
+2016-03-03 15048 38962 0
+2016-03-03 15329 41057 0
+2016-03-03 15427 42973 0
+2016-03-03 15558 44791 0
+2016-03-03 15589 48490 0
+2016-03-03 15627 49340 0
+2016-03-03 15748 51132 0
+2016-03-03 15763 51548 0
+2016-03-03 15839 53342 0
+2016-03-03 15913 54113 0
+2016-03-03 16025 54408 0
+2016-03-03 16051 55374 0
+2016-03-03 16223 56707 0
+2016-03-03 16248 56978 0
+2016-03-03 16249 59818 0
+2016-03-03 16322 60355 0
+2016-03-03 16327 62333 0
+2016-03-03 16368 67479 0
+2016-03-03 16459 69799 0
+2016-03-03 16505 70302 0
+2016-03-03 16616 71848 0
+2016-03-03 16680 73849 0
+2016-03-03 16794 76080 0
+2016-03-03 17028 2697 25
+2016-03-03 17081 34840 100
+2016-03-03 17188 50467 65
+2016-03-03 17346 49116 95
+2016-03-03 17382 65113 20
+2016-03-03 17385 46518 40
+2016-03-03 17392 91573 95
+2016-03-03 17423 24725 65
+2016-03-03 17480 24725 10
+2016-03-03 17598 10985 5
+2016-03-03 17661 97336 90
+2016-03-03 17726 15039 10
+2016-03-03 17801 33142 90
+2016-03-03 17817 74861 55
+2016-03-03 17830 18105 15
+2016-03-03 17839 20594 20
+2016-03-03 17959 67735 10
+2016-03-03 17967 81598 50
+2016-03-03 17970 32540 15
+2016-03-03 18051 79278 80
+2016-03-03 18157 16014 35
+2016-03-03 18197 53808 10
+2016-03-03 18363 69706 0
+2016-03-03 18389 91573 30
+2016-03-03 18482 89991 40
+2016-03-03 18522 55343 20
+2016-03-03 18583 53295 90
+2016-03-03 18697 90401 55
+2016-03-03 18819 70287 75
+2016-03-03 18834 78002 0
+2016-03-03 18864 80682 40
+2016-03-03 18995 78408 85
+2016-03-03 19012 46870 90
+2016-03-03 19039 12852 10
+2016-03-03 19056 29719 50
+2016-03-03 19283 74568 15
+2016-03-03 19291 56909 60
+2016-03-03 19440 21657 40
+2016-03-03 19448 21743 70
+2016-03-03 19501 42368 100
+2016-03-03 19564 31247 50
+2016-03-03 19569 43604 30
+2016-03-03 19578 72237 55
+2016-03-03 19668 17482 100
+2016-03-03 19705 89164 50
+2016-03-03 19758 75908 50
+2016-03-03 19835 50910 20
+2016-03-03 19911 86429 20
+2016-03-03 19952 8878 75
+2016-03-03 20007 18105 60
+2016-03-03 20073 83263 15
+2016-03-03 20130 25398 90
+2016-03-03 20295 73740 95
+2016-03-03 20298 86065 70
+2016-03-03 20337 79480 0
+2016-03-03 20388 87555 15
+2016-03-03 20464 10068 55
+2016-03-03 20486 59761 50
+2016-03-03 20567 95958 30
+2016-03-03 20590 31822 10
+2016-03-03 20609 16932 60
+2016-03-03 20620 12707 50
+2016-03-03 20664 82956 45
+2016-03-03 20784 59761 60
+2016-03-03 20945 95647 75
+2016-03-03 21185 75889 45
+2016-03-03 21209 45630 65
+2016-03-03 21210 80682 0
+2016-03-04 21226 650 0
+2016-03-04 21229 3162 0
+2016-03-04 21445 4413 0
+2016-03-04 21482 5478 0
+2016-03-04 21492 5509 0
+2016-03-04 21497 5990 0
+2016-03-04 21526 7460 0
+2016-03-04 21703 7865 0
+2016-03-04 21756 7897 0
+2016-03-04 21781 7978 0
+2016-03-04 21812 8150 0
+2016-03-04 21973 9630 0
+2016-03-04 22008 11209 0
+2016-03-04 22035 12371 0
+...
+-----------------------------
+o/p - (submission_date, submission_count, hacker_id, name)
 
--------------------------------
+2016-03-01 112 81314 Denise
+2016-03-02 59 39091 Ruby
+2016-03-03 51 18105 Roy
+2016-03-04 49 533 Patrick
+2016-03-05 49 7891 Stephanie
+2016-03-06 49 84307 Evelyn
+2016-03-07 35 80682 Deborah
+2016-03-08 35 10985 Timothy
+2016-03-09 35 31221 Susan
+2016-03-10 35 43192 Bobby
+2016-03-11 35 3178 Melissa
+2016-03-12 35 54967 Kenneth
+2016-03-13 35 30061 Julia
+2016-03-14 35 32353 Rose
+2016-03-15 35 27789 Helen
+-----------------------------
+
+-- number of submissions and total score made by each hacker who submitted the solutions
+with T1 as 
+(select submission_date, hacker_id, count(submission_id) as submisstion_made, sum(score) as total_score
+from Submissions
+group by submission_date, hacker_id),
+
+-- adding day wise rank as num1 and num2 as no. of days he has been submitting solutions
+T2 as
+(select submission_date, hacker_id,
+        dense_rank() over(order by submission_date) as num1,
+        dense_rank() over(partition by hacker_id order by submission_date) as num2
+from T1),
+
+-- if num1 = num2, then only they are submitting sol. regularly
+T3 as
+(select T1.submission_date, T1.hacker_id, submisstion_made, total_score 
+from T1 join T2 on T1.submission_date = T2.submission_date and T1.hacker_id = T2.hacker_id
+where num2 = num1),
+
+-- count the maximum number of solutions submitted per day that are elligible( from c3)
+T4 as
+(select submission_date, count(hacker_id) as submisstion_count
+from T3
+group by submission_date),
+
+-- ordering by submission_made count wrt date 
+T5 as
+(select submission_date, hacker_id, submisstion_made, total_score, 
+        row_number() over(partition by submission_date order by submisstion_made desc, hacker_id) as rn
+from T1)
+
+select T4.submission_date, submisstion_count, T5.hacker_id, name
+from T4 join T5 on T4.submission_date = T5.submission_date
+    join Hackers on T5.hacker_id = Hackers.hacker_id
+where rn = 1
+order by T4.submission_date;
+
+-------------------------
+-- fetching the day_count for each hacker_id from its previous obs as lag_id...
+-- null replaces by 0
 
 WITH CTE AS (
 SELECT *, LAG(day_count,1,0) OVER( PARTITION BY hacker_id ORDER BY hacker_id,day_count) as lag_id
 FROM(
+
+    -- day-wise rank
+
     SELECT *, dense_rank() OVER(ORDER BY submission_date) AS day_count
        FROM Submissions) AS T1 ),
+
+-- list of hacker_id with their submission_date who made submission on every day from the day of contest
 
 CTE1 AS ( 
 SELECT submission_date,hacker_id
@@ -27,6 +494,15 @@ FROM (SELECT *, (day_count - lag_id) AS lag_info ,
        FROM CTE) AS T2
 WHERE (lag_info <2 ) AND (day_count = track_id )
 ),
+
+/*
+finding the diff between day_count and lag_id,
+generating dense_rank for each hacker_id based on submission_date,
+to use it to check if he has done submission every day or notby matching with day_count
+log_info values 0,1 are considered :-
+0, 1 - means first time submission and more than 1 submission on the same day
+day_count - track_id will ensure the submissions are done each and every day of the contest
+*/
 
 CTE2 AS (
 SELECT submission_date,COUNT(DISTINCT(hacker_id)) as total_unique_per_day
@@ -56,172 +532,4 @@ FROM CTE3 AS C3
      ON C2.submission_date = C3.submission_date
 ORDER BY C3.submission_date;
 
------------------------------
-
-with T1 as
-(select submission_date, hacker_id, count(submission_id) as submisstion_made, sum(score) as total_score
-from Submissions
-group by submission_date, hacker_id),
-
-T2 as
-(select submission_date, hacker_id,
-        dense_rank() over(order by submission_date) as num1,
-        dense_rank() over(partition by hacker_id order by submission_date) as num2
-from T1),
-
-T3 as
-(select T1.submission_date, T1.hacker_id, submisstion_made, total_score 
-from T1 join T2 on T1.submission_date = T2.submission_date and T1.hacker_id = T2.hacker_id
-where num2 = num1),
-
-T4 as
-(select submission_date, count(hacker_id) as submisstion_count
-from T3
-group by submission_date),
-
-T5 as
-(select submission_date, hacker_id, submisstion_made, total_score, 
-        row_number() over(partition by submission_date order by submisstion_made desc, hacker_id) as rn
-from T1)
-
-select T4.submission_date, submisstion_count, T5.hacker_id, name
-from T4 join T5 on T4.submission_date = T5.submission_date
-    join Hackers on T5.hacker_id = Hackers.hacker_id
-where rn = 1
-order by T4.submission_date;
-
 -------------------------
-
-select 
-submission_date,
-
-(
-    select count(distinct hacker_id) 
-    from submissions s2 
-    where 
-    s2.submission_date = s1.submission_date 
-    and 
-    (
-        select count(distinct s3.submission_date) 
-        from submissions s3 
-        where s3.hacker_id = s2.hacker_id 
-        and 
-        s3.submission_date < s1.submission_date
-    ) = datediff(s1.submission_date , '2016-03-01')
-),
- 
-(
-    select hacker_id 
-    from submissions s2 
-    where s2.submission_date = s1.submission_date 
-    group by hacker_id 
-    order by count(submission_id) desc, hacker_id limit 1
-) tmp,
-
-(select name from hackers where hacker_id = tmp)
-
-from (select distinct submission_date from submissions) s1
-group by submission_date;
-
-------------------------------
-
-WITH sub AS (
-SELECT
-    s.hacker_id,
-    h.name,
-    s.submission_date,
-    COUNT(*) AS submissions
-FROM
-    Submissions s
-LEFT JOIN Hackers h ON s.hacker_id = h.hacker_id
-GROUP BY
-    s.hacker_id,
-    h.name,
-    s.submission_date
-),
-
-sub2 AS (
-SELECT
-    *,
-    ROW_NUMBER () OVER (PARTITION BY submission_date ORDER BY submissions DESC, hacker_id) AS rn
-FROM
-    sub
-),
-
-sub3 AS (
-SELECT
-    submission_date,
-    hacker_id,
-    ROW_NUMBER() OVER (PARTITION BY hacker_id ORDER BY submission_date) AS rn
-FROM
-    sub
-),
-
-sub4 AS (
-SELECT
-    submission_date,
-    COUNT(DISTINCT hacker_id) AS hackers
-FROM
-    sub3
-WHERE
-    rn = DAY(submission_date)
-GROUP BY
-    submission_date
-)
-
-SELECT
-    sub4.submission_date,
-    sub4.hackers,
-    sub2.hacker_id,
-    sub2.name
-FROM
-    sub4
-LEFT JOIN sub2 ON sub4.submission_date = sub2.submission_date
-WHERE
-    sub2.rn = 1
-ORDER BY
-    sub4.submission_date
-
-
-
----------------------------------------------------------------------
-my code
----------------------------------------------------------------------
-
-select submission_date, count( distinct( hacker_ID))
-from submissions
-where submission_date like '2016-03-01%'
-group by submission_date
-ORDER BY submission_date asc
-;
-
-
-select row_number() over(partition by submission_date order by count( h.hacker_id ) desc, h.hacker_id asc ) as rn, count( h.hacker_id ), submission_date, h.hacker_id, name
-from submissions s inner join hackers h
-ON s.hacker_id = h.hacker_id
-group by submission_date, h.hacker_id, name
-;
-
-
-with hac_max as
-(
-    select row_number() 
-    over(partition by submission_date 
-    order by count( h.hacker_id ) desc, h.hacker_id asc ) as rn,
-    submission_date, h.hacker_id as hid, name
-    from submissions s inner join hackers h
-    ON s.hacker_id = h.hacker_id
-    group by submission_date, h.hacker_id, name
-)
-select s.submission_date, count( distinct( s.hacker_ID)), hid, name
-from submissions as s inner join hac_max as hm
-ON s.submission_date = hm.submission_date and rn =1
--- where s.submission_date like '2016-03-01%' 
-group by s.submission_date, hid, name
-ORDER BY s.submission_date asc
-;
-
-
-
-
-

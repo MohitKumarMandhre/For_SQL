@@ -1,0 +1,29 @@
+-- Assignment - 3
+
+-- * DDL Table Creation Exercise
+
+create table if not exists Patient(
+	pid int(7) not null,
+    p_name varchar(30) not null
+);
+
+alter table Patient add constraint `UC_patient_pid` UNIQUE (pid);
+alter table Patient add constraint `PK_patient` PRIMARY KEY (pid);
+
+create table if not exists Treatment(
+	tid int(7) not null,
+    t_name varchar(30) not null
+);
+
+alter table Treatment add constraint `UC_patient_tid` UNIQUE (tid);
+alter table Treatment add constraint `PK_treatment` PRIMARY KEY (tid);
+
+create table if not exists Patient_Treatment(
+	pid_pt int(7) not null,
+    tid_pt int(7) not null,
+    date DATETIME not null,
+    constraint `FK_Patient_PatientTreatment` Foreign Key (`pid_pt`) REFERENCES `Patient` (`pid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+    constraint `FK_Treatment_PatientTreatment` FOREIGN KEY (`tid_pt`) REFERENCES `Treatment` (`tid`) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+alter table Patient_Treatment add constraint `PK_Patient_Treatment` PRIMARY KEY (pid_pt, tid_pt);
+desc Patient_Treatment;

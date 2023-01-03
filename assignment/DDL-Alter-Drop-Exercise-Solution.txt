@@ -1,0 +1,18 @@
+-- DDL Alter & Drop Exercise
+
+-- 1. In the Patient table, change the maximum length for Patient’s names to be 35 characters long.
+alter table Patient modify COLUMN p_name varchar(35);
+
+-- 2. In the Patient_Treatment table, add a column called “Dosage” where the amount of the treatment given will be stored. This column is a fixed numerical value with a maximum of 99. This column cannot be null and the default value should be “0”.
+alter table Patient_Treatment add dosage int(7) not null DEFAULT (0) check (dosage <= 99 );
+
+-- 3. In the Treatment table, change the column name “T_Name” to be “Treatment_Name”.
+alter table treatment rename column `t_name` to `Treatment_Name`;
+
+-- 4. Remove the Treatment table from the database.
+drop table treatment;
+
+-- 5. Remove the foreign key constraints from PID_PT and TID_PT columns in the Patient_Treatment table.
+alter table Patient_Treatment drop FOREIGN KEY `FK_Patient_PatientTreatment` ;
+
+alter table Patient_Treatment drop FOREIGN KEY `FK_Treatment_PatientTreatment` ;

@@ -1,0 +1,51 @@
+-- assignment 4
+-- DML Insert Update Delete Exercises
+-- 2.
+insert into Student values (12345, Chris, Rock),
+(23456, Chris, Farley),
+(34567, David, Spade),
+(45678, Liz, Lemon),
+(56789, Jack, Donaghy) ;
+
+insert into course_grade VALUES
+(2010101, SP10, 101005, 34567, D+),
+(2010308, FA10, 101005, 34567, A), 
+(2010309, FA10, 101001, 45678, B+),
+(2011308, FA11, 101003, 23456, B), 
+(2012206, SU12, 101002, 56789, A+)
+;
+
+INSERT into course VALUES
+(101001, 'Intro to Computers'),
+(101002, 'Programming'),
+(101003, 'Databases'),
+(101004, 'Websites'),
+(101005, 'IS Management')
+;
+
+-- 3. In the Student table, change the maximum length for Student first names to be 30 characters long.
+alter table Student modify COLUMN s_fname VARCHAR(30);
+
+-- 4. In the Course table, add a column called “Faculty_LName” where the Faculty last name can vary up to 30 characters long. This column cannot be null and the default value should be “TBD”.
+alter table Course add 'Faculty_LName' varchar(30) not null default ('TBD') ;
+
+-- 5. In the Course table, update CID 101001 where will be Faculty_LName is “Potter” and C_Name is “Intro to Wizardry”.
+update Course set cid = 101001 WHERE Faculty_LName like 'Potter%' and C_Name like 'Intro to Wizardry%' ;
+
+-- 6. In the Course table, change the column name “C_Name” to be “Course_Name”.
+alter table Course rename column 'C_Name' to 'Course_Name';
+
+-- 7. Delete the “Websites” class from the Course table.
+delete from Course where c_name like 'Websites%' ;
+
+-- 8. Remove the Student table from the database.
+drop table Student;
+
+-- 9. Remove all the data from the Course table, but retain the table structure.
+truncate table Course;
+
+-- 10. Remove the foreign key constraints from CID and SID columns in the Course_Grades table
+
+alter table Course_Grades drop FOREIGN KEY `FK_Student_CourseGrades` ;
+
+alter table Course_Grades drop FOREIGN KEY `FK_Course_CourseGrades` ;
