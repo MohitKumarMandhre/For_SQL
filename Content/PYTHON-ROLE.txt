@@ -1,0 +1,16 @@
+* Role of python in data engineering 
+
+- syntax is simple like English, for eg; you don't need semicolons, there is no kind of stuctural pattern that you need to follow to write code.
+
+- Because of the learning curve is short i.e it is very simple to understand and implement. for eg; codes are shoter and easier to use.
+
+- it has rich set of inbuilt libraries like pandas, numpy, matplotlib, scipy.
+
+- memory management :- Python is both a strongly typed and a dynamically typed language. Strong typing means that variables do have a type and that the type matters when performing operations on a variable. Dynamic typing means that the type of the variable is determined only during runtime.
+
+- more productivity :- more productive code can be achieved with fewer lines.
+
+- A scripting language is a programming language that employs a high-level construct to interpret and execute one command at a time.
+
+- it is a platform-independent language, meaning we run the same code on multiple platforms.for eg; write once and run anywhere.
+

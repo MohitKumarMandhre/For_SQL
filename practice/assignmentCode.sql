@@ -184,6 +184,10 @@ from cte1
 group by nog
 ;
 
+SELECT first_name, salary, NTILE(3) over(order by salary) as 'nog'
+from employees
+;
+
 -- 11. Select the employees whose first_name contains “an”.
 select FIRST_NAME
 from employees

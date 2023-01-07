@@ -1,4 +1,5 @@
 -- Active: 1670399129309@@127.0.0.1@3307@hr
+use hr;
 show tables; 
 
 select * from departments limit 5;
