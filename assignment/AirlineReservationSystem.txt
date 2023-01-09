@@ -1,0 +1,17 @@
+* airline reservation system ( performance or cost ), like MakeMyTrip
+
+* search flights - date, to, from, list all flights
+* soft delete strategy1 - update via additional col.
+* strategy2 - create table cancelledBookings & delete from bookings
+* booking flights
+* productivity / performance hacks
+* 
+
+
+
+
+
+
+
+
+

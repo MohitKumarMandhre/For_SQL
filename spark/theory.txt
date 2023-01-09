@@ -1,0 +1,53 @@
+* google launched a paer GFS(google file system) and again released a paper named Map Reduce
+* yahoo implemented a new system Hadoop which uses MR
+* 5 V's - 
+	Volume - amount, 
+	Velocity -fast paced data, 
+	Variety - varied data forms, 
+	Varacity - uncertain or messy data needs to be cleaned, 
+	Value - should produce insights
+* hadoop Cluster - HDFS, MR, Yarn
+* hdfs - storage unit, hadoop distributed file system; divide the data into partitions and store in many systems
+* MR - compute engine; map partitions the data into different servers and collects and reduce will combine them all.
+* yarn - yet another resource negotiator, resource manager
+* hadoop - resource manager & node manager
+* hadoop follows master slave archietecture
+* Name Node( resource manager)
+		|
+		|
+  slave node( node manager)
+* Apache Spark
+Compute - Spark
+Storage - local / HDFS / Amazon S3
+Resource Manager - Yarn / Mesos / Kubernetes
+* MR computing engine or processing frame work is replaced by spark.
+* spark vs MR
+* distributed env - HDFS, spark, yarn otherwise standalone env
+* source --> ingest --> process --> store --> serve
+* hadoop was initially built for batch processing, if we wished to do realtime processing we have to use Kafka / Flink / Stream SQL.
+* spark offers realtime data processing, has in-built libraries.
+* facebook made Hive, supports java and sql( HIVESQL), user implements SQL queries to get data from Hadoop
+* pig - cli ETL
+* SPARK - distributed general purpose in-memory compute engine
+* data ingestion & data migration tool( Scoop / Flume)
+* Scoop - RDBMS <--> HDFS, Flume can collect from diverse sources.
+* Scoop job only runs once, unless schedule bu schedular
+* Flume is long running agent on its own.
+* Oozie - schedular, CRUD operations, define Action & Control using XML
+* 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
