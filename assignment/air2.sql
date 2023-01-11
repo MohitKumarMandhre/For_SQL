@@ -2,7 +2,7 @@
 -- create DATABASE air2db;
 
 -- use air2db;
-
+-- show databases;
 -- drop DATABASE air2db;
 
 show tables;
