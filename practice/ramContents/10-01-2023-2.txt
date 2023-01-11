@@ -1,0 +1,1098 @@
+mysql> select user();
++----------------+
+| user()         |
++----------------+
+| root@localhost |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> grant all privileges on
+    -> hr.job_grades to 'test'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> revoke all privileges on
+    -> hr.job_grades from 'test'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant all privileges on
+    -> hr.job_grades to 'test'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant create table to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table to 'test'@'localhost'' at line 1
+mysql> grant create table to 'test';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table to 'test'' at line 1
+mysql> grant create table to 'test'@'loclalhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table to 'test'@'loclalhost'' at line 1
+mysql> grant create table to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table to 'test'@'localhost'' at line 1
+mysql> grant create  to 'test'@'localhost';
+ERROR 1064 (42000): Illegal authorization identifier near 'create  to 'test'@'localhost'' at line 1
+mysql> grant create table privilege to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table privilege to 'test'@'localhost'' at line 1
+mysql> grant create table on hr to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table on hr to 'test'@'localhost'' at line 1
+mysql> grant create  on hr.* to 'test'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant insert on hr.* to 'test'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> \! cls;
+mysql> select user();
++----------------+
+| user()         |
++----------------+
+| root@localhost |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select database();
++------------+
+| database() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| advaith            |
+| case1              |
+| case_library       |
+| hr                 |
+| information_schema |
+| mysql              |
+| new_db1            |
+| newdb1             |
+| newhr              |
+| newtestdb          |
+| performance_schema |
+| ramu               |
+| sakila             |
+| sys                |
+| test               |
+| world              |
++--------------------+
+16 rows in set (0.00 sec)
+
+mysql> create table as select * from newtestdb.emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as select * from newtestdb.emp' at line 1
+mysql> create table emp as select * from newtestdb.emp;
+Query OK, 15 rows affected (0.04 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> \! CLS;
+mysql> 
+mysql> CREATE TABLE EMP1 AS SELECT EMPNO,ENAME
+    -> FROM EMP WHERE DEPTNO=10;
+ERROR 1050 (42S01): Table 'EMP1' already exists
+mysql> CREATE TABLE EMP2 AS SELECT EMPNO,ENAME
+    -> FROM EMP WHERE DEPTNO=10;
+ERROR 1050 (42S01): Table 'EMP2' already exists
+mysql> CREATE TABLE EMP5 AS SELECT EMPNO,ENAME
+    -> FROM EMP WHERE DEPTNO=10;
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp5;
++-------+--------+
+| EMPNO | ENAME  |
++-------+--------+
+|  7782 | CLARK  |
+|  7839 | KING   |
+|  7934 | MILLER |
++-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> select database();
++------------+
+| database() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> \! CLS;
+mysql> select * from emp5;
++-------+--------+
+| EMPNO | ENAME  |
++-------+--------+
+|  7782 | CLARK  |
+|  7839 | KING   |
+|  7934 | MILLER |
++-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp5 values(8888,'test');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp5;
++-------+--------+
+| EMPNO | ENAME  |
++-------+--------+
+|  7782 | CLARK  |
+|  7839 | KING   |
+|  7934 | MILLER |
+|  8888 | test   |
++-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update emp5
+    -> set ename='RITCHIE'
+    -> where empno=7934;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> select * from emp5;
++-------+---------+
+| EMPNO | ENAME   |
++-------+---------+
+|  7782 | CLARK   |
+|  7839 | KING    |
+|  7934 | RITCHIE |
++-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp5;
++-------+---------+
+| EMPNO | ENAME   |
++-------+---------+
+|  7782 | CLARK   |
+|  7839 | KING    |
+|  7934 | RITCHIE |
++-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> update emp5
+    -> set ename='rajesh'
+    -> where empno=7839;
+ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
+mysql> 
+mysql> 
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp5;
++-------+---------+
+| EMPNO | ENAME   |
++-------+---------+
+|  7782 | CLARK   |
+|  7839 | KING    |
+|  7934 | RITCHIE |
++-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp5 values(1,'x');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> create table empnew as select * from emp where 1=2;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp5;
++-------+---------+
+| EMPNO | ENAME   |
++-------+---------+
+|  7782 | CLARK   |
+|  7839 | KING    |
+|  7934 | RITCHIE |
+|     1 | x       |
++-------+---------+
+4 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp5;
++-------+---------+
+| EMPNO | ENAME   |
++-------+---------+
+|  7782 | CLARK   |
+|  7839 | KING    |
+|  7934 | RITCHIE |
+|     1 | x       |
++-------+---------+
+4 rows in set (0.00 sec)
+
+mysql> \! cls;
+mysql> 
+mysql> 
+mysql> create table employee_new
+    -> as select employee_id,first_name,department_id,job_id
+    -> from employees;
+Query OK, 107 rows affected (0.03 sec)
+Records: 107  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_new add department_name varchar2(35);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar2(35)' at line 1
+mysql> alter table employee_new add department_name varchar(35);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_new;
++-------------+-------------+---------------+------------+-----------------+
+| employee_id | first_name  | department_id | job_id     | department_name |
++-------------+-------------+---------------+------------+-----------------+
+|         100 | Steven      |            90 | AD_PRES    | NULL            |
+|         101 | Neena       |            90 | AD_VP      | NULL            |
+|         102 | Lex         |            90 | AD_VP      | NULL            |
+|         103 | Alexander   |            60 | IT_PROG    | NULL            |
+|         104 | Bruce       |            60 | IT_PROG    | NULL            |
+|         105 | David       |            60 | IT_PROG    | NULL            |
+|         106 | Valli       |            60 | IT_PROG    | NULL            |
+|         107 | Diana       |            60 | IT_PROG    | NULL            |
+|         108 | Nancy       |           100 | FI_MGR     | NULL            |
+|         109 | Daniel      |           100 | FI_ACCOUNT | NULL            |
+|         110 | John        |           100 | FI_ACCOUNT | NULL            |
+|         111 | Ismael      |           100 | FI_ACCOUNT | NULL            |
+|         112 | Jose Manuel |           100 | FI_ACCOUNT | NULL            |
+|         113 | Luis        |           100 | FI_ACCOUNT | NULL            |
+|         114 | Den         |            30 | PU_MAN     | NULL            |
+|         115 | Alexander   |            30 | PU_CLERK   | NULL            |
+|         116 | Shelli      |            30 | PU_CLERK   | NULL            |
+|         117 | Sigal       |            30 | PU_CLERK   | NULL            |
+|         118 | Guy         |            30 | PU_CLERK   | NULL            |
+|         119 | Karen       |            30 | PU_CLERK   | NULL            |
+|         120 | Matthew     |            50 | ST_MAN     | NULL            |
+|         121 | Adam        |            50 | ST_MAN     | NULL            |
+|         122 | Payam       |            50 | ST_MAN     | NULL            |
+|         123 | Shanta      |            50 | ST_MAN     | NULL            |
+|         124 | Kevin       |            50 | ST_MAN     | NULL            |
+|         125 | Julia       |            50 | ST_CLERK   | NULL            |
+|         126 | Irene       |            50 | ST_CLERK   | NULL            |
+|         127 | James       |            50 | ST_CLERK   | NULL            |
+|         128 | Steven      |            50 | ST_CLERK   | NULL            |
+|         129 | Laura       |            50 | ST_CLERK   | NULL            |
+|         130 | Mozhe       |            50 | ST_CLERK   | NULL            |
+|         131 | James       |            50 | ST_CLERK   | NULL            |
+|         132 | TJ          |            50 | ST_CLERK   | NULL            |
+|         133 | Jason       |            50 | ST_CLERK   | NULL            |
+|         134 | Michael     |            50 | ST_CLERK   | NULL            |
+|         135 | Ki          |            50 | ST_CLERK   | NULL            |
+|         136 | Hazel       |            50 | ST_CLERK   | NULL            |
+|         137 | Renske      |            50 | ST_CLERK   | NULL            |
+|         138 | Stephen     |            50 | ST_CLERK   | NULL            |
+|         139 | John        |            50 | ST_CLERK   | NULL            |
+|         140 | Joshua      |            50 | ST_CLERK   | NULL            |
+|         141 | Trenna      |            50 | ST_CLERK   | NULL            |
+|         142 | Curtis      |            50 | ST_CLERK   | NULL            |
+|         143 | Randall     |            50 | ST_CLERK   | NULL            |
+|         144 | Peter       |            50 | ST_CLERK   | NULL            |
+|         145 | John        |            80 | SA_MAN     | NULL            |
+|         146 | Karen       |            80 | SA_MAN     | NULL            |
+|         147 | Alberto     |            80 | SA_MAN     | NULL            |
+|         148 | Gerald      |            80 | SA_MAN     | NULL            |
+|         149 | Eleni       |            80 | SA_MAN     | NULL            |
+|         150 | Peter       |            80 | SA_REP     | NULL            |
+|         151 | David       |            80 | SA_REP     | NULL            |
+|         152 | Peter       |            80 | SA_REP     | NULL            |
+|         153 | Christopher |            80 | SA_REP     | NULL            |
+|         154 | Nanette     |            80 | SA_REP     | NULL            |
+|         155 | Oliver      |            80 | SA_REP     | NULL            |
+|         156 | Janette     |            80 | SA_REP     | NULL            |
+|         157 | Patrick     |            80 | SA_REP     | NULL            |
+|         158 | Allan       |            80 | SA_REP     | NULL            |
+|         159 | Lindsey     |            80 | SA_REP     | NULL            |
+|         160 | Louise      |            80 | SA_REP     | NULL            |
+|         161 | Sarath      |            80 | SA_REP     | NULL            |
+|         162 | Clara       |            80 | SA_REP     | NULL            |
+|         163 | Danielle    |            80 | SA_REP     | NULL            |
+|         164 | Mattea      |            80 | SA_REP     | NULL            |
+|         165 | David       |            80 | SA_REP     | NULL            |
+|         166 | Sundar      |            80 | SA_REP     | NULL            |
+|         167 | Amit        |            80 | SA_REP     | NULL            |
+|         168 | Lisa        |            80 | SA_REP     | NULL            |
+|         169 | Harrison    |            80 | SA_REP     | NULL            |
+|         170 | Tayler      |            80 | SA_REP     | NULL            |
+|         171 | William     |            80 | SA_REP     | NULL            |
+|         172 | Elizabeth   |            80 | SA_REP     | NULL            |
+|         173 | Sundita     |            80 | SA_REP     | NULL            |
+|         174 | Ellen       |            80 | SA_REP     | NULL            |
+|         175 | Alyssa      |            80 | SA_REP     | NULL            |
+|         176 | Jonathon    |            80 | SA_REP     | NULL            |
+|         177 | Jack        |            80 | SA_REP     | NULL            |
+|         178 | Kimberely   |          NULL | SA_REP     | NULL            |
+|         179 | Charles     |            80 | SA_REP     | NULL            |
+|         180 | Winston     |            50 | SH_CLERK   | NULL            |
+|         181 | Jean        |            50 | SH_CLERK   | NULL            |
+|         182 | Martha      |            50 | SH_CLERK   | NULL            |
+|         183 | Girard      |            50 | SH_CLERK   | NULL            |
+|         184 | Nandita     |            50 | SH_CLERK   | NULL            |
+|         185 | Alexis      |            50 | SH_CLERK   | NULL            |
+|         186 | Julia       |            50 | SH_CLERK   | NULL            |
+|         187 | Anthony     |            50 | SH_CLERK   | NULL            |
+|         188 | Kelly       |            50 | SH_CLERK   | NULL            |
+|         189 | Jennifer    |            50 | SH_CLERK   | NULL            |
+|         190 | Timothy     |            50 | SH_CLERK   | NULL            |
+|         191 | Randall     |            50 | SH_CLERK   | NULL            |
+|         192 | Sarah       |            50 | SH_CLERK   | NULL            |
+|         193 | Britney     |            50 | SH_CLERK   | NULL            |
+|         194 | Samuel      |            50 | SH_CLERK   | NULL            |
+|         195 | Vance       |            50 | SH_CLERK   | NULL            |
+|         196 | Alana       |            50 | SH_CLERK   | NULL            |
+|         197 | Kevin       |            50 | SH_CLERK   | NULL            |
+|         198 | Donald      |            50 | SH_CLERK   | NULL            |
+|         199 | Douglas     |            50 | SH_CLERK   | NULL            |
+|         200 | Jennifer    |            10 | AD_ASST    | NULL            |
+|         201 | Michael     |            20 | MK_MAN     | NULL            |
+|         202 | Pat         |            20 | MK_REP     | NULL            |
+|         203 | Susan       |            40 | HR_REP     | NULL            |
+|         204 | Hermann     |            70 | PR_REP     | NULL            |
+|         205 | Shelley     |           110 | AC_MGR     | NULL            |
+|         206 | William     |           110 | AC_ACCOUNT | NULL            |
++-------------+-------------+---------------+------------+-----------------+
+107 rows in set (0.00 sec)
+
+mysql> 
+mysql> update employee_new
+    -> ^C
+mysql> \! cls;
+mysql> update employee_new e
+    -> set department_name=(select department_name
+    ->                      from  departments
+    ->                      where department_id=e.department_id);
+Query OK, 106 rows affected (0.01 sec)
+Rows matched: 107  Changed: 106  Warnings: 0
+
+mysql> select * from employee_new limit 10;
++-------------+------------+---------------+------------+-----------------+
+| employee_id | first_name | department_id | job_id     | department_name |
++-------------+------------+---------------+------------+-----------------+
+|         100 | Steven     |            90 | AD_PRES    | Executive       |
+|         101 | Neena      |            90 | AD_VP      | Executive       |
+|         102 | Lex        |            90 | AD_VP      | Executive       |
+|         103 | Alexander  |            60 | IT_PROG    | IT              |
+|         104 | Bruce      |            60 | IT_PROG    | IT              |
+|         105 | David      |            60 | IT_PROG    | IT              |
+|         106 | Valli      |            60 | IT_PROG    | IT              |
+|         107 | Diana      |            60 | IT_PROG    | IT              |
+|         108 | Nancy      |           100 | FI_MGR     | Finance         |
+|         109 | Daniel     |           100 | FI_ACCOUNT | Finance         |
++-------------+------------+---------------+------------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> delete from employee_new e
+    -> where   job_id in(select job_id from employees
+    ->                   where employee_id=e.employee_id
+    ->                   and employee_id=109);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> select count(*) from employee_new;
++----------+
+| count(*) |
++----------+
+|      106 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete employee_new;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> delete from employee_new;
+Query OK, 106 rows affected (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> \! CLS;
+mysql> show tables;
++-----------------------+
+| Tables_in_newhr       |
++-----------------------+
+| 1_tab                 |
+| account               |
+| agg_view              |
+| countries             |
+| date_tab              |
+| defa_tab              |
+| dep_new1              |
+| departments           |
+| dept1                 |
+| emp                   |
+| emp1                  |
+| emp2                  |
+| emp5                  |
+| emp_details_view      |
+| emp_new               |
+| employee_new          |
+| employees             |
+| empnew                |
+| for_tab               |
+| ipl_table             |
+| itpl_bak              |
+| job_grades            |
+| job_history           |
+| jobs                  |
+| join_reg_country_view |
+| join_table            |
+| locations             |
+| login_tab             |
+| new_dept              |
+| num_tab               |
+| oe_tab                |
+| orders                |
+| pri_tab               |
+| regions               |
+| regions_new           |
+| retired               |
+| student1              |
+| t2                    |
+| t_1                   |
+| test1                 |
+| trans                 |
+| v_check               |
+| v_sum                 |
+| view_purchase         |
++-----------------------+
+44 rows in set (0.01 sec)
+
+mysql> cl scr
+    -> ^C
+mysql> \! cls;
+mysql> create table test1(c1 int,
+    ->                    c2 date,
+    ->                    c3 char(1),
+    ->                    c4 varchar(20));
+ERROR 1050 (42S01): Table 'test1' already exists
+mysql> create table test5(c1 int,
+    ->                    c2 date,
+    ->                    c3 char(1),
+    ->                    c4 varchar(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> #adding a column using alter
+mysql> alter table test5 add c5 timestamp;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| c1    | int         | YES  |     | NULL    |       |
+| c2    | date        | YES  |     | NULL    |       |
+| c3    | char(1)     | YES  |     | NULL    |       |
+| c4    | varchar(20) | YES  |     | NULL    |       |
+| c5    | timestamp   | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> alter table test5 add c6 numeric(11,2) first;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | YES  |     | NULL    |       |
+| c2    | date          | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  |     | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> alter table test5 add c7 smallint after c2;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | YES  |     | NULL    |       |
+| c2    | date          | YES  |     | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  |     | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc employees;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| employee_id    | int unsigned | NO   | PRI | NULL    |       |
+| first_name     | varchar(20)  | YES  |     | NULL    |       |
+| last_name      | varchar(25)  | NO   |     | NULL    |       |
+| email          | varchar(25)  | NO   |     | NULL    |       |
+| phone_number   | varchar(20)  | YES  |     | NULL    |       |
+| hire_date      | date         | NO   |     | NULL    |       |
+| job_id         | varchar(10)  | NO   | MUL | NULL    |       |
+| salary         | decimal(8,2) | NO   |     | NULL    |       |
+| commission_pct | decimal(2,2) | YES  |     | NULL    |       |
+| manager_id     | int unsigned | YES  | MUL | NULL    |       |
+| department_id  | int unsigned | YES  | MUL | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+11 rows in set (0.00 sec)
+
+mysql> show create table employees;
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table     | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| employees | CREATE TABLE `employees` (
+  `employee_id` int unsigned NOT NULL,
+  `first_name` varchar(20) DEFAULT NULL,
+  `last_name` varchar(25) NOT NULL,
+  `email` varchar(25) NOT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `hire_date` date NOT NULL,
+  `job_id` varchar(10) NOT NULL,
+  `salary` decimal(8,2) NOT NULL,
+  `commission_pct` decimal(2,2) DEFAULT NULL,
+  `manager_id` int unsigned DEFAULT NULL,
+  `department_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`employee_id`),
+  KEY `job_id` (`job_id`),
+  KEY `department_id` (`department_id`),
+  KEY `manager_id` (`manager_id`),
+  CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
+  CONSTRAINT `employees_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`),
+  CONSTRAINT `employees_ibfk_3` FOREIGN KEY (`manager_id`) REFERENCES `employees` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> #adding primary key
+mysql> alter table test5 add primary key(c1);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  |     | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  |     | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table test5 add constraint chk_test5 check(c3 in('a','b'));
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  |     | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  |     | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table test5 add constraint uni_test5 unique(c4);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  |     | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  | UNI | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> #adding foreign key
+mysql> create table test6(c2 date primary key);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> alter table test5 add constraint fk_test5 foreign key(c2) references test6(c2);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  | MUL | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  | UNI | NULL    |       |
+| c5    | timestamp     | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> #NULL TO NOT NULL
+mysql> ALTER TABLE TEST5 MODIFY C5 NOT NULL;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOT NULL' at line 1
+mysql> ALTER TABLE TEST5 MODIFY C5 TIMESTAMP NOT NULL;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  | MUL | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| c3    | char(1)       | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  | UNI | NULL    |       |
+| C5    | timestamp     | NO   |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST5 MODIFY C3 VARCHAR(1);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  | MUL | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| C3    | varchar(1)    | YES  |     | NULL    |       |
+| c4    | varchar(20)   | YES  | UNI | NULL    |       |
+| C5    | timestamp     | NO   |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST5 MODIFY C4 VARCHAR(30);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c6    | decimal(11,2) | YES  |     | NULL    |       |
+| c1    | int           | NO   | PRI | NULL    |       |
+| c2    | date          | YES  | MUL | NULL    |       |
+| c7    | smallint      | YES  |     | NULL    |       |
+| C3    | varchar(1)    | YES  |     | NULL    |       |
+| C4    | varchar(30)   | YES  | UNI | NULL    |       |
+| C5    | timestamp     | NO   |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST5 RENAME COLUMN C5 TO C_FIVE;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc test5;
++--------+---------------+------+-----+---------+-------+
+| Field  | Type          | Null | Key | Default | Extra |
++--------+---------------+------+-----+---------+-------+
+| c6     | decimal(11,2) | YES  |     | NULL    |       |
+| c1     | int           | NO   | PRI | NULL    |       |
+| c2     | date          | YES  | MUL | NULL    |       |
+| c7     | smallint      | YES  |     | NULL    |       |
+| C3     | varchar(1)    | YES  |     | NULL    |       |
+| C4     | varchar(30)   | YES  | UNI | NULL    |       |
+| C_FIVE | timestamp     | NO   |     | NULL    |       |
++--------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST5 RENAME TO TEST_5;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DESC TEST5;
+ERROR 1146 (42S02): Table 'newhr.test5' doesn't exist
+mysql> DESC TEST_5;
++--------+---------------+------+-----+---------+-------+
+| Field  | Type          | Null | Key | Default | Extra |
++--------+---------------+------+-----+---------+-------+
+| c6     | decimal(11,2) | YES  |     | NULL    |       |
+| c1     | int           | NO   | PRI | NULL    |       |
+| c2     | date          | YES  | MUL | NULL    |       |
+| c7     | smallint      | YES  |     | NULL    |       |
+| C3     | varchar(1)    | YES  |     | NULL    |       |
+| C4     | varchar(30)   | YES  | UNI | NULL    |       |
+| C_FIVE | timestamp     | NO   |     | NULL    |       |
++--------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST_5 DROP COLUMN C_FIVE;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> SHOW CREATE TABLE TEST_5;
++--------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table  | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
++--------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| TEST_5 | CREATE TABLE `test_5` (
+  `c6` decimal(11,2) DEFAULT NULL,
+  `c1` int NOT NULL,
+  `c2` date DEFAULT NULL,
+  `c7` smallint DEFAULT NULL,
+  `C3` varchar(1) DEFAULT NULL,
+  `C4` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`c1`),
+  UNIQUE KEY `uni_test5` (`C4`),
+  KEY `fk_test5` (`c2`),
+  CONSTRAINT `fk_test5` FOREIGN KEY (`c2`) REFERENCES `test6` (`c2`),
+  CONSTRAINT `chk_test5` CHECK ((`C3` in (_utf8mb4'a',_utf8mb4'b')))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE TEST_5 DROP CONSTRAINT UNI_TEST5;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE DEPT_TAB(id int(4),name varchar(20));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> alter table dept_tab add primary key(id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dept_Tab modify id int auto_increment;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dept_tab auto_increment=1001;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into dept_tab(name) values('prithivi'),('agni'),('tejas'),('trishul');
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from dept_tab;
++------+----------+
+| id   | name     |
++------+----------+
+| 1001 | prithivi |
+| 1002 | agni     |
+| 1003 | tejas    |
+| 1004 | trishul  |
++------+----------+
+4 rows in set (0.00 sec)
+
+mysql> alter table dept_tab add location varchar(25);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update dept_tab set location=case id when 1001 then 'bangalore'
+    -> when 1002 then 'chennai'
+    -> when 1003 then 'hyderabad'
+    -> when 1004 then 'delhi'
+    -> else
+    -> null
+    -> end;
+Query OK, 4 rows affected (0.00 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> select * from dept_tab;
++------+----------+-----------+
+| id   | name     | location  |
++------+----------+-----------+
+| 1001 | prithivi | bangalore |
+| 1002 | agni     | chennai   |
+| 1003 | tejas    | hyderabad |
+| 1004 | trishul  | delhi     |
++------+----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> alter table dept_tab rename location to place;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to place' at line 1
+mysql> alter table dept_tab rename column location to place;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  alter table dept_tab rename to itpl_Tab;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>  alter table itpl_tab modify id numeric(10);
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> alter table itpl_tab drop primary key;
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> create table itpl_bak as select * from itpl_tab;
+ERROR 1050 (42S01): Table 'itpl_bak' already exists
+mysql> create table itpl_back as select * from itpl_tab;
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> drop table iptl_tab;
+ERROR 1051 (42S02): Unknown table 'newhr.iptl_tab'
+mysql> drop table itpl_tab;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> create table default_tab(c1 int,c2 numeric(11,2) default 10.25);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> desc default_tab;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| c1    | int           | YES  |     | NULL    |       |
+| c2    | decimal(11,2) | YES  |     | 10.25   |       |
++-------+---------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql>  alter table default_tab alter c2 set default='11.75';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '='11.75'' at line 1
+mysql>  alter table default_tab alter c2 set default '11.75';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> \! CLS;
+mysql>  alter table default_tab alter c2 set default '11.75';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table pri_tab(c1 int primary key,
+    ->                      c2 char(1));
+ERROR 1050 (42S01): Table 'pri_tab' already exists
+mysql> create table pri_tab1(c1 int primary key,
+    ->                      c2 char(1));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table for_tab1(c1 int,
+    ->                       c3 date,
+    ->                       foreign key (c1) references pri_tab1);
+ERROR 1239 (42000): Incorrect foreign key definition for 'foreign key without name': Key reference and table reference don't match
+mysql> create table for_tab1(c1 int,
+    ->                       c3 date,
+    ->                       foreign key (c1) references pri_tab1(c1));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into pri_tab1 values(1001,'a');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into for_tab1 values(1001,curdate());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into for_tab1 values(1001,date_add(curdate(),interval '10' day);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> insert into for_tab1 values(1001,date_add(curdate(),interval '10' days);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'days)' at line 1
+mysql> insert into for_tab1 values(1001,'2022-10-05');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from pri_tab1;
++------+------+
+| c1   | c2   |
++------+------+
+| 1001 | a    |
++------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from for_tab1;
++------+------------+
+| c1   | c3         |
++------+------------+
+| 1001 | 2023-01-10 |
+| 1001 | 2022-10-05 |
++------+------------+
+2 rows in set (0.00 sec)
+
+mysql> delete from pri_tab1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`newhr`.`for_tab1`, CONSTRAINT `for_tab1_ibfk_1` FOREIGN KEY (`c1`) REFERENCES `pri_tab1` (`c1`))
+mysql> show create table for_tab1;
++----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table                                                                                                                                                                                                                                      |
++----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| for_tab1 | CREATE TABLE `for_tab1` (
+  `c1` int DEFAULT NULL,
+  `c3` date DEFAULT NULL,
+  KEY `c1` (`c1`),
+  CONSTRAINT `for_tab1_ibfk_1` FOREIGN KEY (`c1`) REFERENCES `pri_tab1` (`c1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table for_tab1 drop constraint for_tab1_ibfk_1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table for_tab1 add constraint fk_for_tab1 foreign key(c1)
+    -> references pri_tab1 (c1)
+    -> on delete cascade;
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from pri_tab1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from pri_tab1;
+Empty set (0.00 sec)
+
+mysql> select * from for_tab1;
+Empty set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> alter table for_tab1 drop constraint fk_for_tab1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table for_tab1 add constraint fk_for_tab1 foreign key(c1)
+    -> references pri_tab1 (c1)
+    -> on delete set null;
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from pri_tab1;
++------+------+
+| c1   | c2   |
++------+------+
+| 1001 | a    |
++------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from for_tab1;
++------+------------+
+| c1   | c3         |
++------+------------+
+| 1001 | 2023-01-10 |
+| 1001 | 2022-10-05 |
++------+------------+
+2 rows in set (0.00 sec)
+
+mysql> delete from pri_Tab1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from for_tab1;
++------+------------+
+| c1   | c3         |
++------+------------+
+| NULL | 2023-01-10 |
+| NULL | 2022-10-05 |
++------+------------+
+2 rows in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| advaith            |
+| case1              |
+| case_library       |
+| hr                 |
+| information_schema |
+| mysql              |
+| new_db1            |
+| newdb1             |
+| newhr              |
+| newtestdb          |
+| performance_schema |
+| ramu               |
+| sakila             |
+| sys                |
+| test               |
+| world              |
++--------------------+
+16 rows in set (0.00 sec)
+
+mysql> \! CLS;
+mysql> CREATE DATABASE  hrbackup;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use hrbackup;
+Database changed
+mysql> show tables;
++-----------------------+
+| Tables_in_hrbackup    |
++-----------------------+
+| 1_tab                 |
+| account               |
+| agg_view              |
+| countries             |
+| date_tab              |
+| defa_tab              |
+| dep_new1              |
+| departments           |
+| dept1                 |
+| emp1                  |
+| emp2                  |
+| emp_details_view      |
+| emp_new               |
+| employees             |
+| for_tab               |
+| ipl_table             |
+| itpl_bak              |
+| job_grades            |
+| job_history           |
+| jobs                  |
+| join_reg_country_view |
+| join_table            |
+| locations             |
+| login_tab             |
+| new_dept              |
+| num_tab               |
+| oe_tab                |
+| orders                |
+| pri_tab               |
+| regions               |
+| regions_new           |
+| retired               |
+| student1              |
+| t2                    |
+| t_1                   |
+| test                  |
+| test1                 |
+| trans                 |
+| v_check               |
+| v_sum                 |
+| view_purchase         |
++-----------------------+
+41 rows in set (0.00 sec)
+
+mysql> notee;

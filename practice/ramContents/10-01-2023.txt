@@ -1,0 +1,195 @@
+	DCL(DATA CONTROL LANGUAGE)
+       -----------------------------
+        GRANT
+        REVOKE
+
+
+     PRIVILEGE
+     -------------
+      *  PERMISSIONS TO INTERACT WITH DATABASE
+
+
+   CREATING USER
+   ----------------
+    create user  'test'@'localhost' identified by 'test'
+
+  mysql -u test -p  --port=3308
+
+
+ TC(TRANSACTION CONTROL)
+-------------------------
+  COMMIT
+  ROLLBACK
+
+
+
+ START TRANSACTION;
+  DML
+  ROLLBACK;
+  note:
+       any transactions using start transaction,subsequent
+       ddl,dcl transactions will commit the previous transactions
+
+
+
+ START TRANSACTION;
+  DML
+  ddl/dcl
+  commit;
+
+  TRUNCATE                                    DELETE
+================================================================
+  DDL                                          DML
+  WHERE CLAUSE CANT BE USED                    WHERE CLAUSE
+  NO ROLLBACK                                  ROLLBACK USING
+                                               START TRANSACTION
+
+
+  TRUNCATE                                     DROP
+-----------------------------------------------------------------
+  RETAINS STRUCTURE                            REMOVES STRUCTURE
+  REMOVES  DATA                                REMOVES DATA
+
+ 
+  DDL(DATA DEFINITION LANGUAGE)
+ ------------------------------
+   CREATE         => NEW DB OBJECTS
+   ALTER
+   DROP
+   TRUNCATE
+
+  ALTER
+ ----------------
+ ADD  COLUMNS
+      CONSTRAINTS(P,F,CHK,U)
+
+ MODIFY  NULL TO NOT NULL
+         CHANGE DATATYPE
+         CHANGE SIZE
+         CHANGE DEFAULT
+
+ RENAME  COLUMNS
+         TABLE
+
+ DROP    COLUMNS
+         CONSTRAINTS
+
+
+
+
+
+uni_test5
+
+ PROCEDURES FUNCTIONS
+ -----------------------
+
+ INFORMATION_SCHEMA.ROUTINES
+
+
+ TRIGGERS
+ ---------------
+ INFORMATION_SCHEMA.TRIGGERS
+
+
+ EXPORT 
+ ------------
+  MYSQLDUMP
+
+   TABLES/VIEWS/TRIGGERS  WILL BE EXPORTED
+     NO ROUTINES
+
+   mysqldump -u root  -p  hr > hrdump.sql
+
+==========================================================
+   mysqldump -u root  -p --routines hr > hrdump.sql
+
+============================================================
+
+show databases;
+
+STEPS
+----------
+1.export
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p hr > hrnewdump.sql
+Enter password: ********
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>
+
+
+2. CREATE NEW DATABASE
+   mysql> CREATE DATABASE  hrbackup;
+Query OK, 1 row affected (0.01 sec)
+
+3. import
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p hrbackup < hrnewdump.sql
+Enter password: ********
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
