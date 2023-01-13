@@ -1,0 +1,522 @@
+mysql> \! cls;
+mysql> 
+mysql> 
+mysql> show tables;
++-----------------------+
+| Tables_in_newhr       |
++-----------------------+
+| 1_tab                 |
+| account               |
+| agg_view              |
+| countries             |
+| date_tab              |
+| defa_tab              |
+| default_tab           |
+| dep_new1              |
+| departments           |
+| dept1                 |
+| emp                   |
+| emp1                  |
+| emp2                  |
+| emp5                  |
+| emp_details_view      |
+| emp_new               |
+| employee_new          |
+| employees             |
+| empnew                |
+| for_tab               |
+| for_tab1              |
+| ipl_table             |
+| itpl_back             |
+| itpl_bak              |
+| job_grades            |
+| job_history           |
+| jobs                  |
+| join_reg_country_view |
+| join_table            |
+| locations             |
+| login_tab             |
+| new_dept              |
+| num_tab               |
+| oe_tab                |
+| orders                |
+| pri_tab               |
+| pri_tab1              |
+| regions               |
+| regions_new           |
+| retired               |
+| student1              |
+| t2                    |
+| t_1                   |
+| test1                 |
+| test6                 |
+| test_5                |
+| trans                 |
+| v_check               |
+| v_sum                 |
+| view_purchase         |
++-----------------------+
+50 rows in set (0.00 sec)
+
+mysql> 
+mysql> create table auto1(c1 int,c2 date);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> 
+mysql> drop table auto1;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table auto1(c1 int primary key auto_increment,c2 date);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> insert into auto1(c2) values (curdate()),('2022-05-01'),('2021-01-04');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from auto1;
++----+------------+
+| c1 | c2         |
++----+------------+
+|  1 | 2023-01-11 |
+|  2 | 2022-05-01 |
+|  3 | 2021-01-04 |
++----+------------+
+3 rows in set (0.00 sec)
+
+mysql> select last_insert_id();
++------------------+
+| last_insert_id() |
++------------------+
+|                1 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> insert into auto1(c2) values('2015-04-08');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select last_insert_id();
++------------------+
+| last_insert_id() |
++------------------+
+|                4 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> \! cls;
+mysql> 
+mysql> 
+mysql> create view v1
+    -> as select employee_Id,first_name,last_name,salay,job_id
+    -> from employees
+    -> where department_id=60;
+ERROR 1054 (42S22): Unknown column 'salay' in 'field list'
+mysql> create view v1
+    -> as select employee_Id,first_name,last_name,salary,job_id,department_id
+    -> from employees
+    -> where department_id=60;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from v1;
++-------------+------------+-----------+---------+---------+---------------+
+| employee_Id | first_name | last_name | salary  | job_id  | department_id |
++-------------+------------+-----------+---------+---------+---------------+
+|         103 | Alexander  | Hunold    | 9000.00 | IT_PROG |            60 |
+|         104 | Bruce      | Ernst     | 6000.00 | IT_PROG |            60 |
+|         105 | David      | Austin    | 4800.00 | IT_PROG |            60 |
+|         106 | Valli      | Pataballa | 4800.00 | IT_PROG |            60 |
+|         107 | Diana      | Lorentz   | 4200.00 | IT_PROG |            60 |
++-------------+------------+-----------+---------+---------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> grant select on hr.v1 to 'test'@'localhost';
+ERROR 1146 (42S02): Table 'hr.v1' doesn't exist
+mysql> grant select on view hr.v1 to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'hr.v1 to 'test'@'localhost'' at line 1
+mysql> grant select on hr.v1 view to 'test'@'localhost';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'view to 'test'@'localhost'' at line 1
+mysql> grant select on newhr.v1 to 'test'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE VIEW V2 AS SELECT SUM(SALARY) "TOTSAL",DEPARTMENT_ID
+    -> FROM EMPLOYEES
+    -> WHERE  DEPARTMENT_ID IS NOT NULL
+    -> GROUP BY DEPARTMENT_ID;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT  * FROM V2;
++-----------+---------------+
+| TOTSAL    | DEPARTMENT_ID |
++-----------+---------------+
+|   4400.00 |            10 |
+|  19000.00 |            20 |
+|  24900.00 |            30 |
+|   6500.00 |            40 |
+| 156400.00 |            50 |
+|  28800.00 |            60 |
+|  10000.00 |            70 |
+| 304500.00 |            80 |
+|  58000.00 |            90 |
+|  51600.00 |           100 |
+|  20300.00 |           110 |
++-----------+---------------+
+11 rows in set (0.00 sec)
+
+mysql> 
+mysql> DELETE FROM V2;
+ERROR 1288 (HY000): The target table V2 of the DELETE is not updatable
+mysql> CREATE VIEW V3 AS SELECT DISTINCT(DEPARTMENT_ID),JOB_ID FROM EMPLOYEES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM V3;
++---------------+------------+
+| DEPARTMENT_ID | JOB_ID     |
++---------------+------------+
+|            90 | AD_PRES    |
+|            90 | AD_VP      |
+|            60 | IT_PROG    |
+|           100 | FI_MGR     |
+|           100 | FI_ACCOUNT |
+|            30 | PU_MAN     |
+|            30 | PU_CLERK   |
+|            50 | ST_MAN     |
+|            50 | ST_CLERK   |
+|            80 | SA_MAN     |
+|            80 | SA_REP     |
+|          NULL | SA_REP     |
+|            50 | SH_CLERK   |
+|            10 | AD_ASST    |
+|            20 | MK_MAN     |
+|            20 | MK_REP     |
+|            40 | HR_REP     |
+|            70 | PR_REP     |
+|           110 | AC_MGR     |
+|           110 | AC_ACCOUNT |
++---------------+------------+
+20 rows in set (0.00 sec)
+
+mysql> 
+mysql> CREATE VIEW V4 AS SELECT REGION_NAME,COUNTRY_NAME
+    -> FROM REGIONS NATURAL JOIN COUNTRIES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM V4;
++------------------------+--------------------------+
+| REGION_NAME            | COUNTRY_NAME             |
++------------------------+--------------------------+
+| Americas               | Argentina                |
+| Asia                   | Australia                |
+| Europe                 | Belgium                  |
+| Americas               | Brazil                   |
+| Americas               | Canada                   |
+| Europe                 | Switzerland              |
+| Asia                   | China                    |
+| Europe                 | Germany                  |
+| Europe                 | Denmark                  |
+| Middle East and Africa | Egypt                    |
+| Europe                 | France                   |
+| Asia                   | HongKong                 |
+| Middle East and Africa | Israel                   |
+| Asia                   | India                    |
+| Europe                 | Italy                    |
+| Asia                   | Japan                    |
+| Middle East and Africa | Kuwait                   |
+| Americas               | Mexico                   |
+| Middle East and Africa | Nigeria                  |
+| Europe                 | Netherlands              |
+| Asia                   | Singapore                |
+| Europe                 | United Kingdom           |
+| Americas               | United States of America |
+| Middle East and Africa | Zambia                   |
+| Middle East and Africa | Zimbabwe                 |
++------------------------+--------------------------+
+25 rows in set (0.01 sec)
+
+mysql> CREATE VIEW V5 AS SELECT *
+    -> FROM EMPLOYEES
+    -> WHERE DEPARTMENT_ID=90
+    -> WITH CHECK OPTION;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM V5;
++-------------+------------+-----------+----------+--------------+------------+---------+----------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id  | salary   | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+---------+----------+----------------+------------+---------------+
+|         100 | Steven     | King      | SKING    | 515.123.4567 | 1987-06-17 | AD_PRES | 24000.00 |           NULL |       NULL |            90 |
+|         101 | Neena      | Kochhar   | NKOCHHAR | 515.123.4568 | 1989-09-21 | AD_VP   | 17000.00 |           NULL |        100 |            90 |
+|         102 | Lex        | De Haan   | LDEHAAN  | 515.123.4569 | 1993-01-13 | AD_VP   | 17000.00 |           NULL |        100 |            90 |
++-------------+------------+-----------+----------+--------------+------------+---------+----------+----------------+------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE V5 SET DEPARTMENT_ID=40;
+ERROR 1369 (HY000): CHECK OPTION failed 'newhr.v5'
+mysql> drop procedure pro_hr1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter $$
+mysql> create procedure pro_hr1()
+    -> begin
+    ->    select ('1st procedure');
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr1();
++---------------+
+| 1st procedure |
++---------------+
+| 1st procedure |
++---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> delimiter $$
+mysql> create procedure pro_hr2(p1 int,p2 int)
+    -> begin
+    ->   declare vprod numeric(11,2);
+    ->   set vprod=p1*p2;
+    ->   select concat("product of ",p1,p2,"=",vprod);
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr2(10,15);
++---------------------------------------+
+| concat("product of ",p1,p2,"=",vprod) |
++---------------------------------------+
+| product of 1015=150.00                |
++---------------------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> #create a procedure to pass employee_id as parameter and print salary for him
+mysql> delimiter $$
+mysql> create procedure pro_hr3(p_empno int)
+    -> begin
+    ->    select salary  from employees where employee_id=p_empno;
+    -> END $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr3(143);
++---------+
+| salary  |
++---------+
+| 2600.00 |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> #create a procedure to pass employee_id as parameter and print first_name,last_name,
+mysql> #department_name
+mysql> delimiter $$
+mysql> create procedure pro_hr4(p_empno int)
+    -> begin
+    ->   select first_name,last_name,department_name
+    ->   from  employees join departments
+    ->   using(department_id)
+    ->   where employee_id=p_empno;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr4(101);
++------------+-----------+-----------------+
+| first_name | last_name | department_name |
++------------+-----------+-----------------+
+| Neena      | Kochhar   | Executive       |
++------------+-----------+-----------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table odd_Even(slno int primary key,descn varchar(4)
+    -> check(descn in('odd','even')));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> #create a procedure to insert  more rows in stages using a loop and if elseif else
+mysql> delimiter $$
+mysql> CREATE PROCEDURE PRO_HR5(P1 INT,P2 INT)
+    ->   BEGIN
+    ->    
+    ->    DECLARE V1 VARCHAR(4);
+    ->    WHILE  P1<=P2 DO
+    ->        SET P1=P1+1;
+    ->        IF MOD(P1,2)=0 THEN
+    ->           SET V1='even';
+    ->        ELSE
+    ->           SET V1='odd';
+    ->        end if;
+    ->        insert into odd_even values(p1,v1);
+    ->       end while;
+    ->    end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr5(1,100);
+Query OK, 1 row affected (0.21 sec)
+
+mysql> select * from odd_Even limit 10;
++------+-------+
+| slno | descn |
++------+-------+
+|    2 | even  |
+|    3 | odd   |
+|    4 | even  |
+|    5 | odd   |
+|    6 | even  |
+|    7 | odd   |
+|    8 | even  |
+|    9 | odd   |
+|   10 | even  |
+|   11 | odd   |
++------+-------+
+10 rows in set (0.00 sec)
+
+mysql> call pro_hr5(101,10000);
+Query OK, 1 row affected (19.10 sec)
+
+mysql> select specific_name,routine_type
+    -> from   information_schema.routines
+    -> where  routine_schema='newhr';
++------------------+--------------+
+| SPECIFIC_NAME    | ROUTINE_TYPE |
++------------------+--------------+
+| FUN_1            | FUNCTION     |
+| fun_2            | FUNCTION     |
+| new_procedure    | PROCEDURE    |
+| pro1             | PROCEDURE    |
+| pro_1            | PROCEDURE    |
+| pro_10           | PROCEDURE    |
+| pro_11           | PROCEDURE    |
+| pro_12           | PROCEDURE    |
+| pro_13           | PROCEDURE    |
+| pro_14           | PROCEDURE    |
+| pro_15           | PROCEDURE    |
+| pro_2            | PROCEDURE    |
+| pro_3            | PROCEDURE    |
+| pro_4            | PROCEDURE    |
+| pro_5            | PROCEDURE    |
+| pro_6            | PROCEDURE    |
+| pro_7            | PROCEDURE    |
+| pro_8            | PROCEDURE    |
+| pro_9            | PROCEDURE    |
+| pro_hr1          | PROCEDURE    |
+| pro_hr2          | PROCEDURE    |
+| pro_hr3          | PROCEDURE    |
+| pro_hr4          | PROCEDURE    |
+| PRO_HR5          | PROCEDURE    |
+| pro_ins_date_tab | PROCEDURE    |
+| pro_in_out       | PROCEDURE    |
+| pro_new          | PROCEDURE    |
+| pro_out          | PROCEDURE    |
++------------------+--------------+
+28 rows in set (0.00 sec)
+
+mysql> show create procedure pro_hr4;
++-----------+--------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+| Procedure | sql_mode           | Create Procedure                                                                                                                                                                                                  | character_set_client | collation_connection | Database Collation |
++-----------+--------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+| pro_hr4   | ONLY_FULL_GROUP_BY | CREATE DEFINER=`root`@`localhost` PROCEDURE `pro_hr4`(p_empno int)
+begin
+  select first_name,last_name,department_name
+  from  employees join departments
+  using(department_id)
+  where employee_id=p_empno;
+end | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
++-----------+--------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql> select specific_name,routine_type
+    -> from   information_schema.routines
+    -> ^C
+mysql> show create procedure pro_hr3;
++-----------+--------------------+------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+| Procedure | sql_mode           | Create Procedure                                                                                                                         | character_set_client | collation_connection | Database Collation |
++-----------+--------------------+------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+| pro_hr3   | ONLY_FULL_GROUP_BY | CREATE DEFINER=`root`@`localhost` PROCEDURE `pro_hr3`(p_empno int)
+begin
+   select salary  from employees where employee_id=p_empno;
+END | cp850                | cp850_general_ci     | utf8mb4_0900_ai_ci |
++-----------+--------------------+------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql> call pro_hr3(1000);
+Empty set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> drop procedure pro_hr3();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '()' at line 1
+mysql> drop procedure pro_hr3;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter $$
+mysql>   CREATE PROCEDURE PRO_HR3(PNO INT)
+    ->   begin
+    ->     DECLARE  V1 NUMERIC(11,2);
+    ->    select salary into v1 from employees where employee_id=pno;
+    ->    if v1 is null then
+    ->     SIGNAL  SQLSTATE '45000'  SET MESSAGE_TEXT="**INVALID EMPNO**";
+    ->    end if;
+    ->   end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call pro_hr3(1001);
+ERROR 1644 (45000): **INVALID EMPNO**
+mysql> create procedure pro_hr6_out(in p1 int,out p2 varchar(20))
+    -> begin
+    ->    select first_name into p2 from employees where employee_id=p1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> delimiter $$
+mysql> create procedure pro_hr6_out(in p1 int,out p2 varchar(20))
+    -> begin
+    ->    select first_name into p2 from employees where employee_id=p1;
+    -> end $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> delimiter ;
+mysql> call pro_hr6_out(111,@p2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @p2;
++--------+
+| @p2    |
++--------+
+| Ismael |
++--------+
+1 row in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create procedure pro_hr7_inout(inout pname varchar(50))
+    -> begin
+    ->    set pname=lpad(pname,40,'*');
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> delimiter ;
+mysql> set @nam="ram";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro_hr7_inout(@nam);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @nam;
++------------------------------------------+
+| @nam                                     |
++------------------------------------------+
+| *************************************ram |
++------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> notee;

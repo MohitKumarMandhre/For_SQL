@@ -1,0 +1,203 @@
+VIEWS
+-------------
+   * VIRTUAL TABLE
+
+
+ TYPES
+--------------
+ SIMPLE                                   COMPLEX
+----------------------------------------------------------------
+OUT OF SINGLE TABLE             MOre than 1 table
+
+permits dmls                    not always
+
+
+PROGRAMMING IN MYSQL
+------------------------
+PROCEDURES
+   FUNCTIONS
+         TRIGGERS
+
+
+  SET
+    SELECT
+
+  delimiter ;
+
+PROCEDURES
+-----------------
+
+ * SPECIFIC ACTION(SELECT,INSERT,UPDATE,DELETE...)
+#
+ * MODULAR PROGRAMMING
+
+
+ * PRECOMPILED
+
+  DELIMITER $$
+  CREATE PROCEDURE <PROCEDURENAME>() #PARAMETERS CAN BE SPECIFIED
+                                      WITH COMMA SEPARATOR
+
+  BEGIN
+       STATEMENTS;
+  END $$
+
+ 2 steps
+---------------
+  1. creating procedure
+  2. calling procedure
+      call pro_hr1()
+
+  RULES FOR VARIABLES
+  ----------------------
+   * SHOULD BE DECLARED AFTER BEGIN STATEMENT
+
+   * EACH VARIABLE SHOULD BE DECLARED SEPARATELY
+
+         eg:  begin
+                     declare v1 int;
+                     declare v2 int;
+
+               v_first_name
+     note: donot use columnnames for variables/parameters
+
+
+  3 ATTRIBUTES
+ ----------------
+  SEQUENCE   => ORDER IN WHICH CODE SHOULD FLOW
+  SELECTION  => CHOICE MAKING PROCESS
+                 IF ELSEIF ELSE
+  ITERATION
+               WHILE
+               SIMPLE
+               REPEAT
+
+  SELECTION(CONDITIONAL CONSTRUCTS)
+------------------------------------
+  IF  <CONDN> THEN
+       STATEMENT1;
+  END IF;
+
+
+IF  <CONDN> THEN
+       STATEMENT1;
+ELSE 
+       STATEMENT2;
+  END IF;
+
+
+IF  <CONDN> THEN
+       STATEMENT1;
+ELSEIF <CONDN> THEN
+       STATEMENT2;
+ELSE
+       STATEMENT3;
+  END IF;
+
+
+
+                           LOWER  HIGHER
+  CREATE PROCEDURE PRO_HR5(P1 INT,P2 INT)
+  BEGIN
+   
+   DECLARE V1 VARCHAR(4);
+   WHILE  P1<=P2 DO
+       SET P1=P1+1;
+       IF MOD(P1,2)=0 THEN
+          SET V1='even';
+       ELSE
+          SET V1='odd';
+       end if;
+       insert into odd_even values(p1,v1);
+      end while;
+   end $$
+create table odd_Even(slno int primary key,descn varchar(4)
+check(descn in('odd','even')));
+
+   
+
+
+
+
+
+ create procedure to pass your birthdate as parameter
+ print day of birth starting from birthdate upto current_date
+
+  2015-01-05    mon
+  2016-01-05  
+
+  
+
+  2023-01-05
+
+  SIGNAL  SQLSTATE '45000'  SET MSG_TEXT="**INVALID EMPNO**";
+  
+ delimiter $$
+  CREATE PROCEDURE PRO_HR3(PNO INT)
+  begin
+    DECLARE  V1 NUMERIC(11,2);
+   select salary into v1 from employees where employee_id=pno;
+   if v1 is null then
+    SIGNAL  SQLSTATE '45000'  SET MESSAGE_TEXT="**INVALID EMPNO**";
+   end if;
+  end $$
+
+  PARAMETER MODES
+ ------------------
+   IN           READ
+   OUT          WRITE
+   INOUT        READWRITE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
