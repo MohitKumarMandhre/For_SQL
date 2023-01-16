@@ -1,6 +1,6 @@
 -- create database libdb;
 -- drop database libdb; 
--- use libdb;
+-- use libdb; 
 
 -- show tables;
 
@@ -95,14 +95,32 @@
 -- call new_book('ALZ', 'Tom', 'AWS Fundamentals', 'Cloud') ;
 
 -- c. 	NEW_RENTAL: Function to record a new rental. Pass the bID number for the book that is to be rented, 
--- 		pass ID number into the function. The function should return the due date for the book. 
+-- 		pass MID number into the function. The function should return the due date for the book. 
 -- 		Due dates are three days from the date the book is rented. 
+
 -- 		If the status for a book requested is listed as AVAILABLE in the bCOPY table for one copy of this title, 
 -- 		then update this b_COPY table and set the status to RENTED. If there is no copy available, 
 -- 		the function must return NULL. 
+
 -- 		Then, insert a new record into the BLOAN  table identifying the booked date as today's date, 
 -- 		the copy ID number, the member ID number, the BOOKID number and the expected return date. 
-desc bloan;
 
+-- new_rental(p_bid int, p_mid int) 
+
+-- d. 	RETURN_book: A  procedure that updates the status of a book (available, rented, or reserved) and sets the return date. 
+
+-- 		Pass the book ID, the cID and the status to this procedure. 
+-- 		Check whether there are reservations for that title, and display a message if it is reserved. 
+-- 		Update the RENTAL table and set the actual return date to today’s date. 
+-- 		Update the status in the BCOPY table based on the status parameter passed into the procedure. 
+
+-- 	return_book(p_cid int, p_bookid int, p_status varchar(30)
+
+-- e. 	RESERVE_BOOK: A  procedure that executes only if all of the book copies requested in the NEW_RENTAL procedure have a status of RENTED. 
+-- 		Pass the member ID number and the book ID number to this procedure. 
+-- 		Insert a new record into the BRES table and record the reservation date, member ID number, and BID number. 
+-- 		Print out a message indicating that a BOOK is reserved and its expected date of return.
+
+desc bres;
 
 

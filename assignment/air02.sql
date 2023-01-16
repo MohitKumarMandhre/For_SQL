@@ -1,14 +1,9 @@
--- Active: 1670399129309@@127.0.0.1@3307@air2db
 
--- create DATABASE air2db;
+-- create DATABASE airdb02;
 
--- use air2db;
--- show databases;
--- drop DATABASE air2db;
-/*
-generating data with python scripts -
-https://www.red-gate.com/hub/product-learning/sql-data-generator/generating-realistic-dates-using-sql-data-generator-and-python?topic_first=true&topic=synthetic-data
-*/
+-- use airdb02;
+
+show databases;
 show tables;
 
 create table country(
@@ -219,7 +214,26 @@ show tables;
 15. travelclass
 
 */
-select * from travelclass limit 20;
+select * from aircraft limit 20;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
