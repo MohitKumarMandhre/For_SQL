@@ -1,10 +1,13 @@
+-- Active: 1670399129309@@127.0.0.1@3307@airdb02
 
 -- create DATABASE airdb02;
-
+-- drop DATABASE airdb02;
 -- use airdb02;
 
 show databases;
 show tables;
+
+SELECT count(*) FROM aircraft;
 
 create table country(
 iata_country_code char(2) PRIMARY KEY,
@@ -196,6 +199,8 @@ on update cascade
 
 show tables;
 
+select * from booking;
+
 /*
 1. aircraft
 2. aircraftinstance
@@ -214,7 +219,7 @@ show tables;
 15. travelclass
 
 */
-select * from aircraft limit 20;
+select count(*) from travelclass ;
 
 
 

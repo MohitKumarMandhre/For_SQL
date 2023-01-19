@@ -1,0 +1,393 @@
+mysql> \! cls;
+mysql> explain select count(employee_id),department_id
+    -> from employees
+    -> where department_id in (60,80)
+    -> group by department_id;
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+| id | select_type | table     | partitions | type  | possible_keys | key           | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | employees | NULL       | range | department_id | department_id | 5       | NULL |   39 |   100.00 | Using where; Using index |
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree
+    -> select count(employee_id),department_id
+    -> from employees
+    -> where department_id in (60,80)
+    -> group by department_id;
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                                                                                       |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate: count(employees.employee_id)  (cost=11.97 rows=39)
+    -> Filter: (employees.department_id in (60,80))  (cost=8.07 rows=39)
+        -> Covering index range scan on employees using department_id over (department_id = 60) OR (department_id = 80)  (cost=8.07 rows=39)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> from employees
+    -> where department_id in (60,80)
+    -> ^C
+mysql> explain format=tree
+    -> select count(employee_id),department_id
+    -> from employees
+    -> group by department_id
+    -> having department_id in(60,80);
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                           |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (employees.department_id in (60,80))  (cost=22.40 rows=107)
+    -> Group aggregate: count(employees.employee_id)  (cost=22.40 rows=107)
+        -> Index scan on employees using department_id  (cost=11.70 rows=107)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(sal),job from emp group by job
+    -> union
+    -> select sum(sal),null from emp;
++----------+-----------+
+| sum(sal) | job       |
++----------+-----------+
+|     NULL | NULL      |
+|     4150 | CLERK     |
+|     5600 | SALESMAN  |
+|     8275 | MANAGER   |
+|     6000 | ANALYST   |
+|     5000 | PRESIDENT |
+|    29025 | NULL      |
++----------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> explain
+    ->  select sum(sal),job from emp group by job
+    ->  union
+    ->  select sum(sal),null from emp;
++----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+
+| id | select_type  | table      | partitions | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra           |
++----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+
+|  1 | PRIMARY      | emp        | NULL       | ALL   | COMP_IDX      | NULL    | NULL    | NULL |   15 |   100.00 | Using temporary |
+|  2 | UNION        | emp        | NULL       | index | NULL          | sal_idx | 5       | NULL |   15 |   100.00 | Using index     |
+|  3 | UNION RESULT | <union1,2> | NULL       | ALL   | NULL          | NULL    | NULL    | NULL | NULL |     NULL | Using temporary |
++----+--------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-----------------+
+3 rows in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree
+    ->  select sum(sal),job from emp group by job
+    ->  union
+    ->  select sum(sal),null from emp;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                                                                                                                                                                                                      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Table scan on <union temporary>  (cost=5.86..5.86 rows=1)
+    -> Union materialize with deduplication  (cost=3.35..3.35 rows=1)
+        -> Table scan on <temporary>
+            -> Aggregate using temporary table
+                -> Table scan on emp  (cost=1.75 rows=15)
+        -> Aggregate: sum(emp.SAL)  (cost=3.25 rows=1)
+            -> Index scan on emp using sal_idx  (cost=1.75 rows=15)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree
+    ->  select sum(sal),job from emp group by job with rollup(job);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job)' at line 2
+mysql> explain format=tree
+    ->  select sum(sal),job from emp group by job with rollup;
++------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                    |
++------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate with rollup: sum(emp.SAL)  (cost=3.25 rows=15)
+    -> Sort: job  (cost=1.75 rows=15)
+        -> Table scan on emp  (cost=1.75 rows=15)
+ |
++------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> explain format=tree
+    ->  select sum(salary),job from employees group by job_id with rollup(job_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job_id)' at line 2
+mysql> explain format=tree
+    ->  select sum(salary),job_id from employees group by job_id with rollup(job_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job_id)' at line 2
+mysql>  select sum(salary),job_id from employees group by job_id with rollup;
++-------------+------------+
+| sum(salary) | job_id     |
++-------------+------------+
+|     8300.00 | AC_ACCOUNT |
+|    12000.00 | AC_MGR     |
+|     4400.00 | AD_ASST    |
+|    24000.00 | AD_PRES    |
+|    34000.00 | AD_VP      |
+|    39600.00 | FI_ACCOUNT |
+|    12000.00 | FI_MGR     |
+|     6500.00 | HR_REP     |
+|    28800.00 | IT_PROG    |
+|    13000.00 | MK_MAN     |
+|     6000.00 | MK_REP     |
+|    10000.00 | PR_REP     |
+|    13900.00 | PU_CLERK   |
+|    11000.00 | PU_MAN     |
+|    61000.00 | SA_MAN     |
+|   250500.00 | SA_REP     |
+|    64300.00 | SH_CLERK   |
+|    55700.00 | ST_CLERK   |
+|    36400.00 | ST_MAN     |
+|   691400.00 | NULL       |
++-------------+------------+
+20 rows in set (0.00 sec)
+
+mysql> explain format=tree select sum(salary),job_id from employees group by job_id with rollup;
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                          |
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate with rollup: sum(employees.salary)  (cost=21.65 rows=107)
+    -> Index scan on employees using job_id  (cost=10.95 rows=107)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select sum(salary),job_id from employees group by job_id 
+    -> union
+    -> select sum(salary),null from employees;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                                                                                                                                                                                                                        |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Table scan on <union temporary>  (cost=54.14..57.95 rows=108)
+    -> Union materialize with deduplication  (cost=54.10..54.10 rows=108)
+        -> Group aggregate: sum(employees.salary)  (cost=21.65 rows=107)
+            -> Index scan on employees using job_id  (cost=10.95 rows=107)
+        -> Aggregate: sum(employees.salary)  (cost=21.65 rows=1)
+            -> Table scan on employees  (cost=10.95 rows=107)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> create table reg1 as select * from regions;
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> create table country1 as select * from countries;
+Query OK, 25 rows affected (0.02 sec)
+Records: 25  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> explain select region_name,country_name from regions1 natural join country1;
+ERROR 1146 (42S02): Table 'newhr.regions1' doesn't exist
+mysql> explain select region_name,country_name from reg1 natural join country1;
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra                                      |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+|  1 | SIMPLE      | reg1     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    7 |   100.00 | NULL                                       |
+|  1 | SIMPLE      | country1 | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   25 |    10.00 | Using where; Using join buffer (hash join) |
++----+-------------+----------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                          |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Inner hash join (country1.region_id = reg1.region_id)  (cost=18.70 rows=18)
+    -> Table scan on country1  (cost=0.07 rows=25)
+    -> Hash
+        -> Table scan on reg1  (cost=0.95 rows=7)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> create index reg_idx on country1(region_id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                    |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=9.70 rows=44)
+    -> Table scan on reg1  (cost=0.95 rows=7)
+    -> Index lookup on country1 using reg_idx (region_id=reg1.region_id)  (cost=0.71 rows=6)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE INDEX COMP_R_IDX ON (REGION_ID,REGION_NAME);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(REGION_ID,REGION_NAME)' at line 1
+mysql> CREATE INDEX COMP_R_IDX ON REGIONS(REGION_ID,REGION_NAME);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX COMP_C_IDX ON REGIONS(REGION_ID,COUNTRY_ID);
+ERROR 1072 (42000): Key column 'COUNTRY_ID' doesn't exist in table
+mysql> CREATE INDEX COMP_C_IDX ON COUNTRIES(REGION_ID,COUNTRY_ID);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                    |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=9.70 rows=44)
+    -> Table scan on reg1  (cost=0.95 rows=7)
+    -> Index lookup on country1 using reg_idx (region_id=reg1.region_id)  (cost=0.71 rows=6)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1
+    -> FORCE INDEX(comp_r_idx);
+ERROR 1176 (42000): Key 'comp_r_idx' doesn't exist in table 'country1'
+mysql> explain format=tree select region_name,country_name from reg1 FORCE INDEX(comp_r_idx) natural join country1
+    -> ^C
+mysql> explain format=tree select region_name,country_name from reg1 FORCE INDEX(comp_r_idx) natural join country1;
+ERROR 1176 (42000): Key 'comp_r_idx' doesn't exist in table 'reg1'
+mysql> drop index comp_r_idx on regions;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX COMP_C_IDX ON reg1(REGION_ID,COUNTRY_ID);
+ERROR 1072 (42000): Key column 'COUNTRY_ID' doesn't exist in table
+mysql> CREATE INDEX COMP_C_IDX ON coutnry1(REGION_ID,COUNTRY_ID);
+ERROR 1146 (42S02): Table 'newhr.coutnry1' doesn't exist
+mysql> CREATE INDEX COMP_C_IDX ON country1(REGION_ID,COUNTRY_ID);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX COMP_r_IDX ON reg1(REGION_ID,region_name);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> drop index comp_c_idx on regions;
+ERROR 1091 (42000): Can't DROP 'comp_c_idx'; check that column/key exists
+mysql> drop index comp_c_idx on country1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX COMP_C_IDX ON country1(REGION_ID,COUNTRY_ID,country_name);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 FORCE INDEX(comp_r_idx) natural join country1;
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                 |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=8.98 rows=44)
+    -> Index scan on reg1 using COMP_r_IDX  (cost=2.70 rows=7)
+    -> Covering index lookup on country1 using COMP_C_IDX (region_id=reg1.region_id)  (cost=0.36 rows=6)
+ |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> explain select region_name,country_name from reg1 natural join country1;
++----+-------------+----------+------------+-------+--------------------+------------+---------+----------------------+------+----------+-------------+
+| id | select_type | table    | partitions | type  | possible_keys      | key        | key_len | ref                  | rows | filtered | Extra       |
++----+-------------+----------+------------+-------+--------------------+------------+---------+----------------------+------+----------+-------------+
+|  1 | SIMPLE      | reg1     | NULL       | index | COMP_r_IDX         | COMP_r_IDX | 82      | NULL                 |    7 |   100.00 | Using index |
+|  1 | SIMPLE      | country1 | NULL       | ref   | reg_idx,COMP_C_IDX | COMP_C_IDX | 4       | newhr.reg1.region_id |    6 |   100.00 | Using index |
++----+-------------+----------+------------+-------+--------------------+------------+---------+----------------------+------+----------+-------------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                 |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=7.23 rows=44)
+    -> Index scan on reg1 using COMP_r_IDX  (cost=0.95 rows=7)
+    -> Covering index lookup on country1 using COMP_C_IDX (region_id=reg1.region_id)  (cost=0.36 rows=6)
+ |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter index comp_r_idx invisible;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'index comp_r_idx invisible' at line 1
+mysql> alter table reg1 index comp_r_idx invisible;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'comp_r_idx invisible' at line 1
+mysql> alter table reg1 alter index comp_r_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=7.23 rows=44)
+    -> Table scan on reg1  (cost=0.95 rows=7)
+    -> Covering index lookup on country1 using COMP_C_IDX (region_id=reg1.region_id)  (cost=0.36 rows=6)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table country1 alter index comp_c_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                    |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=9.70 rows=44)
+    -> Table scan on reg1  (cost=0.95 rows=7)
+    -> Index lookup on country1 using reg_idx (region_id=reg1.region_id)  (cost=0.71 rows=6)
+ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table reg1 alter index comp_r_idx visible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                     |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=9.70 rows=44)
+    -> Index scan on reg1 using COMP_r_IDX  (cost=0.95 rows=7)
+    -> Index lookup on country1 using reg_idx (region_id=reg1.region_id)  (cost=0.71 rows=6)
+ |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> \! cls;
+mysql> 
+mysql> 
+mysql> alter table reg1 add primary key(region_id);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table country1 add constraint fk_reg foreign key(region_id)
+    -> references reg1(region_id);
+Query OK, 25 rows affected (0.04 sec)
+Records: 25  Duplicates: 0  Warnings: 0
+
+mysql> explain format=tree select region_name,country_name from reg1 natural join country1;
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                    |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=3.40 rows=7)
+    -> Index scan on reg1 using COMP_r_IDX  (cost=0.95 rows=7)
+    -> Index lookup on country1 using reg_idx (region_id=reg1.region_id)  (cost=0.26 rows=1)
+ |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select region_name,country_name from regions natural join countries;
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                             |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Nested loop inner join  (cost=9.70 rows=44)
+    -> Table scan on regions  (cost=0.95 rows=7)
+    -> Index lookup on countries using region_id (region_id=regions.region_id)  (cost=0.71 rows=6)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> notee;

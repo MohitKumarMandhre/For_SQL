@@ -1,0 +1,129 @@
+
+select ename,hiredate,first_value(hiredate) over w "1st",
+    last_value(hiredate) over w "last",
+     nth_value(hiredate,5) over w "5th"
+     from emp
+     window w as (order by hiredate);
+
+
+   select e.ename "empname",e.deptno "empdeptno",
+          m.ename  "manname",m.deptno "mandeptno"
+   from emp e j
+
+oin emp m on e.mgr=m.empno;
+
+
+
+
+(select count(*)cnt,deptno
+from emp
+group by deptno)a
+on e.deptno=a.deptno
+
+(select count(*)cnt,deptno
+from emp
+group by deptno)b
+one m.deptno=b.deptno
+
+   select e.ename "empname",e.deptno "empdeptno",a.cnt,
+          m.ename  "manname",m.deptno "mandeptno",b.cnt
+   from emp e join emp m on e.mgr=m.empno
+join  (select count(*)cnt,deptno
+from emp
+group by deptno)a
+on   e.deptno=a.deptno
+join
+(select count(*)cnt,deptno
+from emp
+group by deptno)b
+on m.deptno=b.deptno;
+
+
+DATA DICTIONARY VIEW
+----------------------
+ information_schema.files
+
+
+
+
+  rows inside datapages
+  datapages inside extents
+  extents  inside datafiles
+  datafiles inside tablespaces
+ 
+ OTHER TABLE TYPES
+ --------------------
+ PARTITIONED TABLES
+ TEMPORARY TABLES
+
+
+ PARTITIONED TABLES
+ ---------------------
+  LIST PARTITIONING
+
+
+
+  CREATE TABLE LIST_JOB(EMPNO INT,
+                        ENAME VARCHAR(20),
+                        JOB VARCHAR(20))
+  PARTITION BY LIST COLUMNS(JOB)
+  (
+   PARTITION P_CLERK VALUES IN ('CLERK'),
+   PARTITION P_SALES VALUES IN ('SALESMAN'),
+   PARTITION P_ANAL VALUES IN ('ANALYST'),
+   PARTITION P_MAN VALUES IN ('MANAGER'),
+   PARTITION P_PRES VALUES IN ('PRESIDENT'));
+
+  INSERT INTO LIST_JOB SELECT EMPNO,ENAME,JOB FROM CHECK_EXTENT;
+
+
+
+  EXPLAIN SELECT * FROM EMP;
+
+ SELECT * FROM EMP WHERE DEPTNO=10;
+ SELECT * FROM DEPT WHERE DNAME='SALES';
+ SELECT * FROM REGIONS  WHERE REGION_ID=1;
+ SELECT * FROM DEPARTMENTS WHERE LOCATION_ID=1700;
+
+
+
+EXPLAIN FORMAT=TREE SELECT * FROM FRUIT WHERE ID=101;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

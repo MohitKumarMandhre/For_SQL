@@ -1,0 +1,555 @@
+mysql> \! CLS;
+mysql> EXPLAIN SELECT * FROM DEPT;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | DEPT  | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM  REGIONS WHERE REGION_ID=1;
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table   | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | REGIONS | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> DESC REGIONS;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| region_id   | int unsigned | NO   | PRI | NULL    |       |
+| region_name | varchar(25)  | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM REGIONS WHERE REGION_ID=1;
++-------------------------------------------------------------+
+| EXPLAIN                                                     |
++-------------------------------------------------------------+
+| -> Rows fetched before execution  (cost=0.00..0.00 rows=1)
+ |
++-------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT ENAME FROM EMP WHERE JOB='CLERK'
+    -> ^C
+mysql> DESC EMP;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| EMPNO    | int         | NO   |     | NULL    |       |
+| ENAME    | varchar(10) | YES  |     | NULL    |       |
+| JOB      | varchar(9)  | YES  |     | NULL    |       |
+| MGR      | int         | YES  |     | NULL    |       |
+| HIREDATE | date        | YES  |     | NULL    |       |
+| SAL      | float       | YES  |     | NULL    |       |
+| COMM     | float       | YES  |     | NULL    |       |
+| DEPTNO   | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> SHOW INDEXES FROM HR.EMP;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | BIT      |            1 | DEPTNO      | A         |           3 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT DATABASE();
++------------+
+| DATABASE() |
++------------+
+| hr         |
++------------+
+1 row in set (0.00 sec)
+
+mysql> DROP INDEX BIT;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> USE NEWHR;
+Database changed
+mysql> SELECT DATABASE();
++------------+
+| DATABASE() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW INDEXES FROM HR.EMP;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | BIT      |            1 | DEPTNO      | A         |           3 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW INDEXES FROM NEWHR.EMP;
+Empty set (0.01 sec)
+
+mysql> EXPLAIN  SELECT ENAME FROM EMP WHERE JOB='CLERK';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> EXPLAIN  FORMAT=TREE SELECT ENAME FROM EMP WHERE JOB='CLERK';
++---------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                           |
++---------------------------------------------------------------------------------------------------+
+| -> Filter: (emp.JOB = 'CLERK')  (cost=1.75 rows=2)
+    -> Table scan on EMP  (cost=1.75 rows=15)
+ |
++---------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> EXPLAIN  SELECT * FROM DEPT WHERE DNAME='SALES';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | DEPT  | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |    25.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM DEPT WHERE DNAME='SALES';
++------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                              |
++------------------------------------------------------------------------------------------------------+
+| -> Filter: (dept.DNAME = 'SALES')  (cost=0.65 rows=1)
+    -> Table scan on DEPT  (cost=0.65 rows=4)
+ |
++------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE INDEX DNAME_IDX ON DEPT(DNAME);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM DEPT WHERE DNAME='SALES';
++------------------------------------------------------------------------------+
+| EXPLAIN                                                                      |
++------------------------------------------------------------------------------+
+| -> Index lookup on DEPT using DNAME_IDX (DNAME='SALES')  (cost=0.35 rows=1)
+ |
++------------------------------------------------------------------------------+
+1 row in set (0.01 sec)
+
+mysql> EXPLAIN  SELECT * FROM DEPT WHERE DNAME='SALES';
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key       | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | DEPT  | NULL       | ref  | DNAME_IDX     | DNAME_IDX | 59      | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM EMP WHERE DEPTNO=20 AND JOB='CLERK';
++---------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: ((emp.JOB = 'CLERK') and (emp.DEPTNO = 20))  (cost=1.75 rows=1)
+    -> Table scan on EMP  (cost=1.75 rows=15)
+ |
++---------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN  SELECT * FROM DEPT WHERE DNAME='SALES';
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key       | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | DEPT  | NULL       | ref  | DNAME_IDX     | DNAME_IDX | 59      | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN  SELECT * FROM EMP WHERE DEPTNO=20 AND JOB='CLERK';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |     6.67 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> SHOW INDEXES FROM NEWHR.EMP;
+Empty set (0.00 sec)
+
+mysql> 
+mysql> SHOW INDEXES FROM NEWHR.DEPT;
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name  | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| dept  |          1 | DNAME_IDX |            1 | DNAME       | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM DEPT WHERE DNAME='SALES';
++------------------------------------------------------------------------------+
+| EXPLAIN                                                                      |
++------------------------------------------------------------------------------+
+| -> Index lookup on DEPT using DNAME_IDX (DNAME='SALES')  (cost=0.35 rows=1)
+ |
++------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE DEPT ALTER INDEX DNAME_IDX INVISIBLE;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM DEPT WHERE DNAME='SALES';
++------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                              |
++------------------------------------------------------------------------------------------------------+
+| -> Filter: (dept.DNAME = 'SALES')  (cost=0.65 rows=1)
+    -> Table scan on DEPT  (cost=0.65 rows=4)
+ |
++------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW INDEXES FROM NEWHR.EMP;
+Empty set (0.00 sec)
+
+mysql> SHOW INDEXES FROM NEWHR.DEPT;
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name  | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| dept  |          1 | DNAME_IDX |            1 | DNAME       | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT INDEX_NAME,IS_VISIBLE FROM INFORMATION_SCHEMA.STATISTICS
+    -> WHERE TABLE_SCHEMA='NEWHR' AND TABLE_NAME='DEPT';
++------------+------------+
+| INDEX_NAME | IS_VISIBLE |
++------------+------------+
+| DNAME_IDX  | NO         |
++------------+------------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE DEPT ALTER INDEX DNAME_IDX VISIBLE;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT INDEX_NAME,IS_VISIBLE FROM INFORMATION_SCHEMA.STATISTICS
+    -> WHERE TABLE_SCHEMA='NEWHR' AND TABLE_NAME='DEPT';
++------------+------------+
+| INDEX_NAME | IS_VISIBLE |
++------------+------------+
+| DNAME_IDX  | YES        |
++------------+------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN  SELECT * FROM EMP WHERE DEPTNO=20 AND JOB='CLERK';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |     6.67 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM EMP WHERE DEPTNO=20 AND JOB='CLERK';
++---------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: ((emp.JOB = 'CLERK') and (emp.DEPTNO = 20))  (cost=1.75 rows=1)
+    -> Table scan on EMP  (cost=1.75 rows=15)
+ |
++---------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE INDEX COMP_IDX ON EMP(DEPTNO,JOB);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> EXPLAIN  FORMAT=TREE SELECT * FROM EMP WHERE DEPTNO=20 AND JOB='CLERK';
++-------------------------------------------------------------------------------------+
+| EXPLAIN                                                                             |
++-------------------------------------------------------------------------------------+
+| -> Index lookup on EMP using COMP_IDX (DEPTNO=20, JOB='CLERK')  (cost=0.70 rows=2)
+ |
++-------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM FRUIT;
++------+-------+--------+
+| ID   | NAME  | PRICE  |
++------+-------+--------+
+|  103 | GUAVA |  80.00 |
+|  101 | MANGO | 150.00 |
+|  105 | APPLE | 200.00 |
++------+-------+--------+
+3 rows in set (0.01 sec)
+
+mysql> EXPLAIN SELECT * FROM FRUIT WHERE ID=101;
++----+-------------+-------+------------+------+---------------+--------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key    | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+--------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | FRUIT | NULL       | ref  | ID_IDX        | ID_IDX | 5       | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+--------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM FRUIT WHERE ID=101;
++---------------------------------------------------------------------+
+| EXPLAIN                                                             |
++---------------------------------------------------------------------+
+| -> Index lookup on FRUIT using ID_IDX (ID=101)  (cost=0.35 rows=1)
+ |
++---------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> DESC FRUIT;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| ID    | int           | YES  | MUL | NULL    |       |
+| NAME  | varchar(20)   | YES  |     | NULL    |       |
+| PRICE | decimal(11,2) | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE RANGE_PART(EMPNO INT ,
+    ->                           ENAME VARCHAR(20),
+    ->                           SAL INT)
+    ->   PARTITION BY RANGE(SAL)
+    ->   (
+    ->     PARTITION P_1000 VALUES LESS THAN (1000),
+    ->     PARTITION P_2000 VALUES LESS THAN (2000),
+    ->     PARTITION P_3000 VALUES LESS THAN (3000),
+    ->     PARTITION P_4000 VALUES LESS THAN (4000),
+    ->     PARTITION P_1000 VALUES LESS THAN (5000),
+    ->     PARTITION P_1000 VALUES LESS THAN (6000));
+ERROR 1517 (HY000): Duplicate partition name P_1000
+mysql> 
+mysql> CREATE TABLE RANGE_PART(EMPNO INT ,
+    ->                           ENAME VARCHAR(20),
+    ->                           SAL INT)
+    ->   PARTITION BY RANGE(SAL)
+    ->   (
+    ->     PARTITION P_1000 VALUES LESS THAN (1000),
+    ->     PARTITION P_2000 VALUES LESS THAN (2000),
+    ->     PARTITION P_3000 VALUES LESS THAN (3000),
+    ->     PARTITION P_4000 VALUES LESS THAN (4000),
+    ->     PARTITION P_5000 VALUES LESS THAN (5000),
+    ->     PARTITION P_6000 VALUES LESS THAN (6000));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql>  INSERT INTO RANGE_PART SELECT EMPNO,ENAME,SAL FROM
+    ->    CHECK_EXTENT;
+Query OK, 851969 rows affected (17.82 sec)
+Records: 851969  Duplicates: 0  Warnings: 0
+
+mysql> EXPLAIN SELECT * FROM RANGE_PART WHERE SAL=3000;
++----+-------------+------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+| id | select_type | table      | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra       |
++----+-------------+------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+|  1 | SIMPLE      | RANGE_PART | P_4000     | ALL  | NULL          | NULL | NULL    | NULL | 131093 |    10.00 | Using where |
++----+-------------+------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM RANGE_PART WHERE SAL BETWEEN 2000 AND 3000;
++----+-------------+------------+---------------+------+---------------+------+---------+------+--------+----------+-------------+
+| id | select_type | table      | partitions    | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra       |
++----+-------------+------------+---------------+------+---------------+------+---------+------+--------+----------+-------------+
+|  1 | SIMPLE      | RANGE_PART | P_3000,P_4000 | ALL  | NULL          | NULL | NULL    | NULL | 322760 |    11.11 | Using where |
++----+-------------+------------+---------------+------+---------------+------+---------+------+--------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> SELECT DISTINCT YEAR(HIREDATE) FROM EMP;
++----------------+
+| YEAR(HIREDATE) |
++----------------+
+|           NULL |
+|           1980 |
+|           1981 |
+|           1987 |
+|           1982 |
++----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT YEAR(HIREDATE) FROM CHECK_EXTENT;
++----------------+
+| YEAR(HIREDATE) |
++----------------+
+|           1980 |
+|           1981 |
+|           1987 |
+|           1982 |
++----------------+
+4 rows in set (0.57 sec)
+
+mysql> 
+mysql> select partition_name, partition_ordinal_position, table_rows 
+    -> from information_schema.partitions where table_name='RANGE_PART'
+    -> 
+    -> 
+    -> ;
++----------------+----------------------------+------------+
+| PARTITION_NAME | PARTITION_ORDINAL_POSITION | TABLE_ROWS |
++----------------+----------------------------+------------+
+| P_1000         |                          1 |     130944 |
+| P_2000         |                          2 |     392430 |
+| P_3000         |                          3 |     191667 |
+| P_4000         |                          4 |     131093 |
+| P_5000         |                          5 |          0 |
+| P_6000         |                          6 |          1 |
++----------------+----------------------------+------------+
+6 rows in set (0.01 sec)
+
+mysql> create table hash_emp
+    ->     (empno int primary key,
+    ->      ename varchar(20),
+    ->      sal float(11,2))
+    ->     partition by hash(empno)
+    ->     partitions 4;
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+
+mysql> insert into hash_emp select empno,ename,sal from check_extent;
+Query OK, 851969 rows affected (14.32 sec)
+Records: 851969  Duplicates: 0  Warnings: 0
+
+mysql> select partition_name, partition_ordinal_position, table_rows 
+    -> from information_schema.partitions where table_name='RANGE_PART'
+    -> ^C
+mysql> select partition_name, partition_ordinal_position, table_rows 
+    -> from information_schema.partitions where table_name='HASH_EMP';
++----------------+----------------------------+------------+
+| PARTITION_NAME | PARTITION_ORDINAL_POSITION | TABLE_ROWS |
++----------------+----------------------------+------------+
+| p0             |                          1 |     212953 |
+| p1             |                          2 |     213033 |
+| p2             |                          3 |     212892 |
+| p3             |                          4 |     209500 |
++----------------+----------------------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TEMPORARY TABLE TEMP_1(SAL FLOAT);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> INSERT INTO TEMP_1 SELECT SAL FROM EMP;
+Query OK, 15 rows affected (0.00 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM TEMP_1;
++------+
+| SAL  |
++------+
+| NULL |
+|  800 |
+| 1600 |
+| 1250 |
+| 2975 |
+| 1250 |
+| 2850 |
+| 2450 |
+| 3000 |
+| 5000 |
+| 1500 |
+| 1100 |
+|  950 |
+| 3000 |
+| 1300 |
++------+
+15 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql>  DELIMITER $$
+mysql>   create procedure pro_cursor(pno int)
+    ->   begin
+    ->       declare cur int default 0;
+    ->       declare v1 numeric(11,2);
+    ->       declare v2 varchar(20);
+    ->       declare cur1 cursor for select sal,ename from emp
+    ->                   where deptno=pno;
+    ->       DECLARE CONTINUE HANDLER FOR NOT FOUND SET cur = 1;
+    ->       open cur1;
+    ->         GETCUR: loop
+    ->                fetch cur1 into v1,v2;
+    ->                 if cur=1 then
+    ->                 leave GETCUR;
+    ->                 end if;
+    -> 
+    ->         end loop;
+    ->         close cur1;
+    ->      end$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CALL PRO_CURSOR(30);
+    -> ^C
+mysql> DELIMITER ;
+mysql> CALL PRO_CURSOR(30);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL PRO_CURSOR(10);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> drop procedure pro_cursor();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '()' at line 1
+mysql> drop procedure pro_cursor;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>  DELIMITER $$
+mysql>   create procedure pro_cursor(pno int)
+    ->   begin
+    ->       declare cur int default 0;
+    ->       declare v1 numeric(11,2);
+    ->       declare v2 varchar(20);
+    ->       declare cur1 cursor for select sal,ename from emp
+    ->                   where deptno=pno;
+    ->       DECLARE CONTINUE HANDLER FOR NOT FOUND SET cur = 1;
+    ->       open cur1;
+    ->         GETCUR: loop
+    ->                fetch cur1 into v1,v2;
+    ->                 if cur=1 then
+    ->                 leave GETCUR;
+    ->                 end if;
+    ->                 select concat("sal=",v1,",","ename=",v2);
+    ->         end loop;
+    ->         close cur1;
+    ->      end$$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> delimiter ;
+mysql> call pro_cursor(10);
++-----------------------------------+
+| concat("sal=",v1,",","ename=",v2) |
++-----------------------------------+
+| sal=1300.00,ename=MILLER          |
++-----------------------------------+
+1 row in set (0.00 sec)
+
++-----------------------------------+
+| concat("sal=",v1,",","ename=",v2) |
++-----------------------------------+
+| sal=2450.00,ename=CLARK           |
++-----------------------------------+
+1 row in set (0.05 sec)
+
++-----------------------------------+
+| concat("sal=",v1,",","ename=",v2) |
++-----------------------------------+
+| sal=5000.00,ename=KING            |
++-----------------------------------+
+1 row in set (0.11 sec)
+
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> notee;

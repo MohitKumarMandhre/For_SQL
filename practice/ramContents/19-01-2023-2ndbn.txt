@@ -1,0 +1,45 @@
+
+SELECT_TYPE
+------------
+ simple
+ primary
+ union
+ subquery
+
+
+type
+------------
+ null
+ ref            non unique index
+ const          primary key/unique
+ index_merge    where clause columns having individual indexes
+ system
+ all     
+ range
+ index
+
+
+ UNUSED INDEXES
+ -------------------
+  SYS.SCHEMA_UNUSED_INDEXES
+
+   After checking from above, unused indexes can be dropped;
+
+
+
+ OPTIMIZER JOINS
+ -----------------
+  HASH           WHENEVER THERE ARE NO INDEXES ON TABLES TO BE
+                 JOINED
+  NESTED LOOPS
+
+
+
+
+
+
+
+
+
+
+             

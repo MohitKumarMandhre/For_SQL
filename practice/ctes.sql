@@ -52,8 +52,35 @@ SELECT * from cte4
 
 select month( CURDATE());
 
+-- inline views- define time and again
 
+select e.`ENAME`, e.`DEPTNO`, m.enaME as 'mname', m.DEPTNO as MDEPTNO, ecnt, mcnt
+from emp as e join emp as m
+on m.empno = e.MGR
+join
+    (select count(*) ecnt, deptno
+    from emp
+    group by DEPTNO) ec
+    on e.deptno = ec.deptno
+join
+    (select count(*) mcnt, deptno
+    from emp
+    group by DEPTNO) mc
+    on mc.deptno = m.deptno
+;
 
+select deptno, count(* ) from emp group by `DEPTNO`;
 
-
+with dc as (
+    select deptno, count(*) as cnt 
+    from emp group by deptno
+)
+select e.ename as emp, e.deptno edep, m.ename as man, m.deptno mdep, dc1.cnt ecnt, dc2.cnt mcnt
+from emp e join emp m 
+ON e.`MGR` = m.`EMPNO`
+join dc dc1
+ON e.`DEPTNO` = dc1.deptno
+join dc dc2
+on m.deptno = dc2.`DEPTNO`
+;
 

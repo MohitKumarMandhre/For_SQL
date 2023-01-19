@@ -1,0 +1,226 @@
+
+
+ PROCEDURE                              FUNCTION
+-----------------------------------------------------------------
+
+MAY OR MAY NOT RETURN VALUE           MUST AND SHOULD RETURN
+                                      SINGLE VALUE
+
+DOES NOT CONTAIN RETURN STATEMENT     RETURN STATEMENT IS A MUST
+
+CANT BE USED DIRECTLY WITH SQL        CAN BE USED WITH SQL
+STATEMENTS                            STATEMENTS DIRECTLY
+
+
+  CREATE FUNCTION <FUNCTIONAME> ()
+  RETURNS DATATYPE  DETERMINISTIC
+  BEGIN
+    DECLARE
+
+    ...
+
+    RETURN 
+  END 
+
+
+
+
+
+FUNCTION `fun_hr1`(p1 int) RETURNS decimal(11,2)
+    DETERMINISTIC
+begin
+   declare v1 numeric(11,2);
+   declare v2 numeric(11,2);
+   declare v3 varchar(20);
+   select job_id,salary into v3,v1 from employees where employee_id=p1;
+   if v3="SH_CLERK" then
+      set v2=1.5*v1;
+   elseif v3="SA_REP" then
+      set v2=1.75*v1;
+   elseif v3="MK_MAN" then
+      set v2=2.0*v1;
+   else
+      set v2=v1;
+   end if;
+   return v2;
+  end
+
+
+delimiter $$
+create function fun_hr_leap(p1 int)
+returns varchar(50) deterministic
+begin
+  declare vleap varchar(50);
+  declare v1 int;
+  select date_format(concat(year(hire_date),'-12-31'),'%j') into v1
+  from employees where employee_id=p1;
+  if v1=366 then
+    set vleap=concat(p1,' joined in leap year
+');
+else
+    set vleap=concat(p1,' not joined in leap year');
+  end if;
+  return vleap;
+ end $$
+
+
+
+
+EMPLOYEES WILL GET A JOINING BONUS.
+
+  CRITERIA
+ ------------
+  ON OR BEFORE 15 OF A MONTH WILL BE PAID JOINING BONUS
+      ON THE LAST FRIDAY AFTER 1 YEAR
+
+  2022-01-15       2023-01-26  LAST FRIDAY
+
+
+
+  2022-01-18       2023-02-26  LAST FRIDAY
+
+
+
+
+
+
+TRIGGER
+---------------
+  * WHENEVER EVENT OCCURS TRIGGERS FIRES
+
+  * enforces complex business rules
+
+ TRIGGER EVENTS
+---------------------
+  INSERT
+  UPDATE
+  DELETE
+
+     TRIGGER TIMINGS
+     -------------------
+      BEFORE
+      AFTER
+
+  ROW LEVEL TRIGGERS
+        NEW
+        OLD
+==============================================
+                    NEW           OLD
+===============================================
+     INSERT         NEW           -
+     UPDATE         NEW           OLD
+     DELETE         -             OLD
+
+
+
+
+  CREATE TRIGGER <TRIGGER NAME>
+  before/after <event> ON <TABLENAME>
+  FOR EACH ROW
+  BEGIN
+      STATEMENTS
+
+  END
+
+ #CREATE A TRIGGER TO INSERT INTO RETIRED TABLE
+  # WHENEVER DELETE HAPPENS ON EMPLOYEES TABLE
+  delimiter 
+  create trigger trig_hr_del
+  before delete on emp_ret
+  for each row
+  begin
+       insert into retired values(old.first_name);
+  end $$
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+delimiter $$
+create trigger trig_redu
+before update on emp_ret
+for each row
+begin
+   if new.salary<old.salary then
+      signal sqlstate '45000' set message_text="**beware!I want hike**";
+      end if;
+      end $$
+
+
+
+create table account
+(accno int primary key,
+ name varchar(20),
+ balance numeric(11,2));
+
+create table trans
+(accno int,
+ wd    numeric(11,2),
+ dep   numeric(11,2),
+ foreign key (accno)
+ references account(accno));
+
+
+ create a trigger to update balance in account table
+ whenever wd(withdrawal),dep(deposit) happens on trans table
+
+
+delimiter $$
+ create trigger trig_bal
+ before insert on trans
+ for each row
+ begin
+   if new.dep is not null then
+     update account set 
+     balance=balance+new.dep where accno=new.accno;
+   else
+     update account set balance=balance-new.wd
+     where accno=new.accno;
+   end if;
+ end$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

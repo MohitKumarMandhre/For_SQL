@@ -1,0 +1,224 @@
+STRUCTURE OF TABLE
+
+DESC
+SHOW COLUMNS
+SHOW CREATE TABLE
+
+
+INDEX
+------------
+PRIMARY KEY
+UNIQUE
+FOREIGN KEY
+
+
+
+
+
+ SELECT
+ -----------
+  PARSING
+    OPTIMIZING
+      EXECUTING
+          FETCHING
+
+
+CREATING INDEXES
+------------------
+  CREATE INDEX
+  ALTER TABLE 
+
+  FIND OUT EMPLOYEES WORKING IN DEPTNO 20 AS CLERK
+
+  CHECK THE PLAN
+
+  TUNE THE QUERY(OPTIMIZE)
+
+
+  TABLESCAN
+ --------------
+    (FORCING INDEX)
+       USE INDEX
+          FORCE INDEX
+           IGNORE INDEX
+
+  SELECT * FROM EMP FORCE INDEX(NAMEIDX) WHERE DEPTNO=20
+            AND JOB='CLERK';
+
+RANGE PARTITIONING
+-----------------------
+  * MOST OF THE COMPANIES USE THIS TYPE OF PARTITIONING
+
+
+  CREATE TABLE RANGE_PART(EMPNO INT ,
+                          ENAME VARCHAR(20),
+                          SAL INT)
+  PARTITION BY RANGE(SAL)
+  (
+    PARTITION P_1000 VALUES LESS THAN (1000),
+    PARTITION P_2000 VALUES LESS THAN (2000),
+    PARTITION P_3000 VALUES LESS THAN (3000),
+    PARTITION P_4000 VALUES LESS THAN (4000),
+    PARTITION P_5000 VALUES LESS THAN (5000),
+    PARTITION P_6000 VALUES LESS THAN (6000));
+
+   INSERT INTO RANGE_PART SELECT EMPNO,ENAME,SAL FROM
+   CHECK_EXTENT;
+
+select partition_name, partition_ordinal_position, table_rows 
+from information_schema.partitions where table_name='RANGE_PART'
+
+
+SELECT  * FROM RANGE_PART PARTITION (P_1000);
+
+
+  year(STR_TO_DATE('1981-12-03','%Y-%M-%d'))
+
+
+
+
+
+
+ TEMPORARY TABLE
+--------------------
+
+   DATA IS AVAILABLE ONLY FOR A SESSION DURATION
+
+
+
+
+
+
+
+
+ procedures
+ -----------------
+   where clause
+   all rows
+
+
+  row by row
+
+  cursor
+ -------------
+
+  * to handle result row by row
+  
+  STEPS
+  ---------
+   DECLARE
+   OPEN
+   FETCH
+   CLOSE
+
+
+  DECLARE
+ ----------------
+      CURSORNAME CURSOR FOR <SELECT>
+
+ DELIMITER $$
+  create procedure pro_cursor(pno int)
+  begin
+      declare cur int default 0;
+      declare v1 numeric(11,2);
+      declare v2 varchar(20);
+      declare cur1 cursor for select sal,ename from emp
+                  where deptno=pno;
+      DECLARE CONTINUE HANDLER FOR NOT FOUND SET cur = 1;
+      open cur1;
+        GETCUR: loop
+               fetch cur1 into v1,v2;
+                if cur=1 then
+                leave GETCUR;
+                end if;
+                select concat("sal=",v1,",","ename=",v2);
+        end loop;
+        close cur1;
+     end$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create table hash_emp
+    (empno int primary key,
+     ename varchar(20),
+     sal float(11,2))
+    partition by hash(empno)
+    partitions 4;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

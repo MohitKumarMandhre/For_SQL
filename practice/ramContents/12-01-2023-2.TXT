@@ -1,0 +1,1040 @@
+mysql> \! CLS;
+mysql> #create a function to pass employee_id as parameter
+mysql> #bonus
+mysql> #sh_clerk 1.5*salary,sa_rep 1.75*salary ,mk_man 2.0*salary others salary
+mysql> delimiter $$
+mysql> create function fun_hr1(p1 int)
+    -> returns numeric(11,2) deterministic
+    -> begin
+    ->    declare v1 numeric(11,2);
+    ->    declare v2 numeric(11,2);
+    ->    declare v3 varchar(20);
+    ->    select job_id,salary into v3,v1 from employees where employee_id=p1;
+    ->    if v3="SH_CLERK" then
+    ->       set v2=1.5*salary;
+    ->    elsif v3="SA_REP" then
+    ->       set v2=1.75*salary;
+    ->    elsif v3="MK_MAN" then
+    ->       set v2=2.0*salary;
+    ->    else
+    ->       set v2=v1;
+    ->    end if;
+    ->    return v2;
+    ->   end $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'v3="SA_REP" then
+      set v2=1.75*salary;
+   elsif v3="MK_MAN" then
+      set v' at line 10
+mysql> delimiter $$
+mysql> ^C
+mysql> 
+mysql> \! cls;
+mysql> select employee_id,job_id,salary,fun_hr1(employee_id) "bonus"
+    -> from employees
+    -> order by 2;
+    -> ^C
+mysql> delimiter ;
+mysql> select employee_id,job_id,salary,fun_hr1(employee_id) "bonus"
+    -> from employees
+    -> order by 2;
++-------------+------------+----------+----------+
+| employee_id | job_id     | salary   | bonus    |
++-------------+------------+----------+----------+
+|         206 | AC_ACCOUNT |  8300.00 |  8300.00 |
+|         205 | AC_MGR     | 12000.00 | 12000.00 |
+|         200 | AD_ASST    |  4400.00 |  4400.00 |
+|         100 | AD_PRES    | 24000.00 | 24000.00 |
+|         101 | AD_VP      | 17000.00 | 17000.00 |
+|         102 | AD_VP      | 17000.00 | 17000.00 |
+|         109 | FI_ACCOUNT |  9000.00 |  9000.00 |
+|         110 | FI_ACCOUNT |  8200.00 |  8200.00 |
+|         111 | FI_ACCOUNT |  7700.00 |  7700.00 |
+|         112 | FI_ACCOUNT |  7800.00 |  7800.00 |
+|         113 | FI_ACCOUNT |  6900.00 |  6900.00 |
+|         108 | FI_MGR     | 12000.00 | 12000.00 |
+|         203 | HR_REP     |  6500.00 |  6500.00 |
+|         103 | IT_PROG    |  9000.00 |  9000.00 |
+|         104 | IT_PROG    |  6000.00 |  6000.00 |
+|         105 | IT_PROG    |  4800.00 |  4800.00 |
+|         106 | IT_PROG    |  4800.00 |  4800.00 |
+|         107 | IT_PROG    |  4200.00 |  4200.00 |
+|         201 | MK_MAN     | 13000.00 | 26000.00 |
+|         202 | MK_REP     |  6000.00 |  6000.00 |
+|         204 | PR_REP     | 10000.00 | 10000.00 |
+|         115 | PU_CLERK   |  3100.00 |  3100.00 |
+|         116 | PU_CLERK   |  2900.00 |  2900.00 |
+|         117 | PU_CLERK   |  2800.00 |  2800.00 |
+|         118 | PU_CLERK   |  2600.00 |  2600.00 |
+|         119 | PU_CLERK   |  2500.00 |  2500.00 |
+|         114 | PU_MAN     | 11000.00 | 11000.00 |
+|         145 | SA_MAN     | 14000.00 | 14000.00 |
+|         146 | SA_MAN     | 13500.00 | 13500.00 |
+|         147 | SA_MAN     | 12000.00 | 12000.00 |
+|         148 | SA_MAN     | 11000.00 | 11000.00 |
+|         149 | SA_MAN     | 10500.00 | 10500.00 |
+|         150 | SA_REP     | 10000.00 | 17500.00 |
+|         151 | SA_REP     |  9500.00 | 16625.00 |
+|         152 | SA_REP     |  9000.00 | 15750.00 |
+|         153 | SA_REP     |  8000.00 | 14000.00 |
+|         154 | SA_REP     |  7500.00 | 13125.00 |
+|         155 | SA_REP     |  7000.00 | 12250.00 |
+|         156 | SA_REP     | 10000.00 | 17500.00 |
+|         157 | SA_REP     |  9500.00 | 16625.00 |
+|         158 | SA_REP     |  9000.00 | 15750.00 |
+|         159 | SA_REP     |  8000.00 | 14000.00 |
+|         160 | SA_REP     |  7500.00 | 13125.00 |
+|         161 | SA_REP     |  7000.00 | 12250.00 |
+|         162 | SA_REP     | 10500.00 | 18375.00 |
+|         163 | SA_REP     |  9500.00 | 16625.00 |
+|         164 | SA_REP     |  7200.00 | 12600.00 |
+|         165 | SA_REP     |  6800.00 | 11900.00 |
+|         166 | SA_REP     |  6400.00 | 11200.00 |
+|         167 | SA_REP     |  6200.00 | 10850.00 |
+|         168 | SA_REP     | 11500.00 | 20125.00 |
+|         169 | SA_REP     | 10000.00 | 17500.00 |
+|         170 | SA_REP     |  9600.00 | 16800.00 |
+|         171 | SA_REP     |  7400.00 | 12950.00 |
+|         172 | SA_REP     |  7300.00 | 12775.00 |
+|         173 | SA_REP     |  6100.00 | 10675.00 |
+|         174 | SA_REP     | 11000.00 | 19250.00 |
+|         175 | SA_REP     |  8800.00 | 15400.00 |
+|         176 | SA_REP     |  8600.00 | 15050.00 |
+|         177 | SA_REP     |  8400.00 | 14700.00 |
+|         178 | SA_REP     |  7000.00 | 12250.00 |
+|         179 | SA_REP     |  6200.00 | 10850.00 |
+|         180 | SH_CLERK   |  3200.00 |  4800.00 |
+|         181 | SH_CLERK   |  3100.00 |  4650.00 |
+|         182 | SH_CLERK   |  2500.00 |  3750.00 |
+|         183 | SH_CLERK   |  2800.00 |  4200.00 |
+|         184 | SH_CLERK   |  4200.00 |  6300.00 |
+|         185 | SH_CLERK   |  4100.00 |  6150.00 |
+|         186 | SH_CLERK   |  3400.00 |  5100.00 |
+|         187 | SH_CLERK   |  3000.00 |  4500.00 |
+|         188 | SH_CLERK   |  3800.00 |  5700.00 |
+|         189 | SH_CLERK   |  3600.00 |  5400.00 |
+|         190 | SH_CLERK   |  2900.00 |  4350.00 |
+|         191 | SH_CLERK   |  2500.00 |  3750.00 |
+|         192 | SH_CLERK   |  4000.00 |  6000.00 |
+|         193 | SH_CLERK   |  3900.00 |  5850.00 |
+|         194 | SH_CLERK   |  3200.00 |  4800.00 |
+|         195 | SH_CLERK   |  2800.00 |  4200.00 |
+|         196 | SH_CLERK   |  3100.00 |  4650.00 |
+|         197 | SH_CLERK   |  3000.00 |  4500.00 |
+|         198 | SH_CLERK   |  2600.00 |  3900.00 |
+|         199 | SH_CLERK   |  2600.00 |  3900.00 |
+|         125 | ST_CLERK   |  3200.00 |  3200.00 |
+|         126 | ST_CLERK   |  2700.00 |  2700.00 |
+|         127 | ST_CLERK   |  2400.00 |  2400.00 |
+|         128 | ST_CLERK   |  2200.00 |  2200.00 |
+|         129 | ST_CLERK   |  3300.00 |  3300.00 |
+|         130 | ST_CLERK   |  2800.00 |  2800.00 |
+|         131 | ST_CLERK   |  2500.00 |  2500.00 |
+|         132 | ST_CLERK   |  2100.00 |  2100.00 |
+|         133 | ST_CLERK   |  3300.00 |  3300.00 |
+|         134 | ST_CLERK   |  2900.00 |  2900.00 |
+|         135 | ST_CLERK   |  2400.00 |  2400.00 |
+|         136 | ST_CLERK   |  2200.00 |  2200.00 |
+|         137 | ST_CLERK   |  3600.00 |  3600.00 |
+|         138 | ST_CLERK   |  3200.00 |  3200.00 |
+|         139 | ST_CLERK   |  2700.00 |  2700.00 |
+|         140 | ST_CLERK   |  2500.00 |  2500.00 |
+|         141 | ST_CLERK   |  3500.00 |  3500.00 |
+|         142 | ST_CLERK   |  3100.00 |  3100.00 |
+|         143 | ST_CLERK   |  2600.00 |  2600.00 |
+|         144 | ST_CLERK   |  2500.00 |  2500.00 |
+|         120 | ST_MAN     |  8000.00 |  8000.00 |
+|         121 | ST_MAN     |  8200.00 |  8200.00 |
+|         122 | ST_MAN     |  7900.00 |  7900.00 |
+|         123 | ST_MAN     |  6500.00 |  6500.00 |
+|         124 | ST_MAN     |  5800.00 |  5800.00 |
++-------------+------------+----------+----------+
+107 rows in set (0.01 sec)
+
+mysql> 
+mysql> #create a function to pass employee_id as parameter and return joined in leap year or not
+mysql> 
+mysql> 
+mysql> select date_format(concat(year(curdate()),'-12-31'),'%j') ;
++----------------------------------------------------+
+| date_format(concat(year(curdate()),'-12-31'),'%j') |
++----------------------------------------------------+
+| 365                                                |
++----------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create function fun_hr_leap(p1 int)
+    -> returns varchar(50) deterministic
+    -> begin
+    ->   declare vleap varchar(50);
+    ->   declare v1 int;
+    ->   select date_format(concat(year(hire_date()),'-12-31'),'%j') into v1
+    ->   from employees where employee_id=p1;
+    ->   if v1=366 then
+    ->     set vleap=concat(p1,' joined in leap year
+    '> ');
+    -> else
+    ->     set vleap=concat(p1,' not joined in leap year');
+    ->   end if;
+    ->   return vleap;
+    ->  end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> select employee_id,hire_date,fun_hr_leap(employee_id) "leap/notleap"
+    -> from   employees;
+ERROR 1305 (42000): FUNCTION newhr.hire_date does not exist
+mysql> drop function fun_hr_leap;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter $$
+mysql> create function fun_hr_leap(p1 int)
+    -> returns varchar(50) deterministic
+    -> begin
+    ->   declare vleap varchar(50);
+    ->   declare v1 int;
+    ->   select date_format(concat(year(hire_date),'-12-31'),'%j') into v1
+    ->   from employees where employee_id=p1;
+    ->   if v1=366 then
+    ->     set vleap=concat(p1,' joined in leap year
+    '> ');
+    -> else
+    ->     set vleap=concat(p1,' not joined in leap year');
+    ->   end if;
+    ->   return vleap;
+    ->  end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> select employee_id,hire_date,fun_hr_leap(employee_id) "leap/notleap"
+    -> from   employees;
+    -> ^C
+mysql> delimiter ;
+mysql> select employee_id,hire_date,fun_hr_leap(employee_id) "leap/notleap"
+    -> from   employees;
++-------------+------------+-----------------------------+
+| employee_id | hire_date  | leap/notleap                |
++-------------+------------+-----------------------------+
+|         100 | 1987-06-17 | 100 not joined in leap year |
+|         101 | 1989-09-21 | 101 not joined in leap year |
+|         102 | 1993-01-13 | 102 not joined in leap year |
+|         103 | 1990-01-03 | 103 not joined in leap year |
+|         104 | 1991-05-21 | 104 not joined in leap year |
+|         105 | 1997-06-25 | 105 not joined in leap year |
+|         106 | 1998-02-05 | 106 not joined in leap year |
+|         107 | 1999-02-07 | 107 not joined in leap year |
+|         108 | 1994-08-17 | 108 not joined in leap year |
+|         109 | 1994-08-16 | 109 not joined in leap year |
+|         110 | 1997-09-28 | 110 not joined in leap year |
+|         111 | 1997-09-30 | 111 not joined in leap year |
+|         112 | 1998-03-07 | 112 not joined in leap year |
+|         113 | 1999-12-07 | 113 not joined in leap year |
+|         114 | 1994-12-07 | 114 not joined in leap year |
+|         115 | 1995-05-18 | 115 not joined in leap year |
+|         116 | 1997-12-24 | 116 not joined in leap year |
+|         117 | 1997-07-24 | 117 not joined in leap year |
+|         118 | 1998-11-15 | 118 not joined in leap year |
+|         119 | 1999-08-10 | 119 not joined in leap year |
+|         120 | 1996-07-18 | 120 joined in leap year
+    |
+|         121 | 1997-04-10 | 121 not joined in leap year |
+|         122 | 1995-05-01 | 122 not joined in leap year |
+|         123 | 1997-10-10 | 123 not joined in leap year |
+|         124 | 1999-11-16 | 124 not joined in leap year |
+|         125 | 1997-07-16 | 125 not joined in leap year |
+|         126 | 1998-09-28 | 126 not joined in leap year |
+|         127 | 1999-01-14 | 127 not joined in leap year |
+|         128 | 2000-03-08 | 128 joined in leap year
+    |
+|         129 | 1997-08-20 | 129 not joined in leap year |
+|         130 | 1997-10-30 | 130 not joined in leap year |
+|         131 | 1997-02-16 | 131 not joined in leap year |
+|         132 | 1999-04-10 | 132 not joined in leap year |
+|         133 | 1996-06-14 | 133 joined in leap year
+    |
+|         134 | 1998-08-26 | 134 not joined in leap year |
+|         135 | 1999-12-12 | 135 not joined in leap year |
+|         136 | 2000-02-06 | 136 joined in leap year
+    |
+|         137 | 1995-07-14 | 137 not joined in leap year |
+|         138 | 1997-10-26 | 138 not joined in leap year |
+|         139 | 1998-02-12 | 139 not joined in leap year |
+|         140 | 1998-04-06 | 140 not joined in leap year |
+|         141 | 1995-10-17 | 141 not joined in leap year |
+|         142 | 1997-01-29 | 142 not joined in leap year |
+|         143 | 1998-03-15 | 143 not joined in leap year |
+|         144 | 1998-07-09 | 144 not joined in leap year |
+|         145 | 1996-10-01 | 145 joined in leap year
+    |
+|         146 | 1997-01-05 | 146 not joined in leap year |
+|         147 | 1997-03-10 | 147 not joined in leap year |
+|         148 | 1999-10-15 | 148 not joined in leap year |
+|         149 | 2000-01-29 | 149 joined in leap year
+    |
+|         150 | 1997-01-30 | 150 not joined in leap year |
+|         151 | 1997-03-24 | 151 not joined in leap year |
+|         152 | 1997-08-20 | 152 not joined in leap year |
+|         153 | 1998-03-30 | 153 not joined in leap year |
+|         154 | 1998-12-09 | 154 not joined in leap year |
+|         155 | 1999-11-23 | 155 not joined in leap year |
+|         156 | 1996-01-30 | 156 joined in leap year
+    |
+|         157 | 1996-03-04 | 157 joined in leap year
+    |
+|         158 | 1996-08-01 | 158 joined in leap year
+    |
+|         159 | 1997-03-10 | 159 not joined in leap year |
+|         160 | 1997-12-15 | 160 not joined in leap year |
+|         161 | 1998-11-03 | 161 not joined in leap year |
+|         162 | 1997-11-11 | 162 not joined in leap year |
+|         163 | 1999-03-19 | 163 not joined in leap year |
+|         164 | 2000-01-24 | 164 joined in leap year
+    |
+|         165 | 2000-02-23 | 165 joined in leap year
+    |
+|         166 | 2000-03-24 | 166 joined in leap year
+    |
+|         167 | 2000-04-21 | 167 joined in leap year
+    |
+|         168 | 1997-03-11 | 168 not joined in leap year |
+|         169 | 1998-03-23 | 169 not joined in leap year |
+|         170 | 1998-01-24 | 170 not joined in leap year |
+|         171 | 1999-02-23 | 171 not joined in leap year |
+|         172 | 1999-03-24 | 172 not joined in leap year |
+|         173 | 2000-04-21 | 173 joined in leap year
+    |
+|         174 | 1996-05-11 | 174 joined in leap year
+    |
+|         175 | 1997-03-19 | 175 not joined in leap year |
+|         176 | 1998-03-24 | 176 not joined in leap year |
+|         177 | 1998-04-23 | 177 not joined in leap year |
+|         178 | 1999-05-24 | 178 not joined in leap year |
+|         179 | 2000-01-04 | 179 joined in leap year
+    |
+|         180 | 1998-01-24 | 180 not joined in leap year |
+|         181 | 1998-02-23 | 181 not joined in leap year |
+|         182 | 1999-06-21 | 182 not joined in leap year |
+|         183 | 2000-02-03 | 183 joined in leap year
+    |
+|         184 | 1996-01-27 | 184 joined in leap year
+    |
+|         185 | 1997-02-20 | 185 not joined in leap year |
+|         186 | 1998-06-24 | 186 not joined in leap year |
+|         187 | 1999-02-07 | 187 not joined in leap year |
+|         188 | 1997-06-14 | 188 not joined in leap year |
+|         189 | 1997-08-13 | 189 not joined in leap year |
+|         190 | 1998-07-11 | 190 not joined in leap year |
+|         191 | 1999-12-19 | 191 not joined in leap year |
+|         192 | 1996-02-04 | 192 joined in leap year
+    |
+|         193 | 1997-03-03 | 193 not joined in leap year |
+|         194 | 1998-07-01 | 194 not joined in leap year |
+|         195 | 1999-03-17 | 195 not joined in leap year |
+|         196 | 1998-04-24 | 196 not joined in leap year |
+|         197 | 1998-05-23 | 197 not joined in leap year |
+|         198 | 1999-06-21 | 198 not joined in leap year |
+|         199 | 2000-01-13 | 199 joined in leap year
+    |
+|         200 | 1987-09-17 | 200 not joined in leap year |
+|         201 | 1996-02-17 | 201 joined in leap year
+    |
+|         202 | 1997-08-17 | 202 not joined in leap year |
+|         203 | 1994-06-07 | 203 not joined in leap year |
+|         204 | 1994-06-07 | 204 not joined in leap year |
+|         205 | 1994-06-07 | 205 not joined in leap year |
+|         206 | 1994-06-07 | 206 not joined in leap year |
++-------------+------------+-----------------------------+
+107 rows in set (0.01 sec)
+
+mysql> 
+mysql> select employee_id,hire_date,fun_hr_leap(employee_id) "leap/notleap"
+    -> from   employees
+    -> 
+    -> where date_format(concat(year(hire_date),'-12-31'),'%j')=366;
++-------------+------------+--------------------------+
+| employee_id | hire_date  | leap/notleap             |
++-------------+------------+--------------------------+
+|         120 | 1996-07-18 | 120 joined in leap year
+ |
+|         128 | 2000-03-08 | 128 joined in leap year
+ |
+|         133 | 1996-06-14 | 133 joined in leap year
+ |
+|         136 | 2000-02-06 | 136 joined in leap year
+ |
+|         145 | 1996-10-01 | 145 joined in leap year
+ |
+|         149 | 2000-01-29 | 149 joined in leap year
+ |
+|         156 | 1996-01-30 | 156 joined in leap year
+ |
+|         157 | 1996-03-04 | 157 joined in leap year
+ |
+|         158 | 1996-08-01 | 158 joined in leap year
+ |
+|         164 | 2000-01-24 | 164 joined in leap year
+ |
+|         165 | 2000-02-23 | 165 joined in leap year
+ |
+|         166 | 2000-03-24 | 166 joined in leap year
+ |
+|         167 | 2000-04-21 | 167 joined in leap year
+ |
+|         173 | 2000-04-21 | 173 joined in leap year
+ |
+|         174 | 1996-05-11 | 174 joined in leap year
+ |
+|         179 | 2000-01-04 | 179 joined in leap year
+ |
+|         183 | 2000-02-03 | 183 joined in leap year
+ |
+|         184 | 1996-01-27 | 184 joined in leap year
+ |
+|         192 | 1996-02-04 | 192 joined in leap year
+ |
+|         199 | 2000-01-13 | 199 joined in leap year
+ |
+|         201 | 1996-02-17 | 201 joined in leap year
+ |
++-------------+------------+--------------------------+
+21 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql>   delimiter 
+ERROR: 
+DELIMITER must be followed by a 'delimiter' character or string
+mysql>   create trigger trig_hr_del
+    ->   before delete on employees
+    ->   for each row
+    ->   begin
+    ->        insert into retired values(old.first_name);
+    ->   end $$
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> start transaction;
+    -> ^C
+mysql> delimiter ;
+mysql> create table retired as select first_name from employees where 1=2;
+ERROR 1050 (42S01): Table 'retired' already exists
+mysql> create table retired_hr as select first_name from employees where 1=2;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> drop table retired;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table retired as select first_name from employees where 1=2;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from employees where employee_id=100;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`newhr`.`departments`, CONSTRAINT `departments_ibfk_2` FOREIGN KEY (`manager_id`) REFERENCES `employees` (`employee_id`))
+mysql> create table emp_ret as select * from employees
+    -> where department_id=60;
+Query OK, 5 rows affected (0.03 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> drop trigger trig_hr_del;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter 
+ERROR: 
+DELIMITER must be followed by a 'delimiter' character or string
+mysql>   create trigger trig_hr_del
+    ->   before delete on emp_ret
+    ->   for each row
+    ->   begin
+    ->        insert into retired values(old.first_name);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+mysql>   end $$
+    -> 
+    -> 
+    -> ^C
+mysql> delimiter $$
+mysql>  create trigger trig_hr_del
+    ->  before delete on emp_ret
+    ->  for each row
+    ->  begin
+    ->       insert into retired values(old.first_name);
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> select * from retired;
+Empty set (0.00 sec)
+
+mysql> select * from emp_ret;
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id  | salary  | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+|         103 | Alexander  | Hunold    | AHUNOLD  | 590.423.4567 | 1990-01-03 | IT_PROG | 9000.00 |           NULL |        102 |            60 |
+|         104 | Bruce      | Ernst     | BERNST   | 590.423.4568 | 1991-05-21 | IT_PROG | 6000.00 |           NULL |        103 |            60 |
+|         105 | David      | Austin    | DAUSTIN  | 590.423.4569 | 1997-06-25 | IT_PROG | 4800.00 |           NULL |        103 |            60 |
+|         106 | Valli      | Pataballa | VPATABAL | 590.423.4560 | 1998-02-05 | IT_PROG | 4800.00 |           NULL |        103 |            60 |
+|         107 | Diana      | Lorentz   | DLORENTZ | 590.423.5567 | 1999-02-07 | IT_PROG | 4200.00 |           NULL |        103 |            60 |
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from emp_ret where employee_id=107;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from retired;
++------------+
+| first_name |
++------------+
+| Diana      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> create table date_table(slno int primary key,
+    -> ^C
+mysql> 
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from retired;
+Empty set (0.00 sec)
+
+mysql> select * from emp_ret;
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id  | salary  | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+|         103 | Alexander  | Hunold    | AHUNOLD  | 590.423.4567 | 1990-01-03 | IT_PROG | 9000.00 |           NULL |        102 |            60 |
+|         104 | Bruce      | Ernst     | BERNST   | 590.423.4568 | 1991-05-21 | IT_PROG | 6000.00 |           NULL |        103 |            60 |
+|         105 | David      | Austin    | DAUSTIN  | 590.423.4569 | 1997-06-25 | IT_PROG | 4800.00 |           NULL |        103 |            60 |
+|         106 | Valli      | Pataballa | VPATABAL | 590.423.4560 | 1998-02-05 | IT_PROG | 4800.00 |           NULL |        103 |            60 |
+|         107 | Diana      | Lorentz   | DLORENTZ | 590.423.5567 | 1999-02-07 | IT_PROG | 4200.00 |           NULL |        103 |            60 |
++-------------+------------+-----------+----------+--------------+------------+---------+---------+----------------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> create table date_table(slno int primary key,
+    ->                         date1 date check(date1<=curdate()));
+ERROR 3814 (HY000): An expression of a check constraint 'date_table_chk_1' contains disallowed function: curdate.
+mysql> 
+mysql> 
+mysql> 
+mysql> create table date_table(slno int primary key,
+    ->                         date1 date );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter $$
+mysql> create trigger trig_check
+    -> before insert on date_table
+    -> for each row
+    -> begin
+    ->     if new.date1 >curdate() then
+    ->       signal sqlstate '45000' set message_text="**date1<=curdate()***";
+    ->     end if;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into date_table values(1,'2023-01-31');
+    -> ^C
+mysql> delimiter ;
+mysql> insert into date_table values(1,'2023-01-31');
+ERROR 1644 (45000): **date1<=curdate()***
+mysql> 
+mysql> 
+mysql> 
+mysql> #create a trigger to restrict reduction of salary on emp_ret
+mysql> delimiter ;
+mysql> create trigger trig_redu 
+    -> before update on emp_ret
+    -> for each row
+    -> begin
+    ->    if new.salary<old.salary then
+    ->       signal sqlstate '45000' set message_text="**How dare u 2 decrease my salary **";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 6
+mysql> delimiter ;
+mysql> create trigger trig_redu
+    -> before update on emp_ret
+    -> for each row
+    -> begin
+    ->    if new.salary<old.salary then
+    ->       signal sqlstate '45000' set message_text="**beware! no sal reduction**";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 6
+mysql> delimiter ;
+mysql> create trigger trig_redu
+    -> before update on emp_ret
+    -> for each row
+    -> begin
+    ->    if new.salary<old.salary then
+    ->       signal sqlstate '45000' set message_text="**beware!**";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 6
+mysql> 
+mysql> select database();
++------------+
+| database() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger trig_redu
+    -> before update on emp_ret
+    -> for each row
+    -> begin
+    ->    if new.salary<old.salary then
+    ->       signal sqlstate '45000' set message_text="**beware!I want hike**";
+    ->       end if;
+    ->       end $$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> delimiter ;
+mysql> update emp_ret set salary=salary-100;
+ERROR 1644 (45000): **beware!I want hike**
+mysql> 
+mysql> 
+mysql> 
+mysql> drop table trans;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> drop table accounts;
+ERROR 1051 (42S02): Unknown table 'newhr.accounts'
+mysql> drop table account;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> \! cls;
+mysql> create table account
+    -> (accno int primary key,
+    ->  name varchar(20),
+    ->  balance numeric(11,2));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> create table trans
+    -> (accno int,
+    ->  wd    numeric(11,2),
+    ->  dep   numeric(11,2),
+    ->  foreign key (accno)
+    ->  references account(accno));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter $$
+mysql> create trigger trig_bal
+    -> before insert on trans
+    -> for each row
+    -> begin
+    ->   if new.dep is not null then
+    ->     update account set balance=balance+new.dep;
+    ->   else
+    ->     update account set balance=balance-new.wd;
+    ->   end if;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> insert into account values(1234,'rahul',50000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 50000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> insert into trans values(1234,null,25000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 75000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> drop trigger 
+    -> trig_bal;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter $$
+mysql>  create trigger trig_bal before insert on tr
+    -> 
+    -> ^C
+mysql> delimiter ;
+mysql> select * from trans;
++-------+------+----------+
+| accno | wd   | dep      |
++-------+------+----------+
+|  1234 | NULL | 25000.00 |
++-------+------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 75000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> insert into trans values(1234,15000,null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 75000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> delimiter $$
+mysql>  create trigger trig_bal
+    ->  before insert on trans
+    ->  for each row
+    ->  begin
+    ->    if new.dep is not null then
+    ->      update account set 
+    ->      balance=balance+new.dep where accno=new.accno;
+    ->    else
+    ->      update account set balance=balance-new.wd
+    ->      where accno=new.accno;
+    ->    end if;
+    ->  end$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> select * from account;
+    -> ^C
+mysql> delimiter ;
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 75000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> insert into trans values(1234,12000,null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from account;
++-------+-------+----------+
+| accno | name  | balance  |
++-------+-------+----------+
+|  1234 | rahul | 63000.00 |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> create database lib_case;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> use lib_case;
+Database changed
+mysql> 
+mysql> 
+mysql> CREATE TABLE BOOK 
+    ->    (BOOKID int(15)   PRIMARY KEY auto_increment, 
+    -> BPUB varchar(20), 
+    -> BAUTH varchar(20), 
+    -> BTITLE varchar(25), 
+    -> BSUB varchar(25)
+    ->    ) ;
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> 
+mysql> 
+mysql>   CREATE TABLE MEMBER 
+    ->    (MID int(4)   PRIMARY KEY auto_increment, 
+    -> MNAME varchar(20), 
+    -> MPHONE numeric(10,0),
+    ->         JOINDATE DATE
+    ->    ) ;
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql>   CREATE TABLE BCOPY 
+    ->    (C_ID int(4), 
+    -> BOOKID int(15), 
+    -> STATUS varchar(20) CHECK (status in('available','rented','reserved')),
+    ->         PRIMARY KEY (C_ID,BOOKID)
+    ->    ); 
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql>   CREATE TABLE BRES 
+    ->    (MID int(4) , 
+    -> BOOKID int(15) REFERENCES BOOK, 
+    -> RESDATE DATE,PRIMARY KEY (MID, BOOKID, RESDATE),
+    ->         foreign key(mid) references member(mid)
+    ->    ) ;
+Query OK, 0 rows affected, 2 warnings (0.04 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql>   CREATE TABLE BLOAN 
+    ->    (BOOKID int(4), 
+    -> LDATE DATE, 
+    -> FINE numeric(11,2), 
+    -> MID int(4), 
+    -> EXP_DATE DATE DEFAULT (curdate()+2), 
+    -> ACT_DATE DATE, 
+    -> C_ID int(4),
+    ->   FOREIGN KEY (C_ID, BOOKID)
+    ->   REFERENCES BCOPY (C_ID, BOOKID),
+    ->  foreign key(mid) references member(mid)
+    ->    ) ;
+Query OK, 0 rows affected, 3 warnings (0.03 sec)
+
+mysql> 
+mysql> Conversation opened. 1 read message.
+    -> 
+    -> Skip to content
+    -> Using Gmail with screen readers
+    -> 4 of 4,207
+    -> library case study
+    -> s.k. Ramanjaneya <sk1969ramu@gmail.com>
+    -> 
+    -> AttachmentsJan 9, 2023, 11:45 AM (3 days ago)
+    -> 
+    -> to srisainagaprasad10
+    -> 
+    ->  3 Attachments  ?  Scanned by Gmail
+    -> s.k. Ramanjaneya
+    -> 
+    -> Attachments3:52 PM (31 minutes ago)
+    -> 
+    -> to rrsurya36
+    -> case study
+    -> 
+    -> ---------
+    ->  3 Attachments  ?  Scanned by Gmail
+    -> 
+    -> 
+    -> Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+    -> values ('IDG Books','Carol','Oracle Bible','Database');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Conversation opened. 1 read message.
+
+Skip to content
+Using Gmail with screen re' at line 1
+mysql> Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+    -> values ('TMH','James','Information Systems','I.Science');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+    -> values ('SPD','Shah','Java EB 5','Java');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+    -> values ('BPB','Deshpande','P.T.Olap','Database');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> Insert into MEMBER (MNAME,MPHONE,JOINDATE) 
+    -> values ('rahul',9343438641,(curdate()-3));
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into MEMBER (MNAME,MPHONE,joindate)
+    ->  values ('raj',9880138898,(curdate()-2));
+Query OK, 1 row affected (0.00 sec)
+
+mysql> Insert into MEMBER (MNAME,MPHONE,joindate) 
+    -> values ('mahesh',9900780859,curdate());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,1,'available');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (2,1,'available');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,2,'available');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (2,2,'available');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,3,'available');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,4,'available');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> fut-insert.txt
+    -> Displaying fut-insert.txt.
+    -> ^C
+mysql> show tables;
++--------------------+
+| Tables_in_lib_case |
++--------------------+
+| bcopy              |
+| bloan              |
+| book               |
+| bres               |
+| member             |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from member;
++-----+--------+------------+------------+
+| MID | MNAME  | MPHONE     | JOINDATE   |
++-----+--------+------------+------------+
+|   1 | rahul  | 9343438641 | 2023-01-09 |
+|   2 | raj    | 9880138898 | 2023-01-10 |
+|   3 | mahesh | 9900780859 | 2023-01-12 |
++-----+--------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * fromm book
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'fromm book' at line 1
+mysql> select * from book;
++--------+------+-----------+---------------------+-----------+
+| BOOKID | BPUB | BAUTH     | BTITLE              | BSUB      |
++--------+------+-----------+---------------------+-----------+
+|      1 | TMH  | James     | Information Systems | I.Science |
+|      2 | SPD  | Shah      | Java EB 5           | Java      |
+|      3 | BPB  | Deshpande | P.T.Olap            | Database  |
++--------+------+-----------+---------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from bcopy;
++------+--------+-----------+
+| C_ID | BOOKID | STATUS    |
++------+--------+-----------+
+|    1 |      1 | available |
+|    1 |      2 | available |
+|    1 |      3 | available |
+|    1 |      4 | available |
+|    2 |      1 | available |
+|    2 |      2 | available |
++------+--------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> desc member;
++----------+---------------+------+-----+---------+----------------+
+| Field    | Type          | Null | Key | Default | Extra          |
++----------+---------------+------+-----+---------+----------------+
+| MID      | int           | NO   | PRI | NULL    | auto_increment |
+| MNAME    | varchar(20)   | YES  |     | NULL    |                |
+| MPHONE   | decimal(10,0) | YES  |     | NULL    |                |
+| JOINDATE | date          | YES  |     | NULL    |                |
++----------+---------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+mysql> desc book;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| BOOKID | int         | NO   | PRI | NULL    | auto_increment |
+| BPUB   | varchar(20) | YES  |     | NULL    |                |
+| BAUTH  | varchar(20) | YES  |     | NULL    |                |
+| BTITLE | varchar(25) | YES  |     | NULL    |                |
+| BSUB   | varchar(25) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> desc bcopy;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| C_ID   | int         | NO   | PRI | NULL    |       |
+| BOOKID | int         | NO   | PRI | NULL    |       |
+| STATUS | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from bcopy;
++------+--------+-----------+
+| C_ID | BOOKID | STATUS    |
++------+--------+-----------+
+|    1 |      1 | available |
+|    1 |      2 | available |
+|    1 |      3 | available |
+|    1 |      4 | available |
+|    2 |      1 | available |
+|    2 |      2 | available |
++------+--------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from bloan;
+Empty set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> desc bloan;
++----------+---------------+------+-----+-----------------+-------------------+
+| Field    | Type          | Null | Key | Default         | Extra             |
++----------+---------------+------+-----+-----------------+-------------------+
+| BOOKID   | int           | YES  |     | NULL            |                   |
+| LDATE    | date          | YES  |     | NULL            |                   |
+| FINE     | decimal(11,2) | YES  |     | NULL            |                   |
+| MID      | int           | YES  | MUL | NULL            |                   |
+| EXP_DATE | date          | YES  |     | (curdate() + 2) | DEFAULT_GENERATED |
+| ACT_DATE | date          | YES  |     | NULL            |                   |
+| C_ID     | int           | YES  | MUL | NULL            |                   |
++----------+---------------+------+-----+-----------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc book;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| BOOKID | int         | NO   | PRI | NULL    | auto_increment |
+| BPUB   | varchar(20) | YES  |     | NULL    |                |
+| BAUTH  | varchar(20) | YES  |     | NULL    |                |
+| BTITLE | varchar(25) | YES  |     | NULL    |                |
+| BSUB   | varchar(25) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> desc bcopy;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| C_ID   | int         | NO   | PRI | NULL    |       |
+| BOOKID | int         | NO   | PRI | NULL    |       |
+| STATUS | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> notee;

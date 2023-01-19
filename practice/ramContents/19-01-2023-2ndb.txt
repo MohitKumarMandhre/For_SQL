@@ -1,0 +1,600 @@
+mysql> \! cls;
+mysql> explain select * from (select max(sal) from emp) a;
++----+-------------+------------+------------+--------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table      | partitions | type   | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+------------+------------+--------+---------------+------+---------+------+------+----------+-------+
+|  1 | PRIMARY     | <derived2> | NULL       | system | NULL          | NULL | NULL    | NULL |    1 |   100.00 | NULL  |
+|  2 | DERIVED     | emp        | NULL       | ALL    | NULL          | NULL | NULL    | NULL |   15 |   100.00 | NULL  |
++----+-------------+------------+------------+--------+---------------+------+---------+------+------+----------+-------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> select database();
++------------+
+| database() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> explain select * from dept where dname='SALES';
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key       | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | dept  | NULL       | ref  | DNAME_IDX     | DNAME_IDX | 59      | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+-----------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> explain select * from regions where region_id=4;
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table   | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | regions | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.02 sec)
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.00 sec)
+
+mysql> create index dept_idx on emp(deptno);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create index job_idx on emp(job);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+4 rows in set (0.01 sec)
+
+mysql> alter table emp alter comp_idx invisible;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'invisible' at line 1
+mysql> alter table emp alter index comp_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain select * from emp where deptno=20 and job='clerk';
++----+-------------+-------+------------+-------------+------------------+------------------+---------+------+------+----------+------------------------------------------------+
+| id | select_type | table | partitions | type        | possible_keys    | key              | key_len | ref  | rows | filtered | Extra                                          |
++----+-------------+-------+------------+-------------+------------------+------------------+---------+------+------+----------+------------------------------------------------+
+|  1 | SIMPLE      | emp   | NULL       | index_merge | dept_idx,job_idx | job_idx,dept_idx | 39,5    | NULL |    1 |    75.00 | Using intersect(job_idx,dept_idx); Using where |
++----+-------------+-------+------------+-------------+------------------+------------------+---------+------+------+----------+------------------------------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> desc emp;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| EMPNO    | int         | NO   |     | NULL    |       |
+| ENAME    | varchar(10) | YES  |     | NULL    |       |
+| JOB      | varchar(9)  | YES  | MUL | NULL    |       |
+| MGR      | int         | YES  |     | NULL    |       |
+| HIREDATE | date        | YES  |     | NULL    |       |
+| SAL      | float       | YES  |     | NULL    |       |
+| COMM     | float       | YES  |     | NULL    |       |
+| DEPTNO   | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> explain select * from emp where hiredate='1981-12-03';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> create index hire_idx on emp(hiredate);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain select * from emp where hiredate='1981-12-03';
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key      | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | emp   | NULL       | ref  | hire_idx      | hire_idx | 4       | const |    2 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from emp where comm is null;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> create index comm_idx on emp(comm);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain select * from emp where comm is null;
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-----------------------+
+| id | select_type | table | partitions | type | possible_keys | key      | key_len | ref   | rows | filtered | Extra                 |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-----------------------+
+|  1 | SIMPLE      | emp   | NULL       | ref  | comm_idx      | comm_idx | 5       | const |   11 |   100.00 | Using index condition |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-----------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from emp where comm is not null;
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-----------------------+
+| id | select_type | table | partitions | type  | possible_keys | key      | key_len | ref  | rows | filtered | Extra                 |
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-----------------------+
+|  1 | SIMPLE      | emp   | NULL       | range | comm_idx      | comm_idx | 5       | NULL |    4 |   100.00 | Using index condition |
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-----------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | hire_idx |            1 | HIREDATE    | A         |          13 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | comm_idx |            1 | COMM        | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+6 rows in set (0.01 sec)
+
+mysql> alter table emp alter index dept_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp alter index hire_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp alter index job_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp alter index comm_idx invisible;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | hire_idx |            1 | HIREDATE    | A         |          13 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | comm_idx |            1 | COMM        | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+6 rows in set (0.00 sec)
+
+mysql> alter table emp alter index job_idx visible;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | hire_idx |            1 | HIREDATE    | A         |          13 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | comm_idx |            1 | COMM        | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+6 rows in set (0.00 sec)
+
+mysql> alter table emp alter index comp_idx visible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | hire_idx |            1 | HIREDATE    | A         |          13 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | comm_idx |            1 | COMM        | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+6 rows in set (0.00 sec)
+
+mysql> alter table emp alter index job_idx invisible;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show indexes from newhr.emp;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          1 | COMP_IDX |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | COMP_IDX |            2 | JOB         | A         |          10 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | dept_idx |            1 | DEPTNO      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | job_idx  |            1 | JOB         | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | hire_idx |            1 | HIREDATE    | A         |          13 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
+| emp   |          1 | comm_idx |            1 | COMM        | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | NO      | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno=20;
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|  7369 | SMITH | CLERK   | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7876 | ADAMS | CLERK   | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7566 | JONES | MANAGER | 7839 | 1981-04-02 | 2975 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp where job='clerk';
++-------+--------+-------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB   | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7876 | ADAMS  | CLERK | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|  7934 | MILLER | CLERK | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-------+------+------------+------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> explain select * from emp where deptno=20;
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key      | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | emp   | NULL       | ref  | COMP_IDX      | COMP_IDX | 5       | const |    5 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from emp where job='clerk';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    16.67 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree select * from emp where job='clerk';
++---------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                           |
++---------------------------------------------------------------------------------------------------+
+| -> Filter: (emp.JOB = 'clerk')  (cost=1.75 rows=3)
+    -> Table scan on emp  (cost=1.75 rows=15)
+ |
++---------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select * from emp where deptno=20;
++------------------------------------------------------------------------+
+| EXPLAIN                                                                |
++------------------------------------------------------------------------+
+| -> Index lookup on emp using COMP_IDX (DEPTNO=20)  (cost=1.00 rows=5)
+ |
++------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql>   SYS.SCHEMA_UNUSED_INDEXES
+    -> ^C
+mysql> select * from   SYS.SCHEMA_UNUSED_INDEXES
+    -> ;
++---------------+-------------+------------+
+| object_schema | object_name | index_name |
++---------------+-------------+------------+
+| hr            | countries   | region_id  |
+| hr            | emp         | DEPTNO_IDX |
+| hr            | emp         | JOB_IDX1   |
+| hr            | emp         | dj_idx     |
+| newhr         | dept        | DNAME_IDX  |
+| newhr         | emp         | dept_idx   |
+| newhr         | emp         | job_idx    |
+| newhr         | emp         | hire_idx   |
+| newhr         | emp         | comm_idx   |
++---------------+-------------+------------+
+9 rows in set (0.01 sec)
+
+mysql> \! cls;
+mysql> explain select * from emp where empno>7839;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    33.33 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from emp where empno like '75%';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    11.11 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> alter table emp add primary key(empno);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain select * from emp where empno like '75%';
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | PRIMARY       | NULL | NULL    | NULL |   15 |    11.11 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select * from emp where empno>7839;
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | range | PRIMARY       | PRIMARY | 4       | NULL |    5 |   100.00 | Using where |
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select deptno from dept;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | dept  | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain select empno from emp;
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type  | possible_keys | key      | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | emp   | NULL       | index | NULL          | COMP_IDX | 44      | NULL |   15 |   100.00 | Using index |
++----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree select empno from emp;
++-----------------------------------------------------------+
+| EXPLAIN                                                   |
++-----------------------------------------------------------+
+| -> Index scan on emp using COMP_IDX  (cost=1.75 rows=15)
+ |
++-----------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select empno from emp where empno in(7566,7839,7902);
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                           |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (emp.EMPNO in (7566,7839,7902))  (cost=1.36 rows=3)
+    -> Covering index range scan on emp using PRIMARY over (EMPNO = 7566) OR (EMPNO = 7839) OR (EMPNO = 7902)  (cost=1.36 rows=3)
+ |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select * from emp where job='clerk' or deptno=20;
++--------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                  |
++--------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: ((emp.JOB = 'clerk') or (emp.DEPTNO = 20))  (cost=1.75 rows=6)
+    -> Table scan on emp  (cost=1.75 rows=15)
+ |
++--------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select * from emp where job='clerk' and deptno=20;
++-------------------------------------------------------------------------------------+
+| EXPLAIN                                                                             |
++-------------------------------------------------------------------------------------+
+| -> Index lookup on emp using COMP_IDX (DEPTNO=20, JOB='clerk')  (cost=0.70 rows=2)
+ |
++-------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree select * from emp where  deptno=20 or job='clerk';
++--------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                  |
++--------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: ((emp.DEPTNO = 20) or (emp.JOB = 'clerk'))  (cost=1.75 rows=6)
+    -> Table scan on emp  (cost=1.75 rows=15)
+ |
++--------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> \! cls;
+mysql> select min(sal) from emp;
++----------+
+| min(sal) |
++----------+
+|      800 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> explain select min(sal) from emp;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | emp   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain format = tree select min(sal) from emp;
++-----------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                       |
++-----------------------------------------------------------------------------------------------+
+| -> Aggregate: min(emp.SAL)  (cost=3.25 rows=1)
+    -> Table scan on emp  (cost=1.75 rows=15)
+ |
++-----------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> create index sal_idx on emp(sal);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> explain format = tree select min(sal) from emp;
++-------------------------------------------------------------+
+| EXPLAIN                                                     |
++-------------------------------------------------------------+
+| -> Rows fetched before execution  (cost=0.00..0.00 rows=1)
+ |
++-------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select max(sal) from emp;
++-------------------------------------------------------------+
+| EXPLAIN                                                     |
++-------------------------------------------------------------+
+| -> Rows fetched before execution  (cost=0.00..0.00 rows=1)
+ |
++-------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal) from emp;
++-------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                     |
++-------------------------------------------------------------------------------------------------------------+
+| -> Aggregate: sum(emp.SAL)  (cost=3.25 rows=1)
+    -> Index scan on emp using sal_idx  (cost=1.75 rows=15)
+ |
++-------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select avg(sal) from emp;
++-------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                     |
++-------------------------------------------------------------------------------------------------------------+
+| -> Aggregate: avg(emp.SAL)  (cost=3.25 rows=1)
+    -> Index scan on emp using sal_idx  (cost=1.75 rows=15)
+ |
++-------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal),deptno from emp group by deptno;
++---------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                             |
++---------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate: sum(emp.SAL)  (cost=3.25 rows=15)
+    -> Index scan on emp using COMP_IDX  (cost=1.75 rows=15)
+ |
++---------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal),job from emp group by job;
++------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                |
++------------------------------------------------------------------------------------------------------------------------+
+| -> Table scan on <temporary>
+    -> Aggregate using temporary table
+        -> Table scan on emp  (cost=1.75 rows=15)
+ |
++------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal),job from emp group by job having job<>'analyst';
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                              |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (emp.JOB <> 'analyst')
+    -> Table scan on <temporary>
+        -> Aggregate using temporary table
+            -> Table scan on emp  (cost=1.75 rows=15)
+ |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal),job from emp where job<>'analyst' group by job; 
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                   |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Table scan on <temporary>
+    -> Aggregate using temporary table
+        -> Filter: (emp.JOB <> 'analyst')  (cost=1.75 rows=13)
+            -> Table scan on emp  (cost=1.75 rows=15)
+ |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format = tree select sum(sal),job from emp where job='analyst' group by job; 
++------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                          |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate: sum(emp.SAL)  (cost=2.00 rows=3)
+    -> Filter: (emp.JOB = 'analyst')  (cost=1.75 rows=3)
+        -> Table scan on emp  (cost=1.75 rows=15)
+ |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(employee_id),department_id
+    -> from   employees
+    -> where  department_id in(60,80)
+    -> group by department_id;
++--------------------+---------------+
+| count(employee_id) | department_id |
++--------------------+---------------+
+|                  5 |            60 |
+|                 34 |            80 |
++--------------------+---------------+
+2 rows in set (0.01 sec)
+
+mysql> explain select count(employee_id),department_id
+    -> from   employees
+    -> where  department_id in(60,80)
+    -> group by department_id;
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+| id | select_type | table     | partitions | type  | possible_keys | key           | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | employees | NULL       | range | department_id | department_id | 5       | NULL |   39 |   100.00 | Using where; Using index |
++----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> explain format=tree
+    -> select count(employee_id),department_id
+    -> from   employees
+    -> where  department_id in(60,80)
+    -> group by department_id;
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                                                                                       |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Group aggregate: count(employees.employee_id)  (cost=11.97 rows=39)
+    -> Filter: (employees.department_id in (60,80))  (cost=8.07 rows=39)
+        -> Covering index range scan on employees using department_id over (department_id = 60) OR (department_id = 80)  (cost=8.07 rows=39)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> explain format=tree
+    -> select count(employee_id),department_id
+    -> from   employees
+    ->  group by department_id
+    -> having department_id in(60,80);
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                                                                                                           |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (employees.department_id in (60,80))  (cost=22.40 rows=107)
+    -> Group aggregate: count(employees.employee_id)  (cost=22.40 rows=107)
+        -> Index scan on employees using department_id  (cost=11.70 rows=107)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 

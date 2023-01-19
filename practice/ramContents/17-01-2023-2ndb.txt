@@ -1,0 +1,994 @@
+mysql> \! cls;
+mysql> use newhr;
+Database changed
+mysql> 
+mysql>    select e.ename "empname",e.deptno "empdeptno",
+    ->           m.ename  "manname",m.deptno "mandeptno"
+    ->    from emp e join emp m on e.mgr=m.empno;
++---------+-----------+---------+-----------+
+| empname | empdeptno | manname | mandeptno |
++---------+-----------+---------+-----------+
+| FORD    |        20 | JONES   |        20 |
+| SCOTT   |        20 | JONES   |        20 |
+| JAMES   |        30 | BLAKE   |        30 |
+| TURNER  |        30 | BLAKE   |        30 |
+| MARTIN  |        30 | BLAKE   |        30 |
+| WARD    |        30 | BLAKE   |        30 |
+| ALLEN   |        30 | BLAKE   |        30 |
+| MILLER  |        10 | CLARK   |        10 |
+| ADAMS   |        20 | SCOTT   |        20 |
+| CLARK   |        10 | KING    |        10 |
+| BLAKE   |        30 | KING    |        10 |
+| JONES   |        20 | KING    |        10 |
+| SMITH   |        20 | FORD    |        20 |
++---------+-----------+---------+-----------+
+13 rows in set (0.01 sec)
+
+mysql>    select e.ename "empname",e.deptno "empdeptno",a.cnt,
+    ->           m.ename  "manname",m.deptno "mandeptno",b.cnt
+    ->    from emp e join emp m on e.mgr=m.empno
+    -> join  ((select count(*)cnt,deptno
+    -> from emp
+    -> group by deptno)a
+    -> on   e.deptno=a.deptno
+    -> join
+    -> (select count(*)cnt,deptno
+    -> from emp
+    -> group by deptno)b
+    -> one m.deptno=b.deptno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'on   e.deptno=a.deptno
+join
+(select count(*)cnt,deptno
+from emp
+group by deptno)' at line 7
+mysql> \! cls;
+mysql> desc information_schema.files
+    -> ;
++----------------------+--------------+------+-----+---------+-------+
+| Field                | Type         | Null | Key | Default | Extra |
++----------------------+--------------+------+-----+---------+-------+
+| FILE_ID              | bigint       | YES  |     | NULL    |       |
+| FILE_NAME            | text         | YES  |     | NULL    |       |
+| FILE_TYPE            | varchar(256) | YES  |     | NULL    |       |
+| TABLESPACE_NAME      | varchar(268) | NO   |     | NULL    |       |
+| TABLE_CATALOG        | char(0)      | NO   |     |         |       |
+| TABLE_SCHEMA         | binary(0)    | YES  |     | NULL    |       |
+| TABLE_NAME           | binary(0)    | YES  |     | NULL    |       |
+| LOGFILE_GROUP_NAME   | varchar(256) | YES  |     | NULL    |       |
+| LOGFILE_GROUP_NUMBER | bigint       | YES  |     | NULL    |       |
+| ENGINE               | varchar(64)  | NO   |     | NULL    |       |
+| FULLTEXT_KEYS        | binary(0)    | YES  |     | NULL    |       |
+| DELETED_ROWS         | binary(0)    | YES  |     | NULL    |       |
+| UPDATE_COUNT         | binary(0)    | YES  |     | NULL    |       |
+| FREE_EXTENTS         | bigint       | YES  |     | NULL    |       |
+| TOTAL_EXTENTS        | bigint       | YES  |     | NULL    |       |
+| EXTENT_SIZE          | bigint       | YES  |     | NULL    |       |
+| INITIAL_SIZE         | bigint       | YES  |     | NULL    |       |
+| MAXIMUM_SIZE         | bigint       | YES  |     | NULL    |       |
+| AUTOEXTEND_SIZE      | bigint       | YES  |     | NULL    |       |
+| CREATION_TIME        | binary(0)    | YES  |     | NULL    |       |
+| LAST_UPDATE_TIME     | binary(0)    | YES  |     | NULL    |       |
+| LAST_ACCESS_TIME     | binary(0)    | YES  |     | NULL    |       |
+| RECOVER_TIME         | binary(0)    | YES  |     | NULL    |       |
+| TRANSACTION_COUNTER  | binary(0)    | YES  |     | NULL    |       |
+| VERSION              | bigint       | YES  |     | NULL    |       |
+| ROW_FORMAT           | varchar(256) | YES  |     | NULL    |       |
+| TABLE_ROWS           | binary(0)    | YES  |     | NULL    |       |
+| AVG_ROW_LENGTH       | binary(0)    | YES  |     | NULL    |       |
+| DATA_LENGTH          | binary(0)    | YES  |     | NULL    |       |
+| MAX_DATA_LENGTH      | binary(0)    | YES  |     | NULL    |       |
+| INDEX_LENGTH         | binary(0)    | YES  |     | NULL    |       |
+| DATA_FREE            | bigint       | YES  |     | NULL    |       |
+| CREATE_TIME          | binary(0)    | YES  |     | NULL    |       |
+| UPDATE_TIME          | binary(0)    | YES  |     | NULL    |       |
+| CHECK_TIME           | binary(0)    | YES  |     | NULL    |       |
+| CHECKSUM             | binary(0)    | YES  |     | NULL    |       |
+| STATUS               | varchar(256) | YES  |     | NULL    |       |
+| EXTRA                | varchar(256) | YES  |     | NULL    |       |
++----------------------+--------------+------+-----+---------+-------+
+38 rows in set (0.00 sec)
+
+mysql> 
+mysql> show variables like 'data_dir';
+Empty set (0.01 sec)
+
+mysql> show variables like 'datadir';
++---------------+---------------------------------------------+
+| Variable_name | Value                                       |
++---------------+---------------------------------------------+
+| datadir       | C:\ProgramData\MySQL\MySQL Server 8.0\Data\ |
++---------------+---------------------------------------------+
+1 row in set (0.01 sec)
+
+mysql> show variables like 'basedir';
++---------------+------------------------------------------+
+| Variable_name | Value                                    |
++---------------+------------------------------------------+
+| basedir       | C:\Program Files\MySQL\MySQL Server 8.0\ |
++---------------+------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select tablespace_name,file_name
+    -> from information_schema.files
+    -> ;
++------------------------------------------------------+------------------------------------------------------------+
+| TABLESPACE_NAME                                      | FILE_NAME                                                  |
++------------------------------------------------------+------------------------------------------------------------+
+| case1/bcopy                                          | ./case1/bcopy.ibd                                          |
+| case1/bloan                                          | ./case1/bloan.ibd                                          |
+| case1/book                                           | ./case1/book.ibd                                           |
+| case1/bres                                           | ./case1/bres.ibd                                           |
+| case1/member                                         | ./case1/member.ibd                                         |
+| case1/t53                                            | ./case1/t53.ibd                                            |
+| case_library/bcopy                                   | ./case_library/bcopy.ibd                                   |
+| case_library/bloan                                   | ./case_library/bloan.ibd                                   |
+| case_library/book                                    | ./case_library/book.ibd                                    |
+| case_library/bres                                    | ./case_library/bres.ibd                                    |
+| case_library/member                                  | ./case_library/member.ibd                                  |
+| hr/1_tab                                             | ./hr/1_tab.ibd                                             |
+| hr/account                                           | ./hr/account.ibd                                           |
+| hr/bigint_tab                                        | ./hr/bigint_tab.ibd                                        |
+| hr/bool_tab                                          | ./hr/bool_tab.ibd                                          |
+| hr/countries                                         | ./hr/countries.ibd                                         |
+| hr/cte_table                                         | ./hr/cte_table.ibd                                         |
+| hr/date_tab                                          | ./hr/date_tab.ibd                                          |
+| hr/datetime_tab                                      | ./hr/datetime_tab.ibd                                      |
+| hr/defa_tab                                          | ./hr/defa_tab.ibd                                          |
+| hr/dep_new1                                          | ./hr/dep_new1.ibd                                          |
+| hr/departments                                       | ./hr/departments.ibd                                       |
+| hr/dept                                              | ./hr/dept.ibd                                              |
+| hr/dept1                                             | ./hr/dept1.ibd                                             |
+| hr/emp                                               | ./hr/emp.ibd                                               |
+| hr/emp1                                              | ./hr/emp1.ibd                                              |
+| hr/emp2                                              | ./hr/emp2.ibd                                              |
+| hr/emp_new                                           | ./hr/emp_new.ibd                                           |
+| hr/emp_part#p#p_anal                                 | ./hr/emp_part#p#p_anal.ibd                                 |
+| hr/emp_part#p#p_clerk                                | ./hr/emp_part#p#p_clerk.ibd                                |
+| hr/emp_part#p#p_manager                              | ./hr/emp_part#p#p_manager.ibd                              |
+| hr/emp_part#p#p_pres                                 | ./hr/emp_part#p#p_pres.ibd                                 |
+| hr/emp_part#p#p_sales                                | ./hr/emp_part#p#p_sales.ibd                                |
+| hr/emp_seg                                           | ./hr/emp_seg.ibd                                           |
+| hr/employees                                         | ./hr/employees.ibd                                         |
+| hr/enumtab                                           | ./hr/enumtab.ibd                                           |
+| hr/float_deci                                        | ./hr/float_deci.ibd                                        |
+| hr/for_tab                                           | ./hr/for_tab.ibd                                           |
+| hr/fruit                                             | ./hr/fruit.ibd                                             |
+| hr/int_tab                                           | ./hr/int_tab.ibd                                           |
+| hr/ipl_table                                         | ./hr/ipl_table.ibd                                         |
+| hr/itpl_bak                                          | ./hr/itpl_bak.ibd                                          |
+| hr/job_grades                                        | ./hr/job_grades.ibd                                        |
+| hr/job_history                                       | ./hr/job_history.ibd                                       |
+| hr/jobs                                              | ./hr/jobs.ibd                                              |
+| hr/join_table                                        | ./hr/join_table.ibd                                        |
+| hr/locations                                         | ./hr/locations.ibd                                         |
+| hr/login_tab                                         | ./hr/login_tab.ibd                                         |
+| hr/mediumint_tab                                     | ./hr/mediumint_tab.ibd                                     |
+| hr/new_dept                                          | ./hr/new_dept.ibd                                          |
+| hr/num_tab                                           | ./hr/num_tab.ibd                                           |
+| hr/oe_tab                                            | ./hr/oe_tab.ibd                                            |
+| hr/orders                                            | ./hr/orders.ibd                                            |
+| hr/pri_tab                                           | ./hr/pri_tab.ibd                                           |
+| hr/regions                                           | ./hr/regions.ibd                                           |
+| hr/regions_new                                       | ./hr/regions_new.ibd                                       |
+| hr/retired                                           | ./hr/retired.ibd                                           |
+| hr/salgrade                                          | ./hr/salgrade.ibd                                          |
+| hr/smallint_tab                                      | ./hr/smallint_tab.ibd                                      |
+| hr/student1                                          | ./hr/student1.ibd                                          |
+| hr/t2                                                | ./hr/t2.ibd                                                |
+| hr/t_1                                               | ./hr/t_1.ibd                                               |
+| hr/test                                              | ./hr/test.ibd                                              |
+| hr/test1                                             | ./hr/test1.ibd                                             |
+| hr/time_tab                                          | ./hr/time_tab.ibd                                          |
+| hr/timestamp_tab                                     | ./hr/timestamp_tab.ibd                                     |
+| hr/tinyint_tab                                       | ./hr/tinyint_tab.ibd                                       |
+| hr/trans                                             | ./hr/trans.ibd                                             |
+| hr/year_tab                                          | ./hr/year_tab.ibd                                          |
+| hrbackup/1_tab                                       | ./hrbackup/1_tab.ibd                                       |
+| hrbackup/account                                     | ./hrbackup/account.ibd                                     |
+| hrbackup/countries                                   | ./hrbackup/countries.ibd                                   |
+| hrbackup/date_tab                                    | ./hrbackup/date_tab.ibd                                    |
+| hrbackup/defa_tab                                    | ./hrbackup/defa_tab.ibd                                    |
+| hrbackup/dep_new1                                    | ./hrbackup/dep_new1.ibd                                    |
+| hrbackup/departments                                 | ./hrbackup/departments.ibd                                 |
+| hrbackup/dept1                                       | ./hrbackup/dept1.ibd                                       |
+| hrbackup/emp1                                        | ./hrbackup/emp1.ibd                                        |
+| hrbackup/emp2                                        | ./hrbackup/emp2.ibd                                        |
+| hrbackup/emp_new                                     | ./hrbackup/emp_new.ibd                                     |
+| hrbackup/employees                                   | ./hrbackup/employees.ibd                                   |
+| hrbackup/for_tab                                     | ./hrbackup/for_tab.ibd                                     |
+| hrbackup/ipl_table                                   | ./hrbackup/ipl_table.ibd                                   |
+| hrbackup/itpl_bak                                    | ./hrbackup/itpl_bak.ibd                                    |
+| hrbackup/job_grades                                  | ./hrbackup/job_grades.ibd                                  |
+| hrbackup/job_history                                 | ./hrbackup/job_history.ibd                                 |
+| hrbackup/jobs                                        | ./hrbackup/jobs.ibd                                        |
+| hrbackup/join_table                                  | ./hrbackup/join_table.ibd                                  |
+| hrbackup/locations                                   | ./hrbackup/locations.ibd                                   |
+| hrbackup/login_tab                                   | ./hrbackup/login_tab.ibd                                   |
+| hrbackup/new_dept                                    | ./hrbackup/new_dept.ibd                                    |
+| hrbackup/num_tab                                     | ./hrbackup/num_tab.ibd                                     |
+| hrbackup/oe_tab                                      | ./hrbackup/oe_tab.ibd                                      |
+| hrbackup/orders                                      | ./hrbackup/orders.ibd                                      |
+| hrbackup/pri_tab                                     | ./hrbackup/pri_tab.ibd                                     |
+| hrbackup/regions                                     | ./hrbackup/regions.ibd                                     |
+| hrbackup/regions_new                                 | ./hrbackup/regions_new.ibd                                 |
+| hrbackup/retired                                     | ./hrbackup/retired.ibd                                     |
+| hrbackup/student1                                    | ./hrbackup/student1.ibd                                    |
+| hrbackup/t2                                          | ./hrbackup/t2.ibd                                          |
+| hrbackup/t_1                                         | ./hrbackup/t_1.ibd                                         |
+| hrbackup/test                                        | ./hrbackup/test.ibd                                        |
+| hrbackup/test1                                       | ./hrbackup/test1.ibd                                       |
+| hrbackup/trans                                       | ./hrbackup/trans.ibd                                       |
+| innodb_temporary                                     | ./ibtmp1                                                   |
+| lib_case/bcopy                                       | ./lib_case/bcopy.ibd                                       |
+| lib_case/bloan                                       | ./lib_case/bloan.ibd                                       |
+| lib_case/book                                        | ./lib_case/book.ibd                                        |
+| lib_case/bres                                        | ./lib_case/bres.ibd                                        |
+| lib_case/member                                      | ./lib_case/member.ibd                                      |
+| new_db1/account                                      | ./new_db1/account.ibd                                      |
+| new_db1/atm                                          | ./new_db1/atm.ibd                                          |
+| new_db1/birthtable                                   | ./new_db1/birthtable.ibd                                   |
+| new_db1/dept                                         | ./new_db1/dept.ibd                                         |
+| new_db1/dept1                                        | ./new_db1/dept1.ibd                                        |
+| new_db1/dept2                                        | ./new_db1/dept2.ibd                                        |
+| new_db1/emp                                          | ./new_db1/emp.ibd                                          |
+| new_db1/metrocities                                  | ./new_db1/metrocities.ibd                                  |
+| new_db1/rto                                          | ./new_db1/rto.ibd                                          |
+| new_db1/sal1                                         | ./new_db1/sal1.ibd                                         |
+| new_db1/salgrade                                     | ./new_db1/salgrade.ibd                                     |
+| new_db1/stu_phone                                    | ./new_db1/stu_phone.ibd                                    |
+| new_db1/student                                      | ./new_db1/student.ibd                                      |
+| new_db1/trans                                        | ./new_db1/trans.ibd                                        |
+| new_db1/vote                                         | ./new_db1/vote.ibd                                         |
+| newdb1/account                                       | ./newdb1/account.ibd                                       |
+| newdb1/atm                                           | ./newdb1/atm.ibd                                           |
+| newdb1/birthtable                                    | ./newdb1/birthtable.ibd                                    |
+| newdb1/dept                                          | ./newdb1/dept.ibd                                          |
+| newdb1/dept1                                         | ./newdb1/dept1.ibd                                         |
+| newdb1/dept2                                         | ./newdb1/dept2.ibd                                         |
+| newdb1/deptsal                                       | ./newdb1/deptsal.ibd                                       |
+| newdb1/emp                                           | ./newdb1/emp.ibd                                           |
+| newdb1/emp1                                          | ./newdb1/emp1.ibd                                          |
+| newdb1/emp9                                          | ./newdb1/emp9.ibd                                          |
+| newdb1/fruit                                         | ./newdb1/fruit.ibd                                         |
+| newdb1/members                                       | ./newdb1/members.ibd                                       |
+| newdb1/metrocities                                   | ./newdb1/metrocities.ibd                                   |
+| newdb1/reminders                                     | ./newdb1/reminders.ibd                                     |
+| newdb1/rto                                           | ./newdb1/rto.ibd                                           |
+| newdb1/salgrade                                      | ./newdb1/salgrade.ibd                                      |
+| newdb1/salnew                                        | ./newdb1/salnew.ibd                                        |
+| newdb1/stu_phone                                     | ./newdb1/stu_phone.ibd                                     |
+| newdb1/student                                       | ./newdb1/student.ibd                                       |
+| newdb1/tab_test                                      | ./newdb1/tab_test.ibd                                      |
+| newdb1/trans                                         | ./newdb1/trans.ibd                                         |
+| newdb1/vote                                          | ./newdb1/vote.ibd                                          |
+| newhr/1_tab                                          | ./newhr/1_tab.ibd                                          |
+| newhr/account                                        | ./newhr/account.ibd                                        |
+| newhr/auto1                                          | ./newhr/auto1.ibd                                          |
+| newhr/countries                                      | ./newhr/countries.ibd                                      |
+| newhr/date_tab                                       | ./newhr/date_tab.ibd                                       |
+| newhr/date_table                                     | ./newhr/date_table.ibd                                     |
+| newhr/defa_tab                                       | ./newhr/defa_tab.ibd                                       |
+| newhr/default_tab                                    | ./newhr/default_tab.ibd                                    |
+| newhr/dep_new1                                       | ./newhr/dep_new1.ibd                                       |
+| newhr/departments                                    | ./newhr/departments.ibd                                    |
+| newhr/dept1                                          | ./newhr/dept1.ibd                                          |
+| newhr/emp                                            | ./newhr/emp.ibd                                            |
+| newhr/emp1                                           | ./newhr/emp1.ibd                                           |
+| newhr/emp2                                           | ./newhr/emp2.ibd                                           |
+| newhr/emp5                                           | ./newhr/emp5.ibd                                           |
+| newhr/emp_new                                        | ./newhr/emp_new.ibd                                        |
+| newhr/emp_ret                                        | ./newhr/emp_ret.ibd                                        |
+| newhr/employee_new                                   | ./newhr/employee_new.ibd                                   |
+| newhr/employees                                      | ./newhr/employees.ibd                                      |
+| newhr/empnew                                         | ./newhr/empnew.ibd                                         |
+| newhr/for_tab                                        | ./newhr/for_tab.ibd                                        |
+| newhr/for_tab1                                       | ./newhr/for_tab1.ibd                                       |
+| newhr/ipl_table                                      | ./newhr/ipl_table.ibd                                      |
+| newhr/itpl_back                                      | ./newhr/itpl_back.ibd                                      |
+| newhr/itpl_bak                                       | ./newhr/itpl_bak.ibd                                       |
+| newhr/job_grades                                     | ./newhr/job_grades.ibd                                     |
+| newhr/job_history                                    | ./newhr/job_history.ibd                                    |
+| newhr/jobs                                           | ./newhr/jobs.ibd                                           |
+| newhr/join_table                                     | ./newhr/join_table.ibd                                     |
+| newhr/locations                                      | ./newhr/locations.ibd                                      |
+| newhr/login_tab                                      | ./newhr/login_tab.ibd                                      |
+| newhr/new_dept                                       | ./newhr/new_dept.ibd                                       |
+| newhr/num_tab                                        | ./newhr/num_tab.ibd                                        |
+| newhr/odd_even                                       | ./newhr/odd_even.ibd                                       |
+| newhr/oe_tab                                         | ./newhr/oe_tab.ibd                                         |
+| newhr/orders                                         | ./newhr/orders.ibd                                         |
+| newhr/pri_tab                                        | ./newhr/pri_tab.ibd                                        |
+| newhr/pri_tab1                                       | ./newhr/pri_tab1.ibd                                       |
+| newhr/regions                                        | ./newhr/regions.ibd                                        |
+| newhr/regions_new                                    | ./newhr/regions_new.ibd                                    |
+| newhr/retired                                        | ./newhr/retired.ibd                                        |
+| newhr/retired_hr                                     | ./newhr/retired_hr.ibd                                     |
+| newhr/student1                                       | ./newhr/student1.ibd                                       |
+| newhr/t2                                             | ./newhr/t2.ibd                                             |
+| newhr/t_1                                            | ./newhr/t_1.ibd                                            |
+| newhr/test1                                          | ./newhr/test1.ibd                                          |
+| newhr/test6                                          | ./newhr/test6.ibd                                          |
+| newhr/test_5                                         | ./newhr/test_5.ibd                                         |
+| newhr/trans                                          | ./newhr/trans.ibd                                          |
+| newtestdb/company_new                                | ./newtestdb/company_new.ibd                                |
+| newtestdb/default_tab                                | ./newtestdb/default_tab.ibd                                |
+| newtestdb/dept                                       | ./newtestdb/dept.ibd                                       |
+| newtestdb/emp                                        | ./newtestdb/emp.ibd                                        |
+| newtestdb/emp1                                       | ./newtestdb/emp1.ibd                                       |
+| newtestdb/salgrade                                   | ./newtestdb/salgrade.ibd                                   |
+| newtestdb/student                                    | ./newtestdb/student.ibd                                    |
+| newtestdb/student_phone                              | ./newtestdb/student_phone.ibd                              |
+| newtestdb/text_tab                                   | ./newtestdb/text_tab.ibd                                   |
+| sakila/actor                                         | ./sakila/actor.ibd                                         |
+| sakila/address                                       | ./sakila/address.ibd                                       |
+| sakila/category                                      | ./sakila/category.ibd                                      |
+| sakila/city                                          | ./sakila/city.ibd                                          |
+| sakila/country                                       | ./sakila/country.ibd                                       |
+| sakila/customer                                      | ./sakila/customer.ibd                                      |
+| sakila/film                                          | ./sakila/film.ibd                                          |
+| sakila/film_actor                                    | ./sakila/film_actor.ibd                                    |
+| sakila/film_category                                 | ./sakila/film_category.ibd                                 |
+| sakila/film_text                                     | ./sakila/film_text.ibd                                     |
+| sakila/fts_000000000000042c_00000000000000ab_index_1 | ./sakila/fts_000000000000042c_00000000000000ab_index_1.ibd |
+| sakila/fts_000000000000042c_00000000000000ab_index_2 | ./sakila/fts_000000000000042c_00000000000000ab_index_2.ibd |
+| sakila/fts_000000000000042c_00000000000000ab_index_3 | ./sakila/fts_000000000000042c_00000000000000ab_index_3.ibd |
+| sakila/fts_000000000000042c_00000000000000ab_index_4 | ./sakila/fts_000000000000042c_00000000000000ab_index_4.ibd |
+| sakila/fts_000000000000042c_00000000000000ab_index_5 | ./sakila/fts_000000000000042c_00000000000000ab_index_5.ibd |
+| sakila/fts_000000000000042c_00000000000000ab_index_6 | ./sakila/fts_000000000000042c_00000000000000ab_index_6.ibd |
+| sakila/fts_000000000000042c_being_deleted            | ./sakila/fts_000000000000042c_being_deleted.ibd            |
+| sakila/fts_000000000000042c_being_deleted_cache      | ./sakila/fts_000000000000042c_being_deleted_cache.ibd      |
+| sakila/fts_000000000000042c_config                   | ./sakila/fts_000000000000042c_config.ibd                   |
+| sakila/fts_000000000000042c_deleted                  | ./sakila/fts_000000000000042c_deleted.ibd                  |
+| sakila/fts_000000000000042c_deleted_cache            | ./sakila/fts_000000000000042c_deleted_cache.ibd            |
+| sakila/inventory                                     | ./sakila/inventory.ibd                                     |
+| sakila/language                                      | ./sakila/language.ibd                                      |
+| sakila/payment                                       | ./sakila/payment.ibd                                       |
+| sakila/rental                                        | ./sakila/rental.ibd                                        |
+| sakila/staff                                         | ./sakila/staff.ibd                                         |
+| sakila/store                                         | ./sakila/store.ibd                                         |
+| sys/sys_config                                       | ./sys/sys_config.ibd                                       |
+| innodb_undo_001                                      | ./undo_001                                                 |
+| innodb_undo_002                                      | ./undo_002                                                 |
+| world/city                                           | ./world/city.ibd                                           |
+| world/country                                        | ./world/country.ibd                                        |
+| world/countrylanguage                                | ./world/countrylanguage.ibd                                |
+| innodb_system                                        | ./ibdata1                                                  |
+| mysql                                                | ./mysql.ibd                                                |
++------------------------------------------------------+------------------------------------------------------------+
+240 rows in set (0.01 sec)
+
+mysql> select tablespace_name,file_name
+    -> from information_schema.files
+    -> ^C
+mysql> select tablespace_name,file_name
+    -> from information_schema.files
+    -> limit 10;
++--------------------+--------------------------+
+| TABLESPACE_NAME    | FILE_NAME                |
++--------------------+--------------------------+
+| case1/bcopy        | ./case1/bcopy.ibd        |
+| case1/bloan        | ./case1/bloan.ibd        |
+| case1/book         | ./case1/book.ibd         |
+| case1/bres         | ./case1/bres.ibd         |
+| case1/member       | ./case1/member.ibd       |
+| case1/t53          | ./case1/t53.ibd          |
+| case_library/bcopy | ./case_library/bcopy.ibd |
+| case_library/bloan | ./case_library/bloan.ibd |
+| case_library/book  | ./case_library/book.ibd  |
+| case_library/bres  | ./case_library/bres.ibd  |
++--------------------+--------------------------+
+10 rows in set (0.00 sec)
+
+mysql> select database();
++------------+
+| database() |
++------------+
+| newhr      |
++------------+
+1 row in set (0.00 sec)
+
+mysql> create table check_tab(c1 int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select tablespace_name,file_name
+    -> from information_schema.files
+    -> where tablespace_name like 'newhr/che%';
++-----------------+-----------------------+
+| TABLESPACE_NAME | FILE_NAME             |
++-----------------+-----------------------+
+| newhr/check_tab | ./newhr/check_tab.ibd |
++-----------------+-----------------------+
+1 row in set (0.00 sec)
+
+mysql> select tablespace_name,file_name,total_extents
+    -> from information_schema.files
+    -> where tablespace_name like 'newhr/che%';
++-----------------+-----------------------+---------------+
+| TABLESPACE_NAME | FILE_NAME             | TOTAL_EXTENTS |
++-----------------+-----------------------+---------------+
+| newhr/check_tab | ./newhr/check_tab.ibd |             0 |
++-----------------+-----------------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> \! cls;
+mysql> create table check_extent as select * from emp;
+Query OK, 15 rows affected (0.02 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> select * from check_extent;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  2222 | y      | NULL      | NULL | NULL       | NULL | NULL |   NULL |
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+15 rows in set (0.00 sec)
+
+mysql> delete from check_extent where ename='y';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from check_extent;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> alter table check_extent modify empno int auto_increment primary key;
+Query OK, 14 rows affected (0.04 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> truncate table check_extent;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into check_extent select * from emp;
+Query OK, 15 rows affected (0.00 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> truncate table check_extent;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc check_extent;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| empno    | int         | NO   | PRI | NULL    | auto_increment |
+| ENAME    | varchar(10) | YES  |     | NULL    |                |
+| JOB      | varchar(9)  | YES  |     | NULL    |                |
+| MGR      | int         | YES  |     | NULL    |                |
+| HIREDATE | date        | YES  |     | NULL    |                |
+| SAL      | float       | YES  |     | NULL    |                |
+| COMM     | float       | YES  |     | NULL    |                |
+| DEPTNO   | int         | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from emp where ename<>'y';
+Query OK, 14 rows affected (0.00 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> select * from check_extent;
++-------+--------+-----------+------+------------+------+------+--------+
+| empno | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|     1 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|     2 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|     3 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|     4 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975 | NULL |     20 |
+|     5 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|     6 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|     7 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450 | NULL |     10 |
+|     8 | SCOTT  | ANALYST   | 7566 | 1987-07-13 | 3000 | NULL |     20 |
+|     9 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|    10 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|    11 | ADAMS  | CLERK     | 7788 | 1987-07-13 | 1100 | NULL |     20 |
+|    12 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950 | NULL |     30 |
+|    13 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000 | NULL |     20 |
+|    14 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> 
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 13 rows affected (0.01 sec)
+Records: 13  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 26 rows affected (0.01 sec)
+Records: 26  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 52 rows affected (0.01 sec)
+Records: 52  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 104 rows affected (0.01 sec)
+Records: 104  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 208 rows affected (0.01 sec)
+Records: 208  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 416 rows affected (0.01 sec)
+Records: 416  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 832 rows affected (0.03 sec)
+Records: 832  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 1664 rows affected (0.05 sec)
+Records: 1664  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 3328 rows affected (0.09 sec)
+Records: 3328  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 6656 rows affected (0.22 sec)
+Records: 6656  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 13312 rows affected (0.30 sec)
+Records: 13312  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 26624 rows affected (0.48 sec)
+Records: 26624  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 53248 rows affected (0.95 sec)
+Records: 53248  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 106496 rows affected (1.86 sec)
+Records: 106496  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 212992 rows affected (3.95 sec)
+Records: 212992  Duplicates: 0  Warnings: 0
+
+mysql> insert into check_extent(ename,job,mgr,hiredate,sal,comm,deptno)
+    -> select ename,job,mgr,hiredate,sal,comm,deptno
+    -> from check_extent where ename<>'king';
+Query OK, 425984 rows affected (8.26 sec)
+Records: 425984  Duplicates: 0  Warnings: 0
+
+mysql> select tablespace_name,file_name
+    -> ,total_extents
+    -> from  information_schema.files
+    -> where tablespace_name like 'hr/check%';
+Empty set (0.00 sec)
+
+mysql> select tablespace_name,file_name
+    -> ,total_extents
+    -> from  information_schema.files
+    -> where tablespace_name like '/hr/check%';
+Empty set (0.00 sec)
+
+mysql> select tablespace_name,file_name
+    -> ,total_extents
+    -> from  information_schema.files
+    -> where tablespace_name like 'newhr/check%';
++--------------------+--------------------------+---------------+
+| TABLESPACE_NAME    | FILE_NAME                | TOTAL_EXTENTS |
++--------------------+--------------------------+---------------+
+| newhr/check_extent | ./newhr/check_extent.ibd |            56 |
+| newhr/check_tab    | ./newhr/check_tab.ibd    |             0 |
++--------------------+--------------------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> Y LIST COLUMNS(JOB)
+    ->   (
+    ->    PARTITION P_CLERK VALUES IN ('CLERK'),
+    ->    PARTITION P_SALES VALUES IN ('SALESMAN'),
+    ->    PARTITION P_ANAL VALUES IN ('ANALYST'),
+    ->    PARTITION P_MAN VALUES IN ('MANAGER'),
+    ->    PARTITION P_PRES VALUES IN ('PRESIDENT'));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Y LIST COLUMNS(JOB)
+  (
+   PARTITION P_CLERK VALUES IN ('CLERK'),
+   PARTITION P' at line 1
+mysql>  CREATE TABLE LIST_JOB(EMPNO INT,
+    ->                         ENAME VARCHAR(20),
+    ->                         JOB VARCHAR(20))
+    ->   PARTITION BY LIST COLUMNS(JOB)
+    ->   (
+    ->    PARTITION P_CLERK VALUES IN ('CLERK'),
+    ->    PARTITION P_SALES VALUES IN ('SALESMAN'),
+    ->    PARTITION P_ANAL VALUES IN ('ANALYST'),
+    ->    PARTITION P_MAN VALUES IN ('MANAGER'),
+    ->    PARTITION P_PRES VALUES IN ('PRESIDENT'));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> 
+mysql> INSERT INTO LIST_JOB SELECT EMPNO,ENAME,JOB FROM CHECK_EXTENT;
+Query OK, 851969 rows affected (19.07 sec)
+Records: 851969  Duplicates: 0  Warnings: 0
+
+mysql>   EXPLAIN SELECT * FROM EMP;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |   100.00 | NULL  |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>   EXPLAIN SELECT * FROM LIST_JOB;
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+| id | select_type | table    | partitions                          | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra |
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+|  1 | SIMPLE      | LIST_JOB | P_CLERK,P_SALES,P_ANAL,P_MAN,P_PRES | ALL  | NULL          | NULL | NULL    | NULL | 850882 |   100.00 | NULL  |
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>   EXPLAIN SELECT COUNT(*) FROM LIST_JOB;
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+| id | select_type | table    | partitions                          | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra |
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+|  1 | SIMPLE      | LIST_JOB | P_CLERK,P_SALES,P_ANAL,P_MAN,P_PRES | ALL  | NULL          | NULL | NULL    | NULL | 850882 |   100.00 | NULL  |
++----+-------------+----------+-------------------------------------+------+---------------+------+---------+------+--------+----------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>   EXPLAIN SELECT COUNT(*) FROM LIST_JOB WHERE JOB='CLERK';
++----+-------------+----------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+| id | select_type | table    | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra       |
++----+-------------+----------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+|  1 | SIMPLE      | LIST_JOB | P_CLERK    | ALL  | NULL          | NULL | NULL    | NULL | 261723 |    10.00 | Using where |
++----+-------------+----------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>   EXPLAIN SELECT COUNT(*) FROM CHECK_EXTENT WHERE JOB='CLERK';
++----+-------------+--------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+| id | select_type | table        | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra       |
++----+-------------+--------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+|  1 | SIMPLE      | CHECK_EXTENT | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 849283 |    10.00 | Using where |
++----+-------------+--------------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM EMP WHERE DEPTNO=10;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql>  SELECT * FROM DEPT WHERE DNAME='SALES';
+ERROR 1146 (42S02): Table 'newhr.dept' doesn't exist
+mysql>  CREATE TABLE DEPT AS SELECT * FROM NEWDB1.DEPT;
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql>  SELECT * FROM DEPT WHERE DNAME='SALES';
++--------+-------+---------+
+| DEPTNO | DNAME | LOC     |
++--------+-------+---------+
+|     30 | SALES | CHICAGO |
++--------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN SELECT * FROM EMP WHERE DEPTNO=10;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN  SELECT * FROM REGIONS  WHERE REGION_ID=1;
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table   | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | REGIONS | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+---------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.04 sec)
+
+mysql> EXPALIN  SELECT * FROM DEPARTMENTS WHERE LOCATION_ID=1700;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EXPALIN  SELECT * FROM DEPARTMENTS WHERE LOCATION_ID=1700' at line 1
+mysql> EXPLAIN  SELECT * FROM DEPARTMENTS WHERE LOCATION_ID=1700;
++----+-------------+-------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table       | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | DEPARTMENTS | NULL       | ALL  | location_id   | NULL | NULL    | NULL |   27 |    77.78 | Using where |
++----+-------------+-------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> DESC DEPARTMENTS;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| department_id   | int unsigned | NO   | PRI | NULL    |       |
+| department_name | varchar(30)  | NO   |     | NULL    |       |
+| manager_id      | int unsigned | YES  | MUL | NULL    |       |
+| location_id     | int unsigned | YES  | MUL | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> DESC REGIONS;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| region_id   | int unsigned | NO   | PRI | NULL    |       |
+| region_name | varchar(25)  | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> EXPLAIN   SELECT ENAME,SAL FROM EMP WHERE SAL IN(SELECT MIN(SAL) FROM EMP);
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | PRIMARY     | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |   100.00 | Using where |
+|  2 | SUBQUERY    | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |   100.00 | NULL        |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> 
+mysql> EXPLAIN SELECT DEPTNO FROM EMP WHERE JOB='CLERK'
+    -> UNION
+    -> SELECT DEPTNO FROM EMP WHERE JOB='SALSEMAN';
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+| id | select_type  | table      | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra           |
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+|  1 | PRIMARY      | EMP        | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where     |
+|  2 | UNION        | EMP        | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where     |
+|  3 | UNION RESULT | <union1,2> | NULL       | ALL  | NULL          | NULL | NULL    | NULL | NULL |     NULL | Using temporary |
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+3 rows in set, 1 warning (0.00 sec)
+
+mysql> EXPALIN SELECT ENAME FROM EMP
+    -> UNION
+    -> SELECT DNAME FROM DEPT;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EXPALIN SELECT ENAME FROM EMP
+UNION
+SELECT DNAME FROM DEPT' at line 1
+mysql> EXPLAIN SELECT ENAME FROM EMP
+    -> UNION
+    -> SELECT DNAME FROM DEPT;
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+| id | select_type  | table      | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra           |
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+|  1 | PRIMARY      | EMP        | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |   100.00 | NULL            |
+|  2 | UNION        | DEPT       | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |   100.00 | NULL            |
+|  3 | UNION RESULT | <union1,2> | NULL       | ALL  | NULL          | NULL | NULL    | NULL | NULL |     NULL | Using temporary |
++----+--------------+------------+------------+------+---------------+------+---------+------+------+----------+-----------------+
+3 rows in set, 1 warning (0.00 sec)
+
+mysql> EXPLAIN SELECT ENAME,DNAME FROM EMP NATURAL JOIN DEPT;
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra                                      |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+|  1 | SIMPLE      | DEPT  | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    4 |   100.00 | NULL                                       |
+|  1 | SIMPLE      | EMP   | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   15 |    10.00 | Using where; Using join buffer (hash join) |
++----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+--------------------------------------------+
+2 rows in set, 1 warning (0.00 sec)
+
+mysql> CREATE TABLE FRUIT(ID INT,NAME VARCHAR(20),PRICE NUMERIC(11,2));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO FRUIT VALUES(103,'GUAVA',80),(101,'MANGO',150),(105,'APPLE',200);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM FRUIT;
++------+-------+--------+
+| ID   | NAME  | PRICE  |
++------+-------+--------+
+|  103 | GUAVA |  80.00 |
+|  101 | MANGO | 150.00 |
+|  105 | APPLE | 200.00 |
++------+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM FRUIT WHERE ID=101;
++-------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                         |
++-------------------------------------------------------------------------------------------------+
+| -> Filter: (fruit.ID = 101)  (cost=0.55 rows=1)
+    -> Table scan on FRUIT  (cost=0.55 rows=3)
+ |
++-------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM LIST_JOB WHERE JOB='PRESIDENT';
++----------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                        |
++----------------------------------------------------------------------------------------------------------------+
+| -> Filter: (list_job.JOB = 'PRESIDENT')  (cost=0.35 rows=1)
+    -> Table scan on LIST_JOB  (cost=0.35 rows=1)
+ |
++----------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM CHECK_EXTENT WHERE JOB='PRESIDENT';
++-----------------------------------------------------------------------------------------------------------------------------------------+
+| EXPLAIN                                                                                                                                 |
++-----------------------------------------------------------------------------------------------------------------------------------------+
+| -> Filter: (check_extent.JOB = 'PRESIDENT')  (cost=85869.91 rows=84928)
+    -> Table scan on CHECK_EXTENT  (cost=85869.91 rows=849283)
+ |
++-----------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM EMP;
++--------------------------------------------+
+| EXPLAIN                                    |
++--------------------------------------------+
+| -> Table scan on EMP  (cost=1.75 rows=15)
+ |
++--------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM DEPT;
++--------------------------------------------+
+| EXPLAIN                                    |
++--------------------------------------------+
+| -> Table scan on DEPT  (cost=0.65 rows=4)
+ |
++--------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM REGIONS;
++-----------------------------------------------+
+| EXPLAIN                                       |
++-----------------------------------------------+
+| -> Table scan on REGIONS  (cost=0.95 rows=7)
+ |
++-----------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW INDEX FROM NEWHR.EMP;
+Empty set (0.01 sec)
+
+mysql> SHOW INDEX FROM NEWDB1.EMP;
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name  | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          0 | PRIMARY   |            1 | EMPNO       | A         |          14 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | fk_deptno |            1 | DEPTNO      | A         |           3 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.01 sec)
+
+mysql> SHOW INDEX FROM NEWHR.EMPLOYEES;
++-----------+------------+---------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table     | Non_unique | Key_name      | Seq_in_index | Column_name   | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-----------+------------+---------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| employees |          0 | PRIMARY       |            1 | employee_id   | A         |         107 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | job_id        |            1 | job_id        | A         |          19 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | department_id |            1 | department_id | A         |          12 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | manager_id    |            1 | manager_id    | A         |          19 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-----------+------------+---------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+4 rows in set (0.01 sec)
+
+mysql> CREATE TABLE UNI_TAB(C1 INT UNIQUE);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> SHOW INDEX FROM NEWHR.UNI_TAB;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| uni_tab |          0 | C1       |            1 | C1          | A         |           0 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SHOW CREATE TABLE UNI_TAB;
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table                                                                                                                                  |
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| UNI_TAB | CREATE TABLE `uni_tab` (
+  `C1` int DEFAULT NULL,
+  UNIQUE KEY `C1` (`C1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE INDEX ID_IDX ON FRUIT(ID);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> EXPLAIN FORMAT=TREE SELECT * FROM FRUIT WHERE ID=101;
++---------------------------------------------------------------------+
+| EXPLAIN                                                             |
++---------------------------------------------------------------------+
+| -> Index lookup on FRUIT using ID_IDX (ID=101)  (cost=0.35 rows=1)
+ |
++---------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT DEPTNO FROM DEPT;
++--------------------------------------------+
+| EXPLAIN                                    |
++--------------------------------------------+
+| -> Table scan on DEPT  (cost=0.65 rows=4)
+ |
++--------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> EXPLAIN FORMAT=TREE SELECT DEPARTMENT_ID FROM DEPARTMENTS;
++----------------------------------------------------------------------+
+| EXPLAIN                                                              |
++----------------------------------------------------------------------+
+| -> Index scan on DEPARTMENTS using location_id  (cost=3.70 rows=27)
+ |
++----------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> 
+mysql> notee;

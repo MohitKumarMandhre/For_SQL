@@ -1,0 +1,97 @@
+
+
+SELECT COUNT(*) FROM EMP;
+
+SELECT COUNT(*),DEPTNO FROM EMP GROUP BY DEPTNO;
+
+
+OLAP                                     OLTP
+------------------------------------------------------------------
+ONLINE ANALYTICAL PROCESSING            ONLINE TRANSACTION PROCESSING
+
+DATE,NUMERIC DATATYPE
+
+WINDOW FUNCTIONS
+-----------------
+ OVER()
+
+
+
+over()
+-----------
+ order by
+ partition
+ frame
+
+
+RANKING FUNCTIONS
+---------------------
+row_number()
+rank()
+dense_rank()
+
+RANK                          DENSE_RANK
+-------------------------------------------------------------
+WHEN THERE IS A TIE,          NO GAP
+IT LEAVES A GAP
+
+COMPARING FUNCTIONS
+---------------------
+LAG
+LEAD
+FIRST_VALUE
+LAST_VALUE
+NTH_VALUE
+
+ LAST_VALUE
+ --------------
+  range  between unbounded preceding and unbounded following
+  rows    between unbounded preceding and current row
+          between current row and unbounded following
+
+
+
+  NTILE
+-------------
+  * DIVIDES THE ROWS INTO PARTITIONS
+
+
+   select ntile(5) over(order by deptno)
+               
+ COMMON TABLE EXPRESSIONS(CTE)
+--------------------------------
+   select * from (select ename from emp) a  => derived table/inline
+                                                view
+-----------------------------------------------------
+  with cte
+  as
+   (select * from emp)
+
+   select ename from cte;
+
+------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select ename,hiredate,first_value(hiredate) over w "1st",
+     last_value(hiredate) over w "last",
+     nth_value(hiredate,5) over w "5th"
+     from emp
+     window w as (order by hiredate);
+
+
+ SMITH
+
+
+
