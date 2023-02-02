@@ -1,0 +1,62 @@
+-- 1. 
+create table if not exists persons(
+	slno int, name varchar(30), place varchar(30), dob date
+);
+insert into persons values 
+	(1002, 'HITESH', 'DELHI', '2000-05-01'), 
+    (1001, 'RITESH', 'MUMBAI', '1998-07-12'),
+    (1005, 'BALAN', 'KOCHI', '1999-11-05')
+;
+
+-- a.
+
+select TABLESPACE_NAME, file_name
+from information_schema.files
+where `TABLESPACE_NAME` like '%world%'
+;
+
+-- b.
+
+select * from persons where slno = 1001;
+
+-- c.
+
+explain select * from persons where slno = 1001;
+explain select * from persons where slno = 1001;
+explain format=tree select * from persons where slno = 1001;
+
+-- '-> Filter: (persons.slno = 1001)  (cost=0.55 rows=1)\n    -> Table scan on persons  (cost=0.55 rows=3)\n'
+
+-- d.
+
+create index idx_slno on persons( slno) ;
+show index from persons;
+explain select * from persons where slno = 1001;
+explain format=tree select * from persons where slno = 1001;
+
+-- '-> Index lookup on persons using idx_slno (slno=1001)  (cost=0.35 rows=1)\n'
+
+-- e.
+
+alter table persons add constraint primary key(slno);
+show index from persons;
+explain select * from persons where slno = 1001;
+explain format=tree select * from persons where slno = 1001;
+
+-- '-> Rows fetched before execution  (cost=0.00..0.00 rows=1)\n'
+
+-- f.
+
+/*
+observation -
+	c - because there is no index present on the table person, thats why it is going for table scan 
+    and the filter is because of where filter clause,
+    type = all, extra = using where condition
+    d - we created an index on slno column, and where condition uses the index 
+    and hence it goes for an index lookup, 
+    type = ref, extra = NULL, key = idx_slno( indexed column)
+    e - here we now have slno as both primary key and indexed as well, so it uses both the indexes and
+    rows are fetched before hand 
+    type is const as where clause contains primary key column filter,
+    extra = NULL, key = primary
+*/

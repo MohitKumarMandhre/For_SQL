@@ -1,0 +1,69 @@
+-- 2. 
+
+-- a.
+
+select l.city, r.region_name, c.country_name, l.location_id
+from countries c inner join locations l
+on c.country_id = l.country_id
+inner join regions r
+on r.region_id = c.region_id
+where  c.country_name IN ( 'Brazil', 'India' )
+;
+
+-- b.
+
+explain 
+select l.city, r.region_name, c.country_name, l.location_id 
+from countries c inner join locations l 
+on c.country_id = l.country_id  
+inner join regions r  
+on r.region_id = c.region_id 
+where  c.country_name IN ( 'Brazil', 'India' ) 
+;
+
+show index from regions;
+
+-- c. 
+
+create table part_ran_emp ( empno int , ename varchar(30), sal int)
+partition by range(sal)
+(
+	partition p_13000 values less than (13000),
+    partition p_20000 values less than (20000),
+    partition p_maxii values less than maxvalue
+);
+
+insert into part_ran_emp select employee_id, first_name, salary from employees;
+
+-- d. 
+
+explain format=tree
+select * 
+from part_ran_emp
+where sal between 12000 and 17000;
+
+-- partitions used - p_13000,p_20000, extra = using where
+-- '-> Filter: (part_ran_emp.sal between 12000 and 17000)  (cost=10.90 rows=12)\n    
+-- 				-> Table scan on part_ran_emp  (cost=10.90 rows=104)\n'
+
+-- e.
+
+explain format = tree 
+select l.city, r.region_name, c.country_name, l.location_id 
+from countries c inner join locations l 
+on c.country_id = l.country_id  
+inner join regions r  
+on r.region_id = c.region_id 
+where  c.country_name IN ( 'Brazil', 'India' ) 
+;
+
+-- type = all for regions table, ref (referencial ) for country and location table 
+-- index used = primary regions(region_id), country(country_id), combined index (country_id + location_id), foreign key (country_id, region_id)
+-- extra = using index; using where
+
+-- g.
+
+-- reason - due to the partitioning present it directly goes to the partitions
+-- named - p_13000,p_20000
+-- does a range scan based on "IN" clause in where clause
+

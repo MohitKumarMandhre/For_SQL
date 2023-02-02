@@ -1,4 +1,4 @@
--- Active: 1670399129309@@127.0.0.1@3307@world
+-- Active: 1670399129309@@127.0.0.1@3307@hr
 
 show tables;
 
@@ -82,5 +82,20 @@ join dc dc1
 ON e.`DEPTNO` = dc1.deptno
 join dc dc2
 on m.deptno = dc2.`DEPTNO`
+;
+
+-------------
+
+explain FORMAT=tree 
+with c1 as (
+    select `JOB_ID`, count(*) as cnt
+    from employees 
+    GROUP BY `JOB_ID`
+)
+, c2 as 
+(select *, ROW_NUMBER() over( order by cnt desc) as rn
+from c1 )
+select * from employees NATURAL JOIN c2
+where rn=1
 ;
 

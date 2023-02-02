@@ -11,6 +11,12 @@ https://www.red-gate.com/hub/product-learning/sql-data-generator/generating-real
 */
 show tables;
 
+select * from direction;
+
+select a.*, am.* from aircraftnamufacturer am join aircraft a
+on am.aircraft_manufacturer_id = a.aircraft_manufacturer_id
+;
+
 create table country(
 iata_country_code char(2) PRIMARY KEY,
 name varchar(45));

@@ -132,6 +132,14 @@ explain
 select ename, dname from emp 
 natural join dept;
 
+use world;
+
+-- explain format=tree  
+select * from chk_extent n1 join emp n2 
+on n1.deptno = n2.deptno
+;
+desc chk_extent;
+
 
 -- fruits task
 
@@ -184,3 +192,12 @@ select * from country;
 create database airportdb;
 use airportdb;
 show tables;
+
+create table nat1 ( a int, b int, c int);
+drop table nat2;
+create table nat2 ( a int, b int, d int);
+
+insert into nat1 values (1, 2, 3), (4, 5, 6);
+insert into nat2 values (1, 3, 4), (8, 5, 8), (4, 5, 9);
+
+select * from nat1 natural join nat2;
