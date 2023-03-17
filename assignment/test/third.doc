@@ -1,0 +1,45 @@
+# PYSPARK PROGRAM
+
+from pyspark import SparkContext, SparkConf
+
+conf = SparkConf().setAppName("WordCount").setMaster("local[*]")
+sc = SparkContext(conf=conf)
+
+# loading data from file path
+lines = sc.textFile("path/to/textfile.txt")
+
+```
+let data be like,
+
+apple boy cow
+cow apple
+boy goa firm
+.....
+
+here words in a row are seperated by spaces and rows are seperated by newlines 
+```
+wordCounts = lines.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda x, y: x + y)
+
+```
+here, mapping of each word to 1 occurs
+(apple, 1)
+(cow, 2) ...
+
+then, we persorm reduce function with lambda which invokes sum of data
+
+```
+
+
+# Sorting by the number of counts in descending order, taking top 10 values
+top10Words = wordCounts.sortBy(lambda x: x[1], ascending=False).take(10)
+
+# printing the output
+for word, count in top10Words:
+    print(word, count)
+
+
+
+
+
+
+

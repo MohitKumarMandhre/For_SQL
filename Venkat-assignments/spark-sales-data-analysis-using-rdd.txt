@@ -1,0 +1,105 @@
+srdd = sc.textFile('/user/sales.csv')
+srdd.take(5)
+
+srdd2 = srdd.map(lambda x: x.split(','))
+head = srdd2.first()
+srdd3 = srdd2.filter(lambda x: x!= head)
+srdd3.cache()
+
+***
+Query questions
+1. Display the number of countries present in the data(Using Hive)
+2.Display the number of units sold in each region.(Using Hive)
+3.Display the 10 most recent sales. (Using Hive)
+4.Display the products with atleast 2 occurences of 'a' (Using spark)
+5.Display country in each region with highest units sold. (Using spark)
+6.Display the unit price and unit cost of each item in ascending order. (Using spark)
+7.Display the number of sales yearwise. (Using pyspark)
+8.Display the number of orders for each item. (Using pyspark)
+9.Display the countr.with highest calallicing pyspark)
+***
+
+1.Display the number of countries present in the data(Using Hive)
+
+rdd.map(lambda x: x[1]).distinct().count()
+
+=> 185
+
+2.Display the number of units sold in each region.(Using Hive)
+
+rdd1 = rdd.map(lambda x: x[0], float(x[8]) )
+rdd1.reduceByKey(lambda x, y: x+y).collect()
+
+=> (u'Europe', 6582322.0), (u'Australia and Oceania', 2111786.0), (u'Middle East and North Africa', 3013431.0), (u'North America', 484760.0), (u'Asia', 3620036.0), (u'Sub-Saharan Africa', 6642380.0), (u'Central America and the Caribbean', 2698776.0)]
+
+3.Display the 10 most recent sales.
+
+#Orderdate is in string format. Change it to datetime object so that we can sort them.
+
+rdd3 = sales.map(lambda row: row[:5] + [datetime.strptime(row[5],'%m/%d/%Y')] + row[6:])
+
+#sortBy sorts the records based on row[5] i.e, datetime object. Here ascending=False return records in descending order
+#and convert the datetimeobject back to string format. Here -m -d removes the leading 0's in month and day.
+
+rdd3.sortBy(lambda row : row[5],ascending=False).map(lambda row : row[:5] + [row[5].strftime('%-m/%-d/%Y')] +row[6:]).take(10)
+
+=> [[u'Asia', u'Bhutan', u'Cereal', u'Offline', u'M', '7/28/2017', u'223854434', u'8/25/2017', u'2356', u'205.70', u'117.11', u'484629.20', u'275911.16', u'208718.04'], [u'Sub-Saharan Africa', u'Senegal', u'Cosmetics', u'Online', u'C', '7/26/2017', u'537970721', u'8/18/2017', u'6346', u'437.20', u'263.33', u'2774471.20', u'1671092.18', u'1103379.02'], [u'Middle East and North Africa', u'United Arab Emirates', u'Household', u'Online', u'C', '7/26/2017', u'419542396', u'8/8/2017', u'773', u'668.27', u'502.54', u'516572.71', u'388463.42', u'128109.29'], [u'Australia and Oceania', u'Australia', u'Beverages', u'Online', u'L', '7/26/2017', u'631485402', u'8/12/2017', u'9418', u'47.45', u'31.79', u'446884.10', u'299398.22', u'147485.88'], [u'Sub-Saharan Africa', u"Cote d'Ivoire", u'Vegetables', u'Online', u'H', '7/24/2017', u'588388097', u'8/25/2017', u'5968', u'154.06', u'90.93', u'919430.08', u'542670.24', u'376759.84'], [u'Sub-Saharan Africa', u'Chad', u'Household', u'Online', u'L', '7/24/2017', u'586341464', u'7/31/2017', u'324', u'668.27', u'502.54', u'216519.48', u'162822.96', u'53696.52'], [u'Australia and Oceania', u'Vanuatu', u'Office Supplies', u'Online', u'C', '7/24/2017', u'480310952', u'8/11/2017', u'3539', u'651.21', u'524.96', u'2304632.19', u'1857833.44', u'446798.75'], [u'Europe', u'Kosovo', u'Vegetables', u'Offline', u'C', '7/23/2017', u'975080668', u'8/20/2017', u'6893', u'154.06', u'90.93', u'1061935.58', u'626780.49', u'435155.09'], [u'Europe', u'San Marino', u'Snacks', u'Offline', u'C', '7/22/2017', u'476453721', u'8/10/2017', u'2099', u'152.58', u'97.44', u'320265.42', u'204526.56', u'115738.86'], [u'Australia and Oceania', u'Palau', u'Baby Food', u'Offline', u'H', '7/21/2017', u'956778991', u'8/25/2017', u'1020', u'255.28', u'159.42', u'260385.60', u'162608.40', u'97777.20']]
+
+4.Display the products with atleast 2 occurences of 'a'
+
+rdd.filter(lambda x: x[0].count('a') > 2 ).take(5)
+
+=> 'Central America and the Caribbean', u'Antigua and Barbuda ', u'Baby Food', u'Online', u'M', u'12/20/2013', u'957081544', u'1/11/2014', u'552', u'255.28', u'159.42', u'140914.56', u'87999.84', u'52914.72'], [u'Central America and the Caribbean', u'Panama', u'Snacks', u'Offline', u'C', u'7/5/2010', u'301644504', u'7/26/2010', u'2167', u'152.58', u'97.44', u'330640.86', u'211152.48', u'119488.38'], [u'Middle East and North Africa', u'Morocco', u'Personal Care', u'Offline', u'L', u'11/8/2010', u'412882792', u'11/22/2010', u'48', u'81.73', u'56.67', u'3923.04', u'2720.16', u'1202.88'], [u'Australia and Oceania', u'Federated States of Micronesia', u'Clothes', u'Offline', u'H', u'3/28/2011', u'932776868', u'5/10/2011', u'8258', u'109.28', u'35.84', u'902434.24', u'295966.72', u'606467.52'], [u'Middle East and North Africa', u'Afghanistan', u'Clothes', u'Offline', u'M', u'8/27/2016', u'579814469', u'10/5/2016', u'8841', u'109.28', u'35.84', u'966144.48', u'316861.44', u'649283.04']]
+
+5.Display country in each region with highest units sold.
+
+rdd51 = srdd3.map(lambda row : ((row[0] , row[1]),int(row[8]))).reduceByKey(lambda a,b :a+b)
+
+[((u'Sub-Saharan Africa', u'Benin'), 153672), ((u'Sub-Saharan Africa', u'Guinea'), 169085), ((u'Sub-Saharan Africa', u'Zimbabwe'), 93906), ((u'Asia', u'Vietnam'), 86331), ((u'Central America and the Caribbean', u'Haiti'), 188776)]
+
+rdd52 = rdd51.map(lambda x: (x[0][0],(x[0][1],x[1]))).reduceByKey(lambda a,b: max(a,b, key=lambda x: x[1]) )
+rdd52.take(5)
+
+=> [(u'Europe', (u'Macedonia', 203078)), (u'Australia and Oceania', (u'Australia', 183909)), (u'Central America and the Caribbean', (u'Grenada', 205943)), (u'Asia', (u'Myanmar', 199967)), (u'North America', (u'United States of America', 159519))]
+
+
+6.Display the unit price and unit cost of each item in ascending order.
+
+rdd6 = rdd.map(lambda x: (x[2],x[9],x[10])).distinct()
+rdd6.take(5)
+
+=> /03/16 23:07:43 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 81.0, whose tasks have all completed, from pool 
+[(u'Meat', u'421.89', u'364.69'), (u'Snacks', u'152.58', u'97.44'), (u'Fruits', u'9.33', u'6.92'), (u'Beverages', u'47.45', u'31.79'), (u'Household', u'668.27', u'502.54')]
+
+7.Display the number of sales yearwise.
+
+rdd7 = srdd3.map(lambda x: (float(x[5][-4:]), float(x[11])) ).reduceByKey(lambda x,y: x+y )
+rdd7.take(5)
+
+=> [(2016.0, 855319761.35000074), (2017.0, 470552200.25999993), (2010.0, 817765368.17000031), (2011.0, 837622220.24000001)]
+
+8.Display the number of orders for each item.
+
+rdd8 = srdd3.map(lambda x: (x[2], 1) ).reduceByKey(lambda x,y: x+y )
+rdd8.take(5)
+
+[(u'Personal Care', 415), (u'Snacks', 398), (u'Baby Food', 445), (u'Vegetables', 410), (u'Beverages', 447)]
+
+storing the output to hdfs,
+
+hadoop fs -cat /user/salesOP/eg08/part-00000
+
+=> (u'Personal Care', 415)
+(u'Snacks', 398)
+(u'Baby Food', 445)
+(u'Vegetables', 410)
+(u'Beverages', 447)
+(u'Cosmetics', 424)
+(u'Cereal', 385)
+(u'Fruits', 447)
+(u'Clothes', 386)
+(u'Household', 424)
+(u'Office Supplies', 420)
+(u'Meat', 399)
+
+

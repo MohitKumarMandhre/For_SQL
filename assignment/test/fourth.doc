@@ -1,0 +1,16 @@
+# hive problem 
+
+# creation of table
+
+CREATE TABLE IF NOT EXISTS sales_data (date date, product String, sales_amount int)
+COMMENT 'sales_data details'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+# we have the created table sales_data
+# adding partition to the table
+
+alter table sales_data add partition (region) ;

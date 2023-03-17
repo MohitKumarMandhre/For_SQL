@@ -1,0 +1,19 @@
+# command 
+
+hadoop fs -rm -r -skipTrash /path/to/parent/directory/*/
+
+explaination - this will do the needfully cleanup of empty directories
+-rm = remove the directory
+-r = does recursively delete
+
+
+hadoop fs -find /path/to/parent/directory -type d -empty -delete
+
+explaination - 
+find = used to find a file/dir
+-type = for specifying type
+d - for serching directory
+-empty = condition according to question
+-delete = simply delete the directory
+
+

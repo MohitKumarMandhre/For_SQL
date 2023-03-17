@@ -1,0 +1,13 @@
+# command
+# dir where files > 1GB of memory
+
+
+hadoop fs -du -s -h / | awk '$1 > "1.0G" {print $2}'
+
+explaination - 
+-du - disk usage
+-h - size i human readable format
+awk - is for grepping the data more than 1GB
+$1 - gives dir name
+$2 - gives path to dir 
+
