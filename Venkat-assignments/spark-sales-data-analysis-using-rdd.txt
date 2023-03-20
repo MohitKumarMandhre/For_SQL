@@ -25,6 +25,11 @@ rdd.map(lambda x: x[1]).distinct().count()
 
 => 185
 
+1.1 display country wise no. of orders
+
+salesdf.select( col('Country'), col('Order ID')).groupBy('Country').agg(count('Order ID')).take(5)
+
+
 2.Display the number of units sold in each region.(Using Hive)
 
 rdd1 = rdd.map(lambda x: x[0], float(x[8]) )
