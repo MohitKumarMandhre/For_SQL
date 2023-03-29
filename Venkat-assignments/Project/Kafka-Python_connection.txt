@@ -1,0 +1,66 @@
+#Assuming that Kafka and Python3 were installed on your system.
+
+# Launch Zookeeper and kafka
+	cd $KAFKA_HOME/bin
+	sudo ./zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties &	=> Starts Zookeeper and runs in background
+	sudo ./kafka-server-start.sh $KAFKA_HOME/config/server.properties &		=> Starts Kafka and runs in background
+
+
+# create a topic
+	kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic python-test
+
+
+
+# install the kakfa-python
+	pip install kafka-python
+
+# launch producer
+ 	kafka-console-producer.sh --broker-list localhost:9092 --topic python-test
+
+
+# install kafka-python
+	pip install kafka-python
+
+consumer.py 
+-----------------
+import kafka
+
+from kafka import KafkaConsumer
+
+consumer = KafkaConsumer("python-test",bootstrap_servers=['localhost:9092'],value_deserializer=lambda x: x.decode('utf-8'))
+
+for msge in consumer:
+    print(msge.value)
+
+
+# we can also write the producer code to generate the data
+
+producer.py
+--------------
+import kafka
+from kafka import KafkaProducer
+
+from time import sleep
+
+
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda x: x.encode('utf-8'))
+
+i = 0
+
+while(i<=100):
+    producer.send(topic="python-test",value=str(i))
+    i+=10
+    sleep(2)
+    
+    
+producer.flush()
+
+
+#Stop ZOOKEEPER and KAFKA
+
+cd $KAFKA_HOME/bin
+sudo ./kafka-server-stop.sh			=> Stops Kafka
+sudo ./zookeeper-server-stop.sh		=> Stops Zookeeper
+
+
+	

@@ -1,0 +1,21 @@
+ID,Size of House,Number Of Bathrooms,Age Of Building,Number Of Balcony,Number Of Fireplace,Furnished Status,Car Parking,Air Conditioning,Private Garden,Lift Available,Area Status,Rent
+1,Big,4,1-5 Years,3,1,Semi Furnished,Yes,Yes,Yes,No,High,50000
+2,Small,1,Less than a year,0,0,Unfurnished,No,No,No,Yes,Medium,7000
+3,Medium,2,5-10 Years,2,0,Fully Furnished,Yes,No,No,Yes,High,23000
+4,Small,1,Less than a year,1,0,Semi Furnished,Yes,Yes,No,Yes,High,11500
+5,Large,3,10+ Years,2,1,Fully Furnished,Yes,No,Yes,Yes,High,32000
+6,Medium,2,Less than a year,2,0,Unfurnished,Yes,No,No,No,Low,11000
+7,Small,2,1-5 Years,1,1,Semi Furnished,Yes,No,No,Yes,Medium,12000
+8,Big,3,Less than a year,2,1,Fully Furnished,Yes,Yes,Yes,Yes,High,40000
+9,Large,2,1-5 Years,2,0,Unfurnished,Yes,No,No,Yes,High,19500
+10,Small,1,5-10 Years,0,0,Semi Furnished,Yes,No,No,Yes,Medium,8300
+11,Small,1,Less than a year,0,0,Unfurnished,No,No,No,No,Low,6300
+12,Big,4,5-10 Years,2,0,Unfurnished,Yes,No,Yes,No,Medium,32000
+13,Small,1,Less than a year,0,0,Unfurnished,No,No,No,Yes,Medium,8000
+14,Medium,1,Less than a year,2,1,Semi Furnished,Yes,No,Yes,Yes,High,21000
+15,Large,3,10+ Years,1,1,Semi Furnished,Yes,Yes,Yes,Yes,High,44000
+16,Large,3,5-10 Years,0,0,Unfurnished,Yes,No,No,No,Medium,27000
+17,Small,2,1-5 Years,0,0,Fully Furnished,Yes,Yes,No,No,Medium,15600
+18,Medium,3,1-5 Years,2,0,Semi Furnished,No,No,No,Yes,Low,16000
+19,Big,4,5-10 Years,3,1,Fully Furnished,Yes,Yes,Yes,Yes,High,53000
+20,Small,1,Less than a year,0,0,Semi Furnished,No,No,No,Yes,Medium,8500
