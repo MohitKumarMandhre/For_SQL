@@ -1,0 +1,36 @@
+-- Create the table structure and load the table by using the given csv file (1 for each table):
+
+select * from student_list;
+select * from student_response;
+select * from correct_answers;
+select * from question_paper_code;
+
+
+-- Solution PostgreSQL:
+with cte as
+    (select sl.roll_number, sl.student_name, sl.class, sl.section, sl.school_name
+    , sum(case when qpc.subject = 'Math' and sr.option_marked = ca.correct_option and sr.option_marked <> 'e'
+            then 1 else 0 end) as math_correct
+    , sum(case when qpc.subject = 'Math' and sr.option_marked <> ca.correct_option  and sr.option_marked <> 'e'
+            then 1 else 0 end) as math_wrong
+    , sum(case when qpc.subject = 'Math' and sr.option_marked = 'e'
+            then 1 else 0 end) as math_yet_to_learn
+    , sum(case when qpc.subject = 'Science' and sr.option_marked = ca.correct_option and sr.option_marked <> 'e'
+            then 1 else 0 end) as science_correct
+    , sum(case when qpc.subject = 'Science' and sr.option_marked <> ca.correct_option  and sr.option_marked <> 'e'
+            then 1 else 0 end) as science_wrong
+    , sum(case when qpc.subject = 'Science' and sr.option_marked = 'e'
+            then 1 else 0 end) as science_yet_to_learn
+    , sum(case when qpc.subject = 'Math' then 1 else 0 end) as total_math_questions
+    , sum(case when qpc.subject = 'Science' then 1 else 0 end) as total_science_questions
+    from student_list sl
+    join student_response sr on sr.roll_number = sl.roll_number
+    join correct_answers ca on sr.question_paper_code = ca.question_paper_code and sr.question_number = ca.question_number
+    join question_paper_code qpc on qpc.paper_code = ca.question_paper_code
+    group by sl.roll_number, sl.student_name, sl.class, sl.section, sl.school_name)
+select roll_number, student_name, class, section, school_name
+, math_correct, math_wrong, math_yet_to_learn, math_correct as math_score
+, round((math_correct::decimal/total_math_questions::decimal)*100,2) as math_percentage
+, science_correct, science_wrong, science_yet_to_learn, science_correct as science_score
+, round((science_correct::decimal/total_science_questions::decimal)*100,2) as science_percentage
+from cte;
