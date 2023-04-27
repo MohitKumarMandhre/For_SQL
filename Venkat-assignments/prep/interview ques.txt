@@ -1,0 +1,28 @@
+1. introduction
+2. what projects you have worked on
+3. Do you have prior experience in Azure
+4. Which application and how did you deployed the stored procedures in your previous company
+5. Which domain you worked in
+6. Scenario based : 2 companies A and B
+		A -- has existing data architecture in tera data 150 peta bytes of data 
+		B -- got acquired by A .. use Azure SQL data base and ADLS gen 2, BI is on power bi
+		Here data in A is coming from ERM systems.
+		After 1 year of being merged, there data should be integrated in unified platform and all there BI should also be integrated
+		You as a consultant or data architect or data engineer leading that project single handedly what will be your thought process.
+		How will you manage and integrate the system 
+7. Draw architecture diagram which shows the high level design for above scenario
+8. How will you rate yourself in sql out of 8
+9. SQL coding question : 
+	there is a multiplex with some seats occupied and others not
+		table -->  seat_id, free 
+		free = 1 indicates seat is not occupied
+		find the consecutive unoccupied seat ids
+10. Based on the approach i gave for above question, what is lead, lag, window function, window frame, difference between window function and aggregate, different window functions available, which window you are working on in above query, how you are partitioning it, which is the window here, what will happen if apply window on seat id how will result differ with and without partition, what is result for each row. is it possible to apply window function on a group(explained everything with examples) 
+11. Give an alternate approach for above question -- asked further questions -- i gave self join -- so he asked to explain how that will work, based on what join is performed.
+12.  Scenario based: How will you handle this sitiation -- you have tight schedule to complete a project by next day, but same stakeholder called you suddenly to join a call with client which will take 2-3 hours. What will you do, will join the call, how will complete work. how ill you analyse and your approach towards situation.
+13. SQl Coding -- Gave me a binary decision tree --  asked to write query to display what each node represent and explain the approach in detail
+14. Have worked on Hive, kowledge about hive ql
+15. We have data in petabytes about each country which contains details like age, gender, population in S3, you need to analyse using Hive, what will you go for partition or bucketing. diff between partition and bucketing, why use bucketing, when to use it, if data is skewed then which is the approach you go for.
+16. write the syntax for partitioning ang bucketing, can you use bucket without partition
+17. Are you comfortable working in an environment where you are the only female in the team.
+18. Will you work for next one year
